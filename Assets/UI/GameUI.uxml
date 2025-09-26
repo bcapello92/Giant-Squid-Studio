@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="HUDRoot" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; flex-direction: row; justify-content: flex-start; align-items: flex-end; padding: 20px;">
+        <ui:VisualElement name="HealthBarBackground" class="health-bg">
+            <ui:ProgressBar name="HealthBar" style="width: 226px;" />
+            <ui:Label name="HealthLabel" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

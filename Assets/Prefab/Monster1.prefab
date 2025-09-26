@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.218, y: -0.311, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -215,19 +215,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Monster1Controller
   target: {fileID: 0}
   targetTag: Player
-  maxHP: 30
-  currentHP: 0
   moveSpeed: 2
   detectionRange: 6
   stopDistance: 0.4
   acceleration: 12
   shockRange: 1
   shockDamage: 8
+  shockKnockback: 2.5
   windupTime: 0.25
-  activeTime: 0.35
-  tickInterval: 0.15
   attackCooldown: 0.8
   targetLayers:
     serializedVersion: 2
     m_Bits: 0
   debugLogs: 0
+  maxHP: 30
+  currentHP: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -24,11 +25,12 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
     Vector2 moveDirection;
     Vector2 mouseWorld;
-
+    public event Action<int, int> HealthChanged;//current, max
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         currentHP = maxHP;
+        HealthChanged?.Invoke(currentHP, maxHP);
     }
 
     void Update()
@@ -79,17 +81,25 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     // -------- Health / Damage --------
     public void TakeDamage(int amount)
     {
+        int prev = currentHP;
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
-        // Debug.Log($"Player HP: {currentHP}/{maxHP}");
+        if (currentHP != prev)
+            HealthChanged?.Invoke(currentHP, maxHP);
+
         if (currentHP == 0)
         {
             // TODO: death behavior
-            // Debug.Log("Player died.");
         }
     }
 
-#if UNITY_EDITOR
-    [ContextMenu("Test -20 HP")]
-    void _TestDamage() => TakeDamage(20);
-#endif
+    // Optional healing
+    public void Heal(int amount)
+    {
+        int prev = currentHP;
+        currentHP = Mathf.Min(maxHP, currentHP + Mathf.Abs(amount));
+        if (currentHP != prev)
+            HealthChanged?.Invoke(currentHP, maxHP);
+    }
 }
+
+

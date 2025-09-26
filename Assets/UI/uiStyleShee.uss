@@ -1,0 +1,10 @@
+#HealthBar .unity-progress-bar__background {
+  background-image: none;                  /* or url(...) for a track */
+  background-color: transparent;
+}
+
+#HealthBar .unity-progress-bar__progress {
+  background-image: url("project://database/Assets/UI/greenBar.png");
+  -unity-background-scale-mode: scale-and-crop; /* or scale-to-fit */
+  background-color: transparent;
+}
