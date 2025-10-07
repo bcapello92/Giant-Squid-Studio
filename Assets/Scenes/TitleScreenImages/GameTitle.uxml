@@ -1,4 +1,4 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+﻿<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Scenes/TitleScreenImages/GameTitle.uss?fileID=7433441132597879392&amp;guid=bdbfd4534faa35841bd2606be2cb391f&amp;type=3#GameTitle" />
     <ui:VisualElement name="Root" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: none;">
         <ui:VisualElement name="BG" class="bg" style="background-image: url(&quot;project://database/Assets/Scenes/TitleScreenImages/TitleBackground.svg?fileID=7388822144124034973&amp;guid=f560454c9e4dad04abfb7a84f2d2e23a&amp;type=3#TitleBackground&quot;);" />

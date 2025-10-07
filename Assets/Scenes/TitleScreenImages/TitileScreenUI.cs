@@ -1,26 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-public class TitleScreenUI : MonoBehaviour
+public class GameTitleUI : MonoBehaviour
 {
-    [Header("Wiring")]
-    [SerializeField] private UIDocument uiDocument;
+    [SerializeField] UIDocument uiDocument;
+    [SerializeField] Texture2D backgroundTexture;
 
-    [Tooltip("Optional: assign your SVG/Texture here if not set via USS/UI Builder")]
-    [SerializeField] private Texture2D backgroundTexture;  // or Sprite if you prefer
-
-    [Tooltip("Scene name to load when Start Game is pressed")]
-    [SerializeField] private string firstSceneName = "GameScene";
-
-    // (Optional) panels you might open later
-    [SerializeField] private VisualTreeAsset levelSelectUxml;
-    [SerializeField] private VisualTreeAsset optionsUxml;
-
-    VisualElement root;
-    VisualElement bg;
+    VisualElement root, bg;
     Label title;
     Button startBtn, levelBtn, optionsBtn;
+
+    Dictionary<Button, string> baseTexts = new Dictionary<Button, string>();
 
     void OnEnable()
     {
@@ -28,88 +19,81 @@ public class TitleScreenUI : MonoBehaviour
         root = uiDocument.rootVisualElement;
 
         bg = root.Q<VisualElement>("BG");
-        title = root.Q<Label>("Title");
+        title = root.Q<Label>("Title"); // adjust if your label is named "GameTitle"
         startBtn = root.Q<Button>("StartBtn");
         levelBtn = root.Q<Button>("LevelBtn");
         optionsBtn = root.Q<Button>("OptionsBtn");
 
-        // Optional: set background image from code if not using USS/UI Builder
+        // Optional: background setup
         if (bg != null && backgroundTexture != null)
         {
             bg.style.backgroundImage = new StyleBackground(backgroundTexture);
             bg.style.unityBackgroundScaleMode = ScaleMode.ScaleAndCrop;
         }
 
-        // Button events
+        // Click handlers
         if (startBtn != null) startBtn.clicked += OnStartClicked;
         if (levelBtn != null) levelBtn.clicked += OnLevelSelectClicked;
         if (optionsBtn != null) optionsBtn.clicked += OnOptionsClicked;
 
-        // Set keyboard/gamepad focus to first button
+        // Focus + hover setup
+        SetupBrackets(startBtn);
+        SetupBrackets(levelBtn);
+        SetupBrackets(optionsBtn);
+
+        // initial focus
         startBtn?.Focus();
+        ApplyBrackets(startBtn, true);
     }
 
     void OnDisable()
     {
-        if (startBtn != null) startBtn.clicked -= OnStartClicked;
-        if (levelBtn != null) levelBtn.clicked -= OnLevelSelectClicked;
-        if (optionsBtn != null) optionsBtn.clicked -= OnOptionsClicked;
+        RemoveHandlers(startBtn);
+        RemoveHandlers(levelBtn);
+        RemoveHandlers(optionsBtn);
     }
 
-    void OnStartClicked()
+    // ---------------- Helper Functions ----------------
+
+    void SetupBrackets(Button b)
     {
-        if (!string.IsNullOrEmpty(firstSceneName))
-            SceneManager.LoadScene(firstSceneName);
-        else
-            Debug.LogWarning("[Title] firstSceneName not set.");
+        if (b == null) return;
+        if (!baseTexts.ContainsKey(b)) baseTexts[b] = b.text;
+
+        b.RegisterCallback<FocusInEvent>(_ => ApplyBrackets(b, true));
+        b.RegisterCallback<FocusOutEvent>(_ => ApplyBrackets(b, false));
+
+        // add hover
+        b.RegisterCallback<MouseEnterEvent>(_ =>
+        {
+            b.Focus(); // focus for keyboard/visual consistency
+            ApplyBrackets(b, true);
+        });
+        b.RegisterCallback<MouseLeaveEvent>(_ =>
+        {
+            if (!b.focusController.focusedElement.Equals(b))
+                ApplyBrackets(b, false);
+        });
     }
 
-    void OnLevelSelectClicked()
+    void RemoveHandlers(Button b)
     {
-        // Minimal placeholder – swap content with a new visual tree (or open a modal)
-        if (levelSelectUxml != null)
-        {
-            var panel = levelSelectUxml.CloneTree();
-            OpenOverlay(panel);
-        }
-        else
-        {
-            Debug.Log("[Title] Level Select clicked (hook your level UI here).");
-        }
+        if (b == null) return;
+        // no explicit unregister needed unless you’re using lambdas with stored refs
     }
 
-    void OnOptionsClicked()
+    void ApplyBrackets(Button b, bool active)
     {
-        if (optionsUxml != null)
-        {
-            var panel = optionsUxml.CloneTree();
-            OpenOverlay(panel);
-        }
-        else
-        {
-            Debug.Log("[Title] Options clicked (hook your options UI here).");
-        }
+        if (b == null) return;
+        if (!baseTexts.TryGetValue(b, out var baseText))
+            baseText = b.text;
+
+        b.text = active ? $"< {baseText} >" : baseText;
     }
 
-    // Simple modal overlay helper
-    void OpenOverlay(VisualElement panel)
-    {
-        if (panel == null || root == null) return;
+    // ---------------- Button Clicks ----------------
 
-        panel.style.position = Position.Absolute;
-        panel.style.top = 0; panel.style.left = 0; panel.style.right = 0; panel.style.bottom = 0;
-        panel.style.backgroundColor = new Color(0, 0, 0, 0.35f);
-
-        // Add a close button if you want
-        var closeBtn = new Button(() => { root.Remove(panel); startBtn?.Focus(); }) { text = "Back" };
-        closeBtn.AddToClassList("menu-btn");
-        closeBtn.style.position = Position.Absolute;
-        closeBtn.style.top = 16; closeBtn.style.left = 16;
-        panel.Add(closeBtn);
-
-        root.Add(panel);
-    }
-
-    // Optional convenience for changing title text at runtime
-    public void SetTitle(string newTitle) => title.text = newTitle;
+    void OnStartClicked() => Debug.Log("Start Game clicked");
+    void OnLevelSelectClicked() => Debug.Log("Level Select clicked");
+    void OnOptionsClicked() => Debug.Log("Options clicked");
 }
