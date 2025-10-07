@@ -5,10 +5,11 @@ using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class TestPlayerController : MonoBehaviour, IDamageable
-{
+{ 
     [Header("Move")]
     public float moveSpeed = 5f;
-
+    public bool IsStunned { get; private set; }
+    float stunUntil;
     [Header("Health")]
     public int maxHP = 100;
     [SerializeField] private int currentHP; // shows in Inspector; private is fine
@@ -33,6 +34,13 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         HealthChanged?.Invoke(currentHP, maxHP);
     }
 
+    public bool ApplyStun(float seconds)
+    {
+        if (seconds <= 0f) return false;
+        IsStunned = true;
+        stunUntil = Time.time + seconds;
+        return true;
+    }
     void Update()
     {
         // --- Input ---
@@ -47,6 +55,10 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         // Dash trigger
         if (!isDashing && Time.time >= lastDashTime + dashCooldown && Input.GetKeyDown(KeyCode.LeftShift))
             StartCoroutine(Dash());
+        if (IsStunned && Time.time >= stunUntil)
+        {
+            IsStunned = false;
+        }
     }
 
     void FixedUpdate()

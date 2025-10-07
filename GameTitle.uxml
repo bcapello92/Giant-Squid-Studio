@@ -1,0 +1,18 @@
+﻿<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <!-- Fullscreen root that pins to viewport -->
+  <ui:VisualElement name="Root"
+                    style="position:absolute; top:0; left:0; right:0; bottom:0;">
+    <!-- Background layer (we’ll set background-image via USS or code) -->
+    <ui:VisualElement name="BG" class="bg"/>
+
+    <!-- Foreground UI stack -->
+    <ui:VisualElement name="Content" class="content">
+      <ui:Label name="Title" text="MY AWESOME GAME" class="title"/>
+      <ui:VisualElement name="Menu" class="menu">
+        <ui:Button name="StartBtn" text="Start Game" class="menu-btn"/>
+        <ui:Button name="LevelBtn" text="Level Select" class="menu-btn"/>
+        <ui:Button name="OptionsBtn" text="Options" class="menu-btn"/>
+      </ui:VisualElement>
+    </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,64 @@
+/* Fullscreen layout root */
+#Root {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+}
+
+/* Background container (if you use an Image element, you can leave this empty) */
+#BG, .bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* If you set a background from code/UI Builder, keep this rule minimal */
+}
+
+/* Centered content column */
+#Content, .content {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* vertical center */
+  align-items: center;       /* horizontal center */
+
+  padding-top: 32px;
+  padding-right: 32px;
+  padding-bottom: 32px;
+  padding-left: 32px;
+}
+
+/* Title label */
+#Title, .title {
+  font-size: 48px;
+  -unity-font-style: bold;
+  color: white;
+  margin-bottom: 16px;
+  -unity-text-align: middle-center;
+}
+
+/* Menu column */
+#Menu, .menu {
+  display: flex;
+  flex-direction: column;
+  /* 'gap' isn’t supported in some versions; use margins on buttons instead */
+  width: 320px;
+}
+
+/* Buttons */
+.menu-btn {
+  height: 44px;
+  border-radius: 8px;
+  font-size: 18px;
+  -unity-text-align: middle-center;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+/* Focus/hover states */
+.menu-btn:focus {
+  outline-color: white;
+  outline-width: 2px;
+}
+.menu-btn:hover {
+  background-color: rgba(255,255,255,0.1);
+}
