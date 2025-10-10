@@ -19,8 +19,16 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     [SerializeField] float dashDuration = 0.15f;
     [SerializeField] float dashCooldown = 0.6f;
 
+    [Header("Attack")]
+    [SerializeField] float attackDuration = 0.5f;
+    [SerializeField] float attackCooldown = 1f;
+
+    GameObject attackArea;
+
     Rigidbody2D rb;
     bool isDashing;
+    bool isAttacking;
+    float lastAttackTime = -999f;
     float lastDashTime = -999f;
 
     Vector2 moveDirection;
@@ -31,6 +39,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
         currentHP = maxHP;
         HealthChanged?.Invoke(currentHP, maxHP);
+        attackArea = transform.GetChild(0).gameObject;
     }
 
     void Update()
@@ -47,6 +56,10 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         // Dash trigger
         if (!isDashing && Time.time >= lastDashTime + dashCooldown && Input.GetKeyDown(KeyCode.LeftShift))
             StartCoroutine(Dash());
+
+        if (!isAttacking && Time.time >= lastAttackTime + attackCooldown && Input.GetMouseButtonDown(0))
+            StartCoroutine(Attack());
+ 
     }
 
     void FixedUpdate()
@@ -99,6 +112,18 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         currentHP = Mathf.Min(maxHP, currentHP + Mathf.Abs(amount));
         if (currentHP != prev)
             HealthChanged?.Invoke(currentHP, maxHP);
+    }
+
+    IEnumerator Attack()
+    {
+        lastAttackTime = Time.time;
+        isAttacking = true;
+        attackArea.SetActive(isAttacking);
+
+        yield return new WaitForSeconds(attackDuration);
+
+        isAttacking = false;
+        attackArea.SetActive(isAttacking);
     }
 }
 

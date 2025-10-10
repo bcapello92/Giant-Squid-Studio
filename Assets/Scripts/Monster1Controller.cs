@@ -166,6 +166,7 @@ public class BlobMonsterController : MonoBehaviour, IDamageable
         {
             anim.SetTrigger(HitTrig);
         }
+        Debug.Log(currentHP);
     }
 
     void OnDrawGizmosSelected()
