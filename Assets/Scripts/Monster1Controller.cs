@@ -1,182 +1,115 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-
-
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Animator))]
 public class BlobMonsterController : MonoBehaviour, IDamageable
-
 {
-    [Header("Target")]
-    public Transform target;
-    public string targetTag = "Player";
+    [Header("Health")]
+    public int maxHP = 50;
+    [SerializeField] int currentHP;
 
-    [Header("Movement (slow blob)")]
-    public float moveSpeed = 1.25f;
-    public float detectionRange = 6f;
-    public float stopDistance = 1.2f;
-    public float acceleration = 12f;
+    [Header("Death")]
+    public float deathDespawnDelay = 1.5f;     // fallback if you don't use an animation event
+    public bool disablePhysicsOnDeath = true;  // turn off Rigidbody2D/colliders so it stops “bugging out”
+    public Behaviour[] componentsToDisableOnDeath; // e.g., your AI/movement scripts
 
-    [Header("Shock AoE (burst)")]
-    public float shockRange = 1.0f;     // radius around blob
-    public int shockDamage = 8;
-    public float shockKnockback = 2.5f;
-    public float windupTime = 0.25f;    // pause before burst
-    public float attackCooldown = 1.0f; // time between bursts
-    public LayerMask targetLayers;      // set to Player only in Inspector
-
-    [Header("Animator Params (hashed)")]
-    static readonly int SpeedHash = Animator.StringToHash("Speed");
-    static readonly int AttackTrig = Animator.StringToHash("Attack");
+    // Animator hashes (match your Animator)
     static readonly int HitTrig = Animator.StringToHash("Hit");
     static readonly int DeathTrig = Animator.StringToHash("Death");
 
-    [Header("Debug")]
-    public bool debugLogs = false;
-
     Rigidbody2D rb;
     Animator anim;
-    bool isAttacking;
-    float lastAttackTime = -999f;
+    Collider2D[] cols;
 
-    // (Optional) blob HP — implement if you want it damageable
-    [Header("Health (optional)")]
-    public int maxHP = 30;
-    [SerializeField] int currentHP = 30;
-    bool isDead = false;
+    bool isDead;
+    bool attackWindowOpen;             // if you were using an attack window
+    readonly HashSet<Collider2D> hitThisSwing = new(); // if you were tracking hits per swing
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        cols = GetComponentsInChildren<Collider2D>(includeInactive: true);
 
-        // Top-down physics
-        rb.gravityScale = 0f;
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-        if (!target)
-        {
-            var go = GameObject.FindGameObjectWithTag(targetTag);
-            if (go) target = go.transform;
-        }
-
-        // Ensure mask includes Player; if unset, default to Player or Everything (for testing)
-        if (targetLayers.value == 0)
-        {
-            int playerLayer = LayerMask.NameToLayer("Player");
-            if (playerLayer >= 0) targetLayers = 1 << playerLayer;
-            else targetLayers = ~0; // Everything (test only)
-        }
-
-        if (currentHP <= 0) currentHP = maxHP;
+        currentHP = Mathf.Max(1, maxHP);
     }
 
-    void FixedUpdate()
-    {
-        if (isDead || !target) return;
-
-        Vector2 toTarget = (Vector2)(target.position - transform.position);
-        float dist = toTarget.magnitude;
-
-        // Move (slow) until stopDistance, unless attacking
-        Vector2 desiredVel = Vector2.zero;
-        if (!isAttacking && dist <= detectionRange && dist > stopDistance)
-            desiredVel = toTarget.normalized * moveSpeed;
-
-        Vector2 vel = rb.linearVelocity;
-        Vector2 step = Vector2.ClampMagnitude(desiredVel - vel, acceleration * Time.fixedDeltaTime);
-        rb.linearVelocity = vel + step;
-
-        anim.SetFloat(SpeedHash, rb.linearVelocity.magnitude);
-
-        // Trigger attack if close enough and off cooldown
-        if (!isAttacking && dist <= Mathf.Max(shockRange, stopDistance) && Time.time >= lastAttackTime + attackCooldown)
-            StartCoroutine(AttackRoutine());
-    }
-
-    IEnumerator AttackRoutine()
-    {
-        isAttacking = true;
-
-        // Play attack animation
-        anim.ResetTrigger(AttackTrig);
-        anim.SetTrigger(AttackTrig);
-
-        // Wind-up (pause)
-        Vector2 preVel = rb.linearVelocity;
-        rb.linearVelocity = Vector2.zero;
-        yield return new WaitForSeconds(windupTime);
-
-        // Single AoE burst
-        DoShockBurst();
-
-        // Cooldown
-        lastAttackTime = Time.time;
-        isAttacking = false;
-    }
-
-    void DoShockBurst()
-    {
-        Vector2 center = transform.position;
-
-        // Overlap only on targetLayers (set to Player in Inspector)
-        var hits = Physics2D.OverlapCircleAll(center, shockRange, targetLayers);
-
-        if (debugLogs) Debug.Log($"[Blob] Shock burst @ {center}, r={shockRange}, hits={hits.Length}");
-
-        foreach (var h in hits)
-        {
-            if (!h) continue;
-
-            // Extra safeguard: only damage objects tagged Player (optional)
-            if (!h.CompareTag(targetTag)) continue;
-
-            var dmg = h.GetComponentInParent<IDamageable>() ?? h.GetComponentInChildren<IDamageable>();
-            if (dmg != null)
-            {
-                dmg.TakeDamage(shockDamage);
-
-                // Small outward knockback
-                var prb = h.attachedRigidbody;
-                if (prb)
-                {
-                    Vector2 dir = ((Vector2)h.transform.position - center).normalized;
-                    prb.AddForce(dir * shockKnockback, ForceMode2D.Impulse);
-                }
-
-                if (debugLogs) Debug.Log($"[Blob]  -> damaged {h.name}");
-            }
-        }
-    }
-
-    // Optional: make blob damageable
+    // ========= IDamageable =========
     public void TakeDamage(int amount)
     {
         if (isDead) return;
+
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+
         if (currentHP == 0)
         {
-            isDead = true;
-            rb.linearVelocity = Vector2.zero;
-            anim.SetTrigger(DeathTrig);
+            Die();
         }
         else
         {
-            anim.SetTrigger(HitTrig);
+            if (anim) anim.SetTrigger(HitTrig);
         }
     }
 
-    void OnDrawGizmosSelected()
+    // ========= Death flow =========
+    void Die()
     {
-        Gizmos.color = new Color(1f, 0.95f, 0f, 0.25f);
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        if (isDead) return;
+        isDead = true;
 
-        Gizmos.color = new Color(0.5f, 0.8f, 1f, 0.25f);
-        Gizmos.DrawWireSphere(transform.position, stopDistance);
+        // Stop any attack windows / per-swing tracking (if you used them)
+        attackWindowOpen = false;
+        hitThisSwing.Clear();
 
-        Gizmos.color = new Color(1f, 0f, 0f, 0.35f);
-        Gizmos.DrawWireSphere(transform.position, shockRange);
+        // Stop movement/AI immediately
+        if (rb)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            if (disablePhysicsOnDeath) rb.simulated = false; // remove from physics sim so it doesn't jitter
+        }
+
+        // Disable any behaviour scripts that might keep updating (AI, chaser, hazard emitters, etc.)
+        if (componentsToDisableOnDeath != null)
+        {
+            for (int i = 0; i < componentsToDisableOnDeath.Length; i++)
+            {
+                if (componentsToDisableOnDeath[i]) componentsToDisableOnDeath[i].enabled = false;
+            }
+        }
+
+        // Optionally disable colliders so the corpse doesn't block or receive hits
+        if (cols != null)
+        {
+            foreach (var c in cols)
+            {
+                if (!c) continue;
+                c.enabled = false;
+            }
+        }
+
+        // Trigger death animation
+        if (anim) anim.SetTrigger(DeathTrig);
+
+        // EITHER: add an Animation Event on the last frame of the Death clip that calls OnDeathAnimationComplete()
+        // OR: fall back to a timed despawn:
+        StartCoroutine(DespawnAfterDelay());
     }
+
+    IEnumerator DespawnAfterDelay()
+    {
+        yield return new WaitForSeconds(deathDespawnDelay);
+        Destroy(gameObject);
+    }
+
+    // Call this from the Death animation via Animation Event at the end
+    public void OnDeathAnimationComplete()
+    {
+        Destroy(gameObject);
+    }
+
+    // If you had attack events before, keep them safe-guarded:
+    public void StartAttackWindow() { if (!isDead) { attackWindowOpen = true; hitThisSwing.Clear(); } }
+    public void EndAttackWindow() { attackWindowOpen = false; hitThisSwing.Clear(); }
+    public void DealDamageEvent() { if (!isDead) { /* do your overlap damage here */ } }
 }
