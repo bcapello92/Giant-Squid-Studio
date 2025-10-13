@@ -8,91 +8,156 @@ public class BlobMonsterController : MonoBehaviour, IDamageable
     public int maxHP = 50;
     [SerializeField] int currentHP;
 
-    [Header("Death")]
-    public float deathDespawnDelay = 1.5f;     // fallback if you don't use an animation event
-    public bool disablePhysicsOnDeath = true;  // turn off Rigidbody2D/colliders so it stops “bugging out”
-    public Behaviour[] componentsToDisableOnDeath; // e.g., your AI/movement scripts
+    [Header("Targeting")]
+    public string playerTag = "Player";
+    public LayerMask playerLayers;        // set to Player layer in Inspector
+    public float detectionRange = 8f;     // start chasing if within this
+    public float stopDistance = 1.2f;     // stop this far from player
 
-    // Animator hashes (match your Animator)
+    [Header("Shock Attack")]
+    public float shockRadius = 1.4f;
+    public int shockDamage = 10;
+    public float shockCooldown = 1.0f;
+    public float shockKnockback = 4f;
+
+    [Header("Movement")]
+    public float moveSpeed = 2.2f;
+    public float acceleration = 12f;
+
+    [Header("Death")]
+    public float deathDespawnDelay = 1.5f;
+    public bool disablePhysicsOnDeath = true;
+    public Behaviour[] componentsToDisableOnDeath;
+
+    // Animator hashes (adjust to your controller)
+    static readonly int MoveSpeedHash = Animator.StringToHash("Speed");
+    static readonly int AttackTrig = Animator.StringToHash("Attack");
     static readonly int HitTrig = Animator.StringToHash("Hit");
     static readonly int DeathTrig = Animator.StringToHash("Death");
 
     Rigidbody2D rb;
     Animator anim;
     Collider2D[] cols;
+    Transform player;
 
     bool isDead;
-    bool attackWindowOpen;             // if you were using an attack window
-    readonly HashSet<Collider2D> hitThisSwing = new(); // if you were tracking hits per swing
+    float lastShockTime = -999f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        cols = GetComponentsInChildren<Collider2D>(includeInactive: true);
+        cols = GetComponentsInChildren<Collider2D>(true);
 
         currentHP = Mathf.Max(1, maxHP);
+
+        // Best-effort: if you forgot to set playerLayers, include "Player" layer
+        if (playerLayers.value == 0)
+        {
+            int lyr = LayerMask.NameToLayer("Player");
+            if (lyr >= 0) playerLayers |= (1 << lyr);
+        }
     }
 
-    // ========= IDamageable =========
-    public void TakeDamage(int amount)
+    void OnEnable()
+    {
+        // Acquire target by tag if not assigned
+        if (!player)
+        {
+            var go = GameObject.FindGameObjectWithTag(playerTag);
+            if (go) player = go.transform;
+        }
+
+        // Debug sanity
+        if (!player)
+            Debug.LogWarning("[Blob] No player found with tag 'Player'. Assign tag or set player manually.");
+    }
+
+    void FixedUpdate()
+    {
+        if (isDead || !player) return;
+
+        Vector2 toPlayer = (Vector2)(player.position - transform.position);
+        float dist = toPlayer.magnitude;
+
+        // --- Movement / Chase ---
+        Vector2 desiredVel = Vector2.zero;
+        if (dist <= detectionRange && dist > stopDistance)
+        {
+            desiredVel = toPlayer.normalized * moveSpeed;
+        }
+
+        Vector2 vel = rb.linearVelocity;
+        Vector2 step = Vector2.ClampMagnitude(desiredVel - vel, acceleration * Time.fixedDeltaTime);
+        rb.linearVelocity = vel + step;
+
+        // drive locomotion param if you use it
+        if (anim) anim.SetFloat(MoveSpeedHash, rb.linearVelocity.magnitude);
+
+        // --- Attack gating ---
+        if (dist <= stopDistance + 0.1f && Time.time >= lastShockTime + shockCooldown)
+        {
+            lastShockTime = Time.time;
+            if (anim) anim.SetTrigger(AttackTrig);
+            // If you don't use an animation event, call ShockNow() directly:
+            // ShockNow();
+        }
+    }
+
+    // Call this from the Attack animation via Animation Event (or call directly above)
+    public void ShockNow()
     {
         if (isDead) return;
 
-        currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+        Vector2 center = transform.position;
+        var hits = Physics2D.OverlapCircleAll(center, shockRadius, playerLayers);
 
-        if (currentHP == 0)
+        // Debug prints to confirm registration
+        // Debug.Log($"[Blob] Shock overlap count: {hits.Length}");
+
+        foreach (var h in hits)
         {
-            Die();
-        }
-        else
-        {
-            if (anim) anim.SetTrigger(HitTrig);
+            if (!h) continue;
+
+            var dmg = h.GetComponentInParent<IDamageable>() ?? h.GetComponentInChildren<IDamageable>();
+            if (dmg != null)
+            {
+                dmg.TakeDamage(shockDamage);
+
+                var prb = h.attachedRigidbody;
+                if (prb) prb.AddForce((h.transform.position - transform.position).normalized * shockKnockback, ForceMode2D.Impulse);
+            }
         }
     }
 
-    // ========= Death flow =========
+    // ===== Health / Death =====
+    public void TakeDamage(int amount)
+    {
+        if (isDead) return;
+        currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+        if (currentHP == 0) Die();
+        else if (anim) anim.SetTrigger(HitTrig);
+    }
+
     void Die()
     {
         if (isDead) return;
         isDead = true;
 
-        // Stop any attack windows / per-swing tracking (if you used them)
-        attackWindowOpen = false;
-        hitThisSwing.Clear();
-
-        // Stop movement/AI immediately
         if (rb)
         {
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
-            if (disablePhysicsOnDeath) rb.simulated = false; // remove from physics sim so it doesn't jitter
+            if (disablePhysicsOnDeath) rb.simulated = false;
         }
 
-        // Disable any behaviour scripts that might keep updating (AI, chaser, hazard emitters, etc.)
         if (componentsToDisableOnDeath != null)
-        {
-            for (int i = 0; i < componentsToDisableOnDeath.Length; i++)
-            {
-                if (componentsToDisableOnDeath[i]) componentsToDisableOnDeath[i].enabled = false;
-            }
-        }
+            foreach (var b in componentsToDisableOnDeath) if (b) b.enabled = false;
 
-        // Optionally disable colliders so the corpse doesn't block or receive hits
         if (cols != null)
-        {
-            foreach (var c in cols)
-            {
-                if (!c) continue;
-                c.enabled = false;
-            }
-        }
+            foreach (var c in cols) if (c) c.enabled = false;
 
-        // Trigger death animation
         if (anim) anim.SetTrigger(DeathTrig);
-
-        // EITHER: add an Animation Event on the last frame of the Death clip that calls OnDeathAnimationComplete()
-        // OR: fall back to a timed despawn:
         StartCoroutine(DespawnAfterDelay());
     }
 
@@ -102,14 +167,14 @@ public class BlobMonsterController : MonoBehaviour, IDamageable
         Destroy(gameObject);
     }
 
-    // Call this from the Death animation via Animation Event at the end
-    public void OnDeathAnimationComplete()
-    {
-        Destroy(gameObject);
-    }
+    public void OnDeathAnimationComplete() { Destroy(gameObject); }
 
-    // If you had attack events before, keep them safe-guarded:
-    public void StartAttackWindow() { if (!isDead) { attackWindowOpen = true; hitThisSwing.Clear(); } }
-    public void EndAttackWindow() { attackWindowOpen = false; hitThisSwing.Clear(); }
-    public void DealDamageEvent() { if (!isDead) { /* do your overlap damage here */ } }
+    void OnDrawGizmosSelected()
+    {
+        // visualize detection & shock
+        Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.2f);
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.color = new Color(1f, 0.3f, 0.1f, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, shockRadius);
+    }
 }
