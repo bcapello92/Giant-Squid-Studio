@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 6f1aad131b7cc234aafed683f7aab474
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2208468446784607483
+    second: SpearJab-Sheet_0
+  - first:
+      213: 4957500010160643475
+    second: SpearJab-Sheet_1
+  - first:
+      213: 2831599594208470333
+    second: SpearJab-Sheet_2
+  - first:
+      213: 4763944108741010067
+    second: SpearJab-Sheet_3
+  - first:
+      213: 6647131572654378732
+    second: SpearJab-Sheet_4
+  - first:
+      213: -8471891984768873532
+    second: SpearJab-Sheet_5
+  - first:
+      213: 7106001480431694452
+    second: SpearJab-Sheet_6
+  - first:
+      213: -2351020074254690694
+    second: SpearJab-Sheet_7
+  - first:
+      213: -5396121232259819989
+    second: SpearJab-Sheet_8
+  - first:
+      213: -3927139087231960034
+    second: SpearJab-Sheet_9
+  - first:
+      213: -1600121112657541637
+    second: SpearJab-Sheet_10
+  - first:
+      213: -2589920362467378388
+    second: SpearJab-Sheet_11
+  - first:
+      213: -7023822400595161638
+    second: SpearJab-Sheet_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SpearJab-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 23
+        width: 221
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf45144f95e06ae10800000000000000
+      internalID: 2208468446784607483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 23
+        width: 221
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39dde974ef39cc440800000000000000
+      internalID: 4957500010160643475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 41
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d35afe614dcdb4720800000000000000
+      internalID: 2831599594208470333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 1329
+        y: 41
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 392a25b2dedec1240800000000000000
+      internalID: 4763944108741010067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 1690
+        y: 38
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cee095382fa5f3c50800000000000000
+      internalID: 6647131572654378732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 2057
+        y: 29
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cb4f58302bcd6a80800000000000000
+      internalID: -8471891984768873532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 2409
+        y: 20
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 472f78e72b69d9260800000000000000
+      internalID: 7106001480431694452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 2846
+        y: 17
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a769c3ed2bf7f5fd0800000000000000
+      internalID: -2351020074254690694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 3218
+        y: 20
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b26d53244502d15b0800000000000000
+      internalID: -5396121232259819989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 3647
+        y: 17
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1cbcf99ecfff79c0800000000000000
+      internalID: -3927139087231960034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 4029
+        y: 17
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf5c17a635a3bc9e0800000000000000
+      internalID: -1600121112657541637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 4447
+        y: 20
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2bb49ef621ce0cd0800000000000000
+      internalID: -2589920362467378388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpearJab-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 4847
+        y: 20
+        width: 215
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: add081f8dbe568e90800000000000000
+      internalID: -7023822400595161638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SpearJab-Sheet_0: 2208468446784607483
+      SpearJab-Sheet_1: 4957500010160643475
+      SpearJab-Sheet_10: -1600121112657541637
+      SpearJab-Sheet_11: -2589920362467378388
+      SpearJab-Sheet_12: -7023822400595161638
+      SpearJab-Sheet_2: 2831599594208470333
+      SpearJab-Sheet_3: 4763944108741010067
+      SpearJab-Sheet_4: 6647131572654378732
+      SpearJab-Sheet_5: -8471891984768873532
+      SpearJab-Sheet_6: 7106001480431694452
+      SpearJab-Sheet_7: -2351020074254690694
+      SpearJab-Sheet_8: -5396121232259819989
+      SpearJab-Sheet_9: -3927139087231960034
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
