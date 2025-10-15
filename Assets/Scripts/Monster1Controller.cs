@@ -135,8 +135,17 @@ public class BlobMonsterController : MonoBehaviour, IDamageable
     {
         if (isDead) return;
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
-        if (currentHP == 0) Die();
-        else if (anim) anim.SetTrigger(HitTrig);
+        if (currentHP == 0)
+        {
+            isDead = true;
+            rb.linearVelocity = Vector2.zero;
+            anim.SetTrigger(DeathTrig);
+        }
+        else
+        {
+            anim.SetTrigger(HitTrig);
+        }
+        Debug.Log(currentHP);
     }
 
     void Die()
