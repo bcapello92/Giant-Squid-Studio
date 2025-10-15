@@ -1,46 +1,46 @@
 fileFormatVersion: 2
-guid: 6f1aad131b7cc234aafed683f7aab474
+guid: e160969170508c04a91ee9592ceadfb7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2208468446784607483
-    second: SpearJab-Sheet_0
+      213: -356914469870021659
+    second: SpearJab-Sheet 2_0
   - first:
-      213: 4957500010160643475
-    second: SpearJab-Sheet_1
+      213: 8448453719580247162
+    second: SpearJab-Sheet 2_1
   - first:
-      213: 2831599594208470333
-    second: SpearJab-Sheet_2
+      213: -5332592667960847363
+    second: SpearJab-Sheet 2_2
   - first:
-      213: 4763944108741010067
-    second: SpearJab-Sheet_3
+      213: 1238667404242572206
+    second: SpearJab-Sheet 2_3
   - first:
-      213: 6647131572654378732
-    second: SpearJab-Sheet_4
+      213: -2987560679877797889
+    second: SpearJab-Sheet 2_4
   - first:
-      213: -8471891984768873532
-    second: SpearJab-Sheet_5
+      213: -2833945666909587598
+    second: SpearJab-Sheet 2_5
   - first:
-      213: 7106001480431694452
-    second: SpearJab-Sheet_6
+      213: 2942035149753019792
+    second: SpearJab-Sheet 2_6
   - first:
-      213: -2351020074254690694
-    second: SpearJab-Sheet_7
+      213: -7407085189545439460
+    second: SpearJab-Sheet 2_7
   - first:
-      213: -5396121232259819989
-    second: SpearJab-Sheet_8
+      213: -1340371653523979900
+    second: SpearJab-Sheet 2_8
   - first:
-      213: -3927139087231960034
-    second: SpearJab-Sheet_9
+      213: -8128535564061521
+    second: SpearJab-Sheet 2_9
   - first:
-      213: -1600121112657541637
-    second: SpearJab-Sheet_10
+      213: 4279004708739829071
+    second: SpearJab-Sheet 2_10
   - first:
-      213: -2589920362467378388
-    second: SpearJab-Sheet_11
+      213: -1246695698273283078
+    second: SpearJab-Sheet 2_11
   - first:
-      213: -7023822400595161638
-    second: SpearJab-Sheet_12
+      213: 7843763127932855719
+    second: SpearJab-Sheet 2_12
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SpearJab-Sheet_0
+      name: SpearJab-Sheet 2_0
       rect:
         serializedVersion: 2
         x: 18
@@ -151,14 +151,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bf45144f95e06ae10800000000000000
-      internalID: 2208468446784607483
+      spriteID: 5e353304e2cfb0bf0800000000000000
+      internalID: -356914469870021659
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_1
+      name: SpearJab-Sheet 2_1
       rect:
         serializedVersion: 2
         x: 418
@@ -173,14 +173,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 39dde974ef39cc440800000000000000
-      internalID: 4957500010160643475
+      spriteID: a7488e865efee3570800000000000000
+      internalID: 8448453719580247162
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_2
+      name: SpearJab-Sheet 2_2
       rect:
         serializedVersion: 2
         x: 881
@@ -195,14 +195,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d35afe614dcdb4720800000000000000
-      internalID: 2831599594208470333
+      spriteID: df35756c833def5b0800000000000000
+      internalID: -5332592667960847363
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_3
+      name: SpearJab-Sheet 2_3
       rect:
         serializedVersion: 2
         x: 1329
@@ -217,14 +217,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 392a25b2dedec1240800000000000000
-      internalID: 4763944108741010067
+      spriteID: ea3dbb00171a03110800000000000000
+      internalID: 1238667404242572206
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_4
+      name: SpearJab-Sheet 2_4
       rect:
         serializedVersion: 2
         x: 1690
@@ -239,14 +239,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cee095382fa5f3c50800000000000000
-      internalID: 6647131572654378732
+      spriteID: ff795f2f36d0a86d0800000000000000
+      internalID: -2987560679877797889
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_5
+      name: SpearJab-Sheet 2_5
       rect:
         serializedVersion: 2
         x: 2057
@@ -261,14 +261,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4cb4f58302bcd6a80800000000000000
-      internalID: -8471891984768873532
+      spriteID: 277b81b4e6dcba8d0800000000000000
+      internalID: -2833945666909587598
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_6
+      name: SpearJab-Sheet 2_6
       rect:
         serializedVersion: 2
         x: 2409
@@ -283,14 +283,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 472f78e72b69d9260800000000000000
-      internalID: 7106001480431694452
+      spriteID: 09dedb1916534d820800000000000000
+      internalID: 2942035149753019792
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_7
+      name: SpearJab-Sheet 2_7
       rect:
         serializedVersion: 2
         x: 2846
@@ -305,14 +305,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a769c3ed2bf7f5fd0800000000000000
-      internalID: -2351020074254690694
+      spriteID: c1f4618b34fb43990800000000000000
+      internalID: -7407085189545439460
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_8
+      name: SpearJab-Sheet 2_8
       rect:
         serializedVersion: 2
         x: 3218
@@ -327,14 +327,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b26d53244502d15b0800000000000000
-      internalID: -5396121232259819989
+      spriteID: 48143bc251b066de0800000000000000
+      internalID: -1340371653523979900
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_9
+      name: SpearJab-Sheet 2_9
       rect:
         serializedVersion: 2
         x: 3647
@@ -349,14 +349,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e1cbcf99ecfff79c0800000000000000
-      internalID: -3927139087231960034
+      spriteID: fa4f825d32f13eff0800000000000000
+      internalID: -8128535564061521
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_10
+      name: SpearJab-Sheet 2_10
       rect:
         serializedVersion: 2
         x: 4029
@@ -371,14 +371,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bf5c17a635a3bc9e0800000000000000
-      internalID: -1600121112657541637
+      spriteID: f4d49a88c14126b30800000000000000
+      internalID: 4279004708739829071
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_11
+      name: SpearJab-Sheet 2_11
       rect:
         serializedVersion: 2
         x: 4447
@@ -393,14 +393,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c2bb49ef621ce0cd0800000000000000
-      internalID: -2589920362467378388
+      spriteID: af3d9612ed8d2bee0800000000000000
+      internalID: -1246695698273283078
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpearJab-Sheet_12
+      name: SpearJab-Sheet 2_12
       rect:
         serializedVersion: 2
         x: 4847
@@ -415,8 +415,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: add081f8dbe568e90800000000000000
-      internalID: -7023822400595161638
+      spriteID: 7a5aebeb105aadc60800000000000000
+      internalID: 7843763127932855719
       vertices: []
       indices: 
       edges: []
@@ -435,19 +435,19 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SpearJab-Sheet_0: 2208468446784607483
-      SpearJab-Sheet_1: 4957500010160643475
-      SpearJab-Sheet_10: -1600121112657541637
-      SpearJab-Sheet_11: -2589920362467378388
-      SpearJab-Sheet_12: -7023822400595161638
-      SpearJab-Sheet_2: 2831599594208470333
-      SpearJab-Sheet_3: 4763944108741010067
-      SpearJab-Sheet_4: 6647131572654378732
-      SpearJab-Sheet_5: -8471891984768873532
-      SpearJab-Sheet_6: 7106001480431694452
-      SpearJab-Sheet_7: -2351020074254690694
-      SpearJab-Sheet_8: -5396121232259819989
-      SpearJab-Sheet_9: -3927139087231960034
+      SpearJab-Sheet 2_0: -356914469870021659
+      SpearJab-Sheet 2_1: 8448453719580247162
+      SpearJab-Sheet 2_10: 4279004708739829071
+      SpearJab-Sheet 2_11: -1246695698273283078
+      SpearJab-Sheet 2_12: 7843763127932855719
+      SpearJab-Sheet 2_2: -5332592667960847363
+      SpearJab-Sheet 2_3: 1238667404242572206
+      SpearJab-Sheet 2_4: -2987560679877797889
+      SpearJab-Sheet 2_5: -2833945666909587598
+      SpearJab-Sheet 2_6: 2942035149753019792
+      SpearJab-Sheet 2_7: -7407085189545439460
+      SpearJab-Sheet 2_8: -1340371653523979900
+      SpearJab-Sheet 2_9: -8128535564061521
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,45 +1,30 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class CharacterCombat : MonoBehaviour
 {
-    [SerializeField] Transform weaponMount;     // drag your hand mount
-    [SerializeField] WeaponDriver equippedWeapon; // drag an instance or prefab
+    [SerializeField] Transform weaponMount;        // assign a child transform (hand)
+    [SerializeField] WeaponDriver weaponPrefab;    // drag your weapon prefab here
+    WeaponDriver weapon;
 
     void Start()
     {
-        if (!weaponMount) weaponMount = transform; // fallback
+        if (!weaponMount) weaponMount = transform;
+        // Instantiate if you dragged a prefab
+        weapon = weaponPrefab && !weaponPrefab.gameObject.scene.IsValid()
+            ? Instantiate(weaponPrefab, weaponMount)
+            : weaponPrefab;
 
-        if (equippedWeapon != null)
+        if (weapon)
         {
-            // If you dragged a prefab, instantiate it
-            if (!equippedWeapon.gameObject.scene.IsValid())
-            {
-                equippedWeapon = Instantiate(equippedWeapon, weaponMount);
-            }
-            equippedWeapon.AttachTo(weaponMount, gameObject);
+            weapon.AttachTo(weaponMount, gameObject);
             Debug.Log("[Combat] Weapon attached.");
         }
-        else
-        {
-            Debug.LogWarning("[Combat] No weapon assigned!");
-        }
+        else Debug.LogWarning("[Combat] No weapon assigned.");
     }
 
     void Update()
     {
-        // Optional: ignore clicks over UI
-        if (EventSystem.current && EventSystem.current.IsPointerOverGameObject())
-            return;
-
         if (Input.GetMouseButtonDown(0))
-        {
-            if (equippedWeapon != null)
-            {
-                Debug.Log("[Combat] Click → PlayAttack()");
-                equippedWeapon.PlayAttack();
-            }
-            else Debug.LogWarning("[Combat] No weapon to attack with.");
-        }
+            weapon?.PlayAttack();
     }
 }

@@ -233,8 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2efc11c1e98b0d40baf250d3e4d4d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDriver
-  attackArea: {fileID: 0}
-  sr: {fileID: 0}
-  anim: {fileID: 0}
   attackTrigger: Attack
+  animator: {fileID: 9098402194433001562}
+  attackArea: {fileID: 2949015054305945216}
   autoDisableHitboxDelay: 0

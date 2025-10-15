@@ -4,7 +4,7 @@ using UnityEngine;
 public class WeaponDriver : MonoBehaviour
 {
     [Header("Animator")]
-    public string attackTrigger = "Attack";   // must match Animator parameter
+    public string attackTrigger = "jab";   // must match Animator parameter
     public Animator animator;                 // auto-filled in Awake
 
     [Header("Hitbox (optional)")]
@@ -31,15 +31,14 @@ public class WeaponDriver : MonoBehaviour
         if (attackArea) attackArea.owner = ownerGO;
     }
 
-    public void PlayAttack()
+   
+        public void PlayAttack()
     {
-        if (!animator)
-        {
-            Debug.LogError("[Weapon] PlayAttack() but no Animator.");
-            return;
-        }
+        if (!animator) { Debug.LogError("[Weapon] No Animator."); return; }
+        bool hasParam = false;
+        foreach (var p in animator.parameters) if (p.name == attackTrigger && p.type == AnimatorControllerParameterType.Trigger) { hasParam = true; break; }
+        if (!hasParam) { Debug.LogError($"[Weapon] Animator missing Trigger '{attackTrigger}'."); return; }
 
-        // Defensive: clear then set trigger
         animator.ResetTrigger(attackTrigger);
         animator.SetTrigger(attackTrigger);
         if (animator.speed == 0f) animator.speed = 1f;
@@ -47,8 +46,10 @@ public class WeaponDriver : MonoBehaviour
         Debug.Log($"[Weapon] Triggered '{attackTrigger}' on {animator.runtimeAnimatorController?.name}");
     }
 
-    // ---- Animation Events (optional but recommended) ----
-    public void StartSwing()
+
+
+// ---- Animation Events (optional but recommended) ----
+public void StartSwing()
     {
         if (!attackArea) return;
         attackArea.gameObject.SetActive(true);
