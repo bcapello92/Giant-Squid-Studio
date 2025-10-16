@@ -188,8 +188,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_LinearDamping: 1
+  m_AngularDamping: 1
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -214,23 +214,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e6ef3d634932d3419e9eea835dc369c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster1Controller
-  target: {fileID: 0}
-  targetTag: Player
-  moveSpeed: 2
-  detectionRange: 6
-  stopDistance: 0.4
-  acceleration: 12
-  shockRange: 1
-  shockDamage: 8
-  shockKnockback: 2.5
-  windupTime: 0.25
-  attackCooldown: 0.8
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  debugLogs: 0
   maxHP: 30
   currentHP: 0
+  playerTag: Player
+  playerLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  detectionRange: 6
+  stopDistance: 0.4
+  shockRadius: 1.4
+  shockDamage: 8
+  shockCooldown: 1
+  shockKnockback: 2.5
+  moveSpeed: 2
+  acceleration: 12
+  deathDespawnDelay: 1.5
+  disablePhysicsOnDeath: 1
+  componentsToDisableOnDeath: []
 --- !u!58 &5541645150240523091
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: 1df4915e861f26545b0f0121625883ee
+guid: 59bb7d47c8cea014e92622cdca6be09d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 283889582903899514
-    second: BrickBlock_01_0
+      213: -1340736732113520106
+    second: Jar_01_0
   - first:
-      213: 7687431398725980168
-    second: BrickBlock_01_1
+      213: 2052846463407775876
+    second: Jar_01_1
   - first:
-      213: 8444579366157543293
-    second: BrickBlock_01_2
+      213: 1022422823354075021
+    second: Jar_01_2
   - first:
-      213: -5372643907860719528
-    second: BrickBlock_01_3
+      213: -6826057914286406278
+    second: Jar_01_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,113 +109,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BrickBlock_01_0
+      name: Jar_01_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 6
-        width: 401
-        height: 401
+        x: 3
+        y: 11
+        width: 67
+        height: 81
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: -198.5, y: 97.5}
-        - {x: -195.5, y: -105.5}
-        - {x: -1.5, y: -200.5}
-        - {x: 40.5, y: -179.5}
-        - {x: 44.5, y: 20.5}
-        - {x: -160.5, y: 122.5}
-      tessellationDetail: 0
+      physicsShape: []
+      tessellationDetail: -1
       bones: []
-      spriteID: 9a4bd3bc22fc96143912691d919cf76b
-      internalID: 283889582903899514
+      spriteID: 61a3e01bb0fb46de0800000000000000
+      internalID: -1340736732113520106
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickBlock_01_1
+      name: Jar_01_1
       rect:
         serializedVersion: 2
-        x: 425
-        y: 6
-        width: 401
-        height: 401
+        x: 76
+        y: 11
+        width: 67
+        height: 81
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: 197.5, y: -105.5}
-        - {x: -5.5, y: -196.5}
-        - {x: -71.5, y: -165.5}
-        - {x: -57.5, y: 28.5}
-        - {x: 130.5, y: 128.5}
-        - {x: 195.5, y: 98.5}
-      tessellationDetail: 0
+      physicsShape: []
+      tessellationDetail: -1
       bones: []
-      spriteID: fcd44c2bc27688c4fade8c3bad7f8435
-      internalID: 7687431398725980168
+      spriteID: 48066d56bfc2d7c10800000000000000
+      internalID: 2052846463407775876
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickBlock_01_2
+      name: Jar_01_2
       rect:
         serializedVersion: 2
-        x: 842
-        y: 6
-        width: 401
-        height: 401
+        x: 149
+        y: 11
+        width: 67
+        height: 81
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: -198.5, y: 97.5}
-        - {x: -195.5, y: -105.5}
-        - {x: -1.5, y: -200.5}
-        - {x: 40.5, y: -179.5}
-        - {x: 44.5, y: 20.5}
-        - {x: -160.5, y: 122.5}
-      tessellationDetail: 0
+      physicsShape: []
+      tessellationDetail: -1
       bones: []
-      spriteID: 8f743d4ba02109849af664eeac2f473c
-      internalID: 8444579366157543293
+      spriteID: d87854c0420603e00800000000000000
+      internalID: 1022422823354075021
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickBlock_01_3
+      name: Jar_01_3
       rect:
         serializedVersion: 2
-        x: 1259
-        y: 6
-        width: 401
-        height: 401
+        x: 222
+        y: 11
+        width: 67
+        height: 81
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: 197.5, y: -105.5}
-        - {x: -5.5, y: -196.5}
-        - {x: -71.5, y: -165.5}
-        - {x: -57.5, y: 28.5}
-        - {x: 130.5, y: 128.5}
-        - {x: 195.5, y: 98.5}
-      tessellationDetail: 0
+      physicsShape: []
+      tessellationDetail: -1
       bones: []
-      spriteID: 46b24e35d82e79a4d85f407a422c2ff2
-      internalID: -5372643907860719528
+      spriteID: a7507b23e78f441a0800000000000000
+      internalID: -6826057914286406278
       vertices: []
       indices: 
       edges: []
@@ -224,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: adfedb64466a3924aa03d2db5d175ad4
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -232,16 +208,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
-      - key: SpriteEditor.SliceOnImport
-        value: False
+      entries: []
     nameFileIdTable:
-      BrickBlock_01_0: 283889582903899514
-      BrickBlock_01_1: 7687431398725980168
-      BrickBlock_01_2: 8444579366157543293
-      BrickBlock_01_3: -5372643907860719528
+      Jar_01_0: -1340736732113520106
+      Jar_01_1: 2052846463407775876
+      Jar_01_2: 1022422823354075021
+      Jar_01_3: -6826057914286406278
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
