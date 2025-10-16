@@ -20,20 +20,20 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
     [SerializeField] float dashDuration = 0.15f;
     [SerializeField] float dashCooldown = 0.6f;
 
-<<<<<<< HEAD
+
     [Header("Attack")]
     [SerializeField] float attackDuration = 0.5f;
     [SerializeField] float attackCooldown = 1f;
 
     GameObject attackArea;
-=======
+
     [Header("Stun")]
     [SerializeField] float stunDamp = 20f;   // how fast we kill velocity while stunned
 
     public event Action<int, int> HealthChanged; // current, max
     public bool IsStunned { get; private set; }
     float stunUntil;
->>>>>>> Combat-Mechanics
+
 
     Rigidbody2D rb;
     bool isDashing;
@@ -86,7 +86,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
 
     void Update()
     {
-<<<<<<< HEAD
+
         // --- Input ---
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
@@ -100,17 +100,17 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
         if (!isDashing && Time.time >= lastDashTime + dashCooldown && Input.GetKeyDown(KeyCode.LeftShift))
             StartCoroutine(Dash());
             
-=======
+
         // Clear stun when time passes
->>>>>>> Combat-Mechanics
+
         if (IsStunned && Time.time >= stunUntil)
             IsStunned = false;
 
         // --- Input (blocked while stunned) ---
         if (!IsStunned)
         {
-            float moveX = Input.GetAxisRaw("Horizontal");
-            float moveY = Input.GetAxisRaw("Vertical");
+             moveX = Input.GetAxisRaw("Horizontal");
+             moveY = Input.GetAxisRaw("Vertical");
             moveDirection = new Vector2(moveX, moveY).normalized;
 
             if (Camera.main != null)
@@ -191,7 +191,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
             HealthChanged?.Invoke(currentHP, maxHP);
     }
 
-<<<<<<< HEAD
+
     IEnumerator Attack()
     {
         lastAttackTime = Time.time;
@@ -203,7 +203,5 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
         isAttacking = false;
         attackArea.SetActive(isAttacking);
     }
-=======
-  
->>>>>>> Combat-Mechanics
+
 }
