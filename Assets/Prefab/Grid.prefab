@@ -2254,16 +2254,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+<<<<<<< HEAD
     - target: {fileID: 5341973168038796048, guid: 96cad4bd06ec4a4498547b3dbbaf53b7, type: 3}
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+=======
+>>>>>>> Combat-Mechanics
     - target: {fileID: 7113417890982467402, guid: 96cad4bd06ec4a4498547b3dbbaf53b7, type: 3}
       propertyPath: m_Simulated
       value: 1
       objectReference: {fileID: 0}
+<<<<<<< HEAD
     m_RemovedComponents:
     - {fileID: 592811807535259744, guid: 96cad4bd06ec4a4498547b3dbbaf53b7, type: 3}
+=======
+    m_RemovedComponents: []
+>>>>>>> Combat-Mechanics
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
