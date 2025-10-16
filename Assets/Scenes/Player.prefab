@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4207396111269455916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5529246340542791240}
+  m_Layer: 0
+  m_Name: WeaponMount
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5529246340542791240
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4207396111269455916}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.25, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7899845539922549450}
+  m_Father: {fileID: 365226866832241989}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &6807223594092247478
 GameObject:
   m_ObjectHideFlags: 0
@@ -33,7 +65,8 @@ Transform:
   m_LocalPosition: {x: 0.111, y: -1.522, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5529246340542791240}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7349348734199168956
@@ -112,6 +145,7 @@ MonoBehaviour:
   dashSpeed: 10
   dashDuration: 1
   dashCooldown: 0.6
+  stunDamp: 20
 --- !u!50 &7626889515930886275
 Rigidbody2D:
   serializedVersion: 5
@@ -193,3 +227,66 @@ MonoBehaviour:
   dashSpeed: 10
   dashDuration: 1
   dashCooldown: 0.6
+  stunDamp: 20
+--- !u!1001 &5213065897844302617
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5529246340542791240}
+    m_Modifications:
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.9571502
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.102020144
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7360450355562340234, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+      propertyPath: m_Name
+      value: Weapon_Harpoon
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+--- !u!4 &7899845539922549450 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2736328722482198995, guid: c1fd06ddf57499c4db9e2af6c84cd579, type: 3}
+  m_PrefabInstance: {fileID: 5213065897844302617}
+  m_PrefabAsset: {fileID: 0}
