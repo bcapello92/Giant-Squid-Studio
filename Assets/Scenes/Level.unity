@@ -180,6 +180,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7349348734199168956, guid: c024bc016a44f824a82fabf85f061176, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1687625534043054549, guid: ac88cb6a2bd28b84d934c7a529989cb1, type: 3}
+    - target: {fileID: 7349348734199168956, guid: c024bc016a44f824a82fabf85f061176, type: 3}
       propertyPath: m_SortingLayer
       value: 4
       objectReference: {fileID: 0}
