@@ -76,4 +76,9 @@ public void StartSwing()
         attackArea.gameObject.SetActive(false);
         Debug.Log("[Weapon] DealDamageFrame()");
     }
+    public void OnAttackAnimationEnd()
+    {
+        if (!animator) return;
+        animator.CrossFade("idle", .1f, 0, 0f);
+    }
 }
