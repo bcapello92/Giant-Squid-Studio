@@ -53,6 +53,32 @@ public class RoomManager : MonoBehaviour
             e.SetRoomManager(this);
         }
 
+        // 5.5) register + configure wave spawners
+        int difficulty = RunManager.I ? RunManager.I.GetCurrentDifficulty() : 1;
+        var spawners = currentRoomInstance.GetComponentsInChildren<EnemyWaveSpawnerPoisson>(true);
+        foreach (var sp in spawners)
+        {
+            sp.SetDifficulty(difficulty);
+            sp.SetRoomManager(this);
+            sp.BeginSpawning();
+        }
+
+        foreach (var e in enemies)
+        {
+            liveEnemies.Add(e);
+            e.SetRoomManager(this);
+        }
+        difficulty = 1;
+        if (RunManager.I != null)
+            difficulty = RunManager.I.GetCurrentDifficulty();
+
+        spawners = currentRoomInstance.GetComponentsInChildren<EnemyWaveSpawnerPoisson>(true);
+        foreach (var sp in spawners)
+        {
+            sp.SetDifficulty(difficulty);
+            sp.SetRoomManager(this);   // so they can RegisterEnemy() etc
+        }
+
         // 6) move player
         var player = FindObjectOfType<TestPlayerController>();
         if (player != null)
@@ -102,5 +128,14 @@ public class RoomManager : MonoBehaviour
     {
         if (RunManager.I != null)
             RunManager.I.GoToNextRoom();
+    }
+    public void RegisterEnemy(RoomEnemy enemy)
+    {
+        if (enemy == null) return;
+        if (!liveEnemies.Contains(enemy))
+        {
+            liveEnemies.Add(enemy);
+            enemy.SetRoomManager(this);
+        }
     }
 }

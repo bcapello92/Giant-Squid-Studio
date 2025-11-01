@@ -499,6 +499,7 @@ Transform:
   - {fileID: 3784530343569674899}
   - {fileID: 3094718280100635376}
   - {fileID: 1202078292841089430}
+  - {fileID: 4037399862842402370}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &4337761342697544411
@@ -2188,6 +2189,70 @@ TilemapRenderer:
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1 &8115724101141900226
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4037399862842402370}
+  - component: {fileID: 9078459507700411662}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4037399862842402370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115724101141900226}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 11.93465, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5939649642352080922}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9078459507700411662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115724101141900226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25e2a8133a9fb2a47a76f3fd3ad5bb1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyWaveSpawnerPoisson
+  areaMode: 0
+  roomCenter: {fileID: 0}
+  circleRadius: 8
+  rectSize: {x: 16, y: 10}
+  poissonRadius: 2
+  samplesPerPoint: 30
+  maxPoissonPoints: 0
+  avoidLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  overlapPadding: 0.15
+  roomDifficulty: 8
+  wave1BudgetPercent: 0.6
+  timeBetweenWaves: 4
+  enemyPool:
+  - prefab: {fileID: -2253911629886400664, guid: e20f0ad18f929324f959554eb3b02f9d, type: 3}
+    difficultyCost: 1
+    weight: 0
+  logSpawns: 0
+  drawPoissonPoints: 1
 --- !u!1 &8194700952205083153
 GameObject:
   m_ObjectHideFlags: 0

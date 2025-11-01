@@ -458,7 +458,6 @@ MonoBehaviour:
     weight: 0
   logSpawns: 0
   drawPoissonPoints: 1
-  maxSpawnPerWave: 50
 --- !u!1 &797814300
 GameObject:
   m_ObjectHideFlags: 0

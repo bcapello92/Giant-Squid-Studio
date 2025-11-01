@@ -1,5 +1,4 @@
-﻿using UnityEditor.EditorTools;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 public class DoorController : MonoBehaviour

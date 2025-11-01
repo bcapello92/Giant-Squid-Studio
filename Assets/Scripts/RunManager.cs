@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor.EditorTools;
+
 using UnityEngine;
 
 public class RunManager : MonoBehaviour
@@ -7,6 +7,7 @@ public class RunManager : MonoBehaviour
     public static RunManager I { get; private set; }
 
     public RoomSequence roomSequence;   // holds the full pool
+    public int currentRoomIndex = 5;
     List<GameObject> runRooms = new List<GameObject>();
     int currentIndex = 0;
 
@@ -21,7 +22,7 @@ public class RunManager : MonoBehaviour
         I = this;
         DontDestroyOnLoad(gameObject);
     }
-
+    
     void Start()
     {
         StartNewRun();
@@ -60,7 +61,10 @@ public class RunManager : MonoBehaviour
         currentIndex = Mathf.Clamp(currentIndex, 0, runRooms.Count - 1);
         rm.LoadRoom(runRooms[currentIndex]);
     }
-
+    public int GetCurrentDifficulty()
+    {
+        return currentRoomIndex + 1;
+    }
     public void GoToNextRoom()
     {
         currentIndex++;

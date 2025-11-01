@@ -28,6 +28,7 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     [Range(10, 60)] public int samplesPerPoint = 30;
     [Tooltip("Maximum points to generate (0 = auto)")]
     public int maxPoissonPoints = 0;
+    bool _hasStarted = false;
 
     [Header("Physics Avoidance")]
     [Tooltip("Layers to avoid when placing (e.g., Walls | Enemy | Player).")]
@@ -46,6 +47,10 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     [Header("Debug")]
     public bool logSpawns = false;
     public bool drawPoissonPoints = true;
+    RoomManager roomManager;
+    [Header("Safety")]
+    [Tooltip("Hard cap per wave to avoid runaway spawns, even if budget is huge.")]
+    public int maxSpawnPerWave = 50;
 
     // --- runtime
     List<Vector2> spawnPoints;
@@ -56,10 +61,7 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     {
         if (!roomCenter) roomCenter = transform;
 
-        // 1) Build weighted pool once
         weightedPool = BuildWeightedList(enemyPool);
-
-        // 2) Generate Poisson points in local space, then translate to world
         spawnPoints = GenerateSpawnField();
 
         if (spawnPoints.Count == 0)
@@ -67,7 +69,6 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
             Debug.LogWarning("[SpawnerPoisson] No spawn points generated. Falling back to room center.");
             spawnPoints.Add(roomCenter.position);
         }
-
         // 3) Run the two waves
         StartCoroutine(RunTwoWaves());
     }
@@ -83,32 +84,90 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
         yield return new WaitForSeconds(timeBetweenWaves);
         SpawnWave(wave2, 2);
     }
+    public void BeginSpawning()
+    {
+        if (_hasStarted) return;     // <-- guard!
+        _hasStarted = true;
+        StartCoroutine(RunTwoWaves());
+    }
 
+    public void SetDifficulty(int difficulty)
+    {
+        roomDifficulty = Mathf.Max(1, difficulty);
+    }
+
+    
+    public void SetRoomManager(RoomManager rm)
+    {
+        roomManager = rm;
+    }
     void SpawnWave(int budget, int waveIndex)
     {
+        if (budget <= 0) return;
+        if (enemyPool == null || enemyPool.Count == 0) return;
+
         int remaining = budget;
-        int safety = 1000;
+        int spawnedThisWave = 0;
+
+        // build a list of enemies that can actually fit in this budget right now
+        // (cost <= budget)
+        var affordable = enemyPool.FindAll(e => e != null && e.prefab != null && e.difficultyCost <= budget);
+        if (affordable.Count == 0)
+        {
+            if (logSpawns) Debug.LogWarning($"[SpawnerPoisson] {name} wave {waveIndex}: no affordable enemies for budget={budget}");
+            return;
+        }
+
+        int safety = 200; // smaller, to make logs readable
 
         while (remaining > 0 && safety-- > 0)
         {
-            var pick = PickEnemy(weightedPool);
-            if (pick == null) break;
-
-            if (pick.difficultyCost <= remaining)
+            // hard cap to prevent explosions
+            if (spawnedThisWave >= maxSpawnPerWave)
             {
-                var pos = GetNextFreeSpawnPosition();
-                Instantiate(pick.prefab, pos, Quaternion.identity);
-                remaining -= pick.difficultyCost;
+                if (logSpawns) Debug.LogWarning($"[SpawnerPoisson] {name} wave {waveIndex}: hit maxSpawnPerWave={maxSpawnPerWave}");
+                break;
+            }
 
-                if (logSpawns) Debug.Log($"[SpawnerPoisson] Wave {waveIndex}: {pick.prefab.name} @ {pos}  (rem {remaining})");
-            }
-            else
+            // pick a random affordable enemy
+            var pick = affordable[Random.Range(0, affordable.Count)];
+
+            // if for some reason pick is still too expensive, stop
+            if (pick.difficultyCost > remaining)
             {
-                bool anyFits = enemyPool.Exists(e => e.prefab && e.difficultyCost <= remaining);
-                if (!anyFits) break;
+                // try to see if ANYTHING fits the *current* remaining
+                var cheaper = affordable.FindAll(e => e.difficultyCost <= remaining);
+                if (cheaper.Count == 0)
+                    break; // nothing fits, end wave
+
+                pick = cheaper[Random.Range(0, cheaper.Count)];
             }
+
+            // spawn it
+            var pos = GetNextFreeSpawnPosition();
+            var go = Instantiate(pick.prefab, pos, Quaternion.identity);
+            spawnedThisWave++;
+            remaining -= pick.difficultyCost;  // <-- ACTUALLY spend budget
+
+            // register with room
+            if (go != null && roomManager != null)
+            {
+                var re = go.GetComponent<RoomEnemy>();
+                if (re != null)
+                {
+                    re.SetRoomManager(roomManager);
+                    roomManager.RegisterEnemy(re);
+                }
+            }
+
+            if (logSpawns)
+                Debug.Log($"[SpawnerPoisson] {name} wave {waveIndex}: {pick.prefab.name} @ {pos}  (rem {remaining})");
         }
+
+        if (logSpawns)
+            Debug.Log($"[SpawnerPoisson] {name} wave {waveIndex} done. spawned={spawnedThisWave}, leftover={remaining}");
     }
+
 
     Vector3 GetNextFreeSpawnPosition()
     {

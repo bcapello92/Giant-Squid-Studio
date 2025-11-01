@@ -1072,6 +1072,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4588234878354657355}
   - component: {fileID: 2593357008842655873}
+  - component: {fileID: -7951203588286995284}
   m_Layer: 0
   m_Name: Room_9x9
   m_TagString: Untagged
@@ -1112,6 +1113,38 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 2
   m_CellSwizzle: 0
+--- !u!114 &-7951203588286995284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6377564653377067004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25e2a8133a9fb2a47a76f3fd3ad5bb1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyWaveSpawnerPoisson
+  areaMode: 0
+  roomCenter: {fileID: 0}
+  circleRadius: 8
+  rectSize: {x: 16, y: 10}
+  poissonRadius: 2
+  samplesPerPoint: 30
+  maxPoissonPoints: 0
+  avoidLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  overlapPadding: 0.15
+  roomDifficulty: 8
+  wave1BudgetPercent: 0.6
+  timeBetweenWaves: 4
+  enemyPool:
+  - prefab: {fileID: 5347680577596769270, guid: e0be6a45d25462e4098384cee4396be4, type: 3}
+    difficultyCost: 1
+    weight: 0
+  logSpawns: 0
+  drawPoissonPoints: 1
 --- !u!1 &6596323946824470271
 GameObject:
   m_ObjectHideFlags: 0
