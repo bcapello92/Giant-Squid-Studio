@@ -281,8 +281,8 @@ GameObject:
   - component: {fileID: 1973956276}
   - component: {fileID: 1973956275}
   m_Layer: 0
-  m_Name: Game Controller
-  m_TagString: GameController
+  m_Name: Generation Controller
+  m_TagString: GenerationController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

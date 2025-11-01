@@ -6,7 +6,7 @@ public class DoorController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gameController = GameObject.FindWithTag("GameController");
+        gameController = GameObject.FindWithTag("GenerationController");
     }
 
     // Update is called once per frame
