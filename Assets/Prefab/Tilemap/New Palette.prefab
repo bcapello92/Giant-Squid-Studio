@@ -524,17 +524,17 @@ Tilemap:
   - m_RefCount: 27
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   - m_RefCount: 1
-    m_Data: {r: 0.99878734, g: 0.5545997, b: 0.604271, a: 1}
+    m_Data: {r: 0.7564099, g: 0.5285423, b: 0.5600667, a: 1}
   - m_RefCount: 1
-    m_Data: {r: 0.7191587, g: 0.29665953, b: 0.37196693, a: 1}
+    m_Data: {r: 0.8530513, g: 0.42432353, b: 0.49285305, a: 1}
   - m_RefCount: 1
-    m_Data: {r: 0.70979905, g: 0.3238741, b: 0.41701642, a: 1}
+    m_Data: {r: 0.71895826, g: 0.4483768, b: 0.5072601, a: 1}
   - m_RefCount: 1
-    m_Data: {r: 0.7808144, g: 0.41820446, b: 0.4429563, a: 1}
+    m_Data: {r: 0.9447478, g: 0.5066306, b: 0.6052842, a: 1}
   - m_RefCount: 1
-    m_Data: {r: 0.96438295, g: 0.4577591, b: 0.47892368, a: 1}
+    m_Data: {r: 0.79153216, g: 0.4275272, b: 0.52087426, a: 1}
   - m_RefCount: 1
-    m_Data: {r: 0.819761, g: 0.54097795, b: 0.6222859, a: 1}
+    m_Data: {r: 0.983368, g: 0.58078355, b: 0.6907837, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -741,6 +741,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: lava
       objectReference: {fileID: 0}
+    - target: {fileID: 2302303680804309834, guid: 96cad4bd06ec4a4498547b3dbbaf53b7, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3494959953774186762, guid: 96cad4bd06ec4a4498547b3dbbaf53b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.0150003
@@ -791,7 +795,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3494959953774186762, guid: 96cad4bd06ec4a4498547b3dbbaf53b7, type: 3}
   m_PrefabInstance: {fileID: 9012309364650791760}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6735460236660393053
+--- !u!114 &5026488142114459064
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
