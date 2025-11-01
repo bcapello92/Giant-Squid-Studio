@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DoorController : MonoBehaviour
+public class GenerationDoorController : MonoBehaviour
 {
     private GameObject gameController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
