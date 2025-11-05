@@ -109,15 +109,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WallBrick_Old_Tall_01_0
+      name: WallBrickRight1
       rect:
         serializedVersion: 2
-        x: 4
+        x: 6
         y: 2
         width: 207
         height: 305
       alignment: 9
-      pivot: {x: 0.019398436, y: 0.01245774}
+      pivot: {x: 0.50430477, y: 0.5357814}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -131,15 +131,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WallBrick_Old_Tall_01_1
+      name: WallBrickLeft1
       rect:
         serializedVersion: 2
-        x: 214
+        x: 212
         y: 2
         width: 207
         height: 305
-      alignment: 9
-      pivot: {x: 0.98100317, y: 0.012872046}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -153,15 +153,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WallBrick_Old_Tall_01_2
+      name: WallBrickRight2
       rect:
         serializedVersion: 2
-        x: 428
-        y: 6
+        x: 426
+        y: 4
         width: 207
         height: 305
-      alignment: 9
-      pivot: {x: 0.014512803, y: 0.012706441}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -175,15 +175,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WallBrick_Old_Tall_01_3
+      name: WallBrickLeft2
       rect:
         serializedVersion: 2
         x: 645
         y: 1
         width: 207
         height: 305
-      alignment: 9
-      pivot: {x: 0.96418977, y: 0.021382192}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -210,10 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      WallBrick_Old_Tall_01_0: 2284932291971682431
-      WallBrick_Old_Tall_01_1: 1035650546187222591
-      WallBrick_Old_Tall_01_2: -2525016884246943832
-      WallBrick_Old_Tall_01_3: 549709174515222632
+      WallBrickLeft1: 1035650546187222591
+      WallBrickLeft2: 549709174515222632
+      WallBrickRight1: 2284932291971682431
+      WallBrickRight2: -2525016884246943832
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BlobMonsterController : MonoBehaviour, IDamageable
+public class BlobMonsterController : RoomEnemy, IDamageable
 {
     [Header("Health")]
     public int maxHP = 50;
@@ -39,7 +39,7 @@ public class BlobMonsterController : MonoBehaviour, IDamageable
     Animator anim;
     Collider2D[] cols;
     Transform player;
-
+    RoomManager roomManager;
     bool isDead;
     float lastShockTime = -999f;
 
@@ -134,25 +134,28 @@ public class BlobMonsterController : MonoBehaviour, IDamageable
     public void TakeDamage(int amount)
     {
         if (isDead) return;
+
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
         if (currentHP == 0)
         {
-            isDead = true;
-            rb.linearVelocity = Vector2.zero;
-            anim.SetTrigger(DeathTrig);
+            Die();
         }
         else
         {
-            anim.SetTrigger(HitTrig);
+            if (anim) anim.SetTrigger(HitTrig);
         }
-        Debug.Log(currentHP);
     }
+
 
     void Die()
     {
         if (isDead) return;
         isDead = true;
 
+        // notify room ONCE
+        DieInRoom();
+
+        // the rest of your death stuff...
         if (rb)
         {
             rb.linearVelocity = Vector2.zero;
@@ -169,6 +172,7 @@ public class BlobMonsterController : MonoBehaviour, IDamageable
         if (anim) anim.SetTrigger(DeathTrig);
         StartCoroutine(DespawnAfterDelay());
     }
+
 
     IEnumerator DespawnAfterDelay()
     {

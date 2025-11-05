@@ -112,17 +112,33 @@ TextureImporter:
       name: DoorFrame_02_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 2
         y: 3
         width: 207
         height: 305
       alignment: 9
-      pivot: {x: 0.015543542, y: 0.016671244}
+      pivot: {x: 0.07794769, y: 0.31016782}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      outline:
+      - - {x: -22.5, y: -138.5}
+        - {x: 103.5, y: -69.5}
+        - {x: 103.5, y: 152.5}
+        - {x: 95.5, y: 152.5}
+        - {x: -101.5, y: 55.5}
+        - {x: -103.5, y: 54.5}
+        - {x: -103.5, y: -152.5}
+        - {x: -87.5, y: -152.5}
+      physicsShape:
+      - - {x: -22.5, y: -138.5}
+        - {x: 103.5, y: -69.5}
+        - {x: 103.5, y: 152.5}
+        - {x: 95.5, y: 152.5}
+        - {x: -101.5, y: 55.5}
+        - {x: -103.5, y: 54.5}
+        - {x: -103.5, y: -152.5}
+        - {x: -87.5, y: -152.5}
+      tessellationDetail: 0
       bones: []
       spriteID: bfc10ecde2ccb01e0800000000000000
       internalID: -2230464688785711877
@@ -139,12 +155,18 @@ TextureImporter:
         width: 207
         height: 305
       alignment: 9
-      pivot: {x: 0.98203385, y: 0.015027268}
+      pivot: {x: 0.4682026, y: 0.20326999}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline: []
+      outline:
+      - - {x: 103.5, y: 53.5}
+        - {x: -91.5, y: 152.5}
+        - {x: -103.5, y: 152.5}
+        - {x: -103.5, y: -65.5}
+        - {x: -77.5, y: -152.5}
+        - {x: 103.5, y: -152.5}
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: a99754eb7fa3a00b0800000000000000
       internalID: -5761727937543571046
@@ -156,17 +178,27 @@ TextureImporter:
       name: DoorFrame_02_2
       rect:
         serializedVersion: 2
-        x: 429
-        y: 3
+        x: 424
+        y: 5
         width: 207
         height: 305
       alignment: 9
-      pivot: {x: 0.020387659, y: 0.016671244}
+      pivot: {x: 0.50646764, y: 0.17303216}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      outline:
+      - - {x: 103.5, y: 151.5}
+        - {x: 101.5, y: 151.5}
+        - {x: -99.5, y: 57.5}
+        - {x: -99.5, y: -152.5}
+        - {x: 103.5, y: -152.5}
+      physicsShape:
+      - - {x: 103.5, y: 151.5}
+        - {x: 101.5, y: 151.5}
+        - {x: -99.5, y: 57.5}
+        - {x: -99.5, y: -152.5}
+        - {x: 103.5, y: -152.5}
+      tessellationDetail: 0
       bones: []
       spriteID: 09f0a3241a8924c20800000000000000
       internalID: 3189279304499990416
@@ -178,17 +210,25 @@ TextureImporter:
       name: DoorFrame_02_3
       rect:
         serializedVersion: 2
-        x: 643
+        x: 641
         y: 3
         width: 207
         height: 305
       alignment: 9
-      pivot: {x: 0.9626553, y: 0.015027268}
+      pivot: {x: 0.4920501, y: 0.21406017}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline: []
+      outline:
+      - - {x: 103.5, y: 57.5}
+        - {x: -91.5, y: 152.5}
+        - {x: -102.5, y: 152.5}
+        - {x: -103.5, y: 149.5}
+        - {x: -103.5, y: -53.5}
+        - {x: -20.5, y: -117.5}
+        - {x: 87.5, y: -152.5}
+        - {x: 103.5, y: -152.5}
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: dd0b275b8e31e3ae0800000000000000
       internalID: -1567793730080821027
