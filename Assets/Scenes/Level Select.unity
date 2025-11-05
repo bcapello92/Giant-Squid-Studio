@@ -271,6 +271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a2bee18c6b775b4793fda68aec8f5d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelMenu
+  buttons:
+  - {fileID: 1384805251}
+  - {fileID: 1845241591}
+  - {fileID: 2009656421}
 --- !u!1 &346323884
 GameObject:
   m_ObjectHideFlags: 0
