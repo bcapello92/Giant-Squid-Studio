@@ -56,9 +56,27 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     List<Vector2> spawnPoints;
     int nextPointIndex;
     List<EnemyData> weightedPool;
+    // Add this helper:
+    void EnsureInitialized()
+    {
+        if (!roomCenter) roomCenter = transform;
+
+        if (weightedPool == null)
+            weightedPool = BuildWeightedList(enemyPool);
+
+        if (spawnPoints == null)
+            spawnPoints = GenerateSpawnField();
+
+        if (spawnPoints.Count == 0)
+        {
+            Debug.LogWarning("[SpawnerPoisson] No spawn points generated. Falling back to room center.");
+            spawnPoints.Add(roomCenter.position);
+        }
+    }
 
     void Start()
     {
+        EnsureInitialized();
         if (!roomCenter) roomCenter = transform;
 
         weightedPool = BuildWeightedList(enemyPool);
@@ -70,7 +88,7 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
             spawnPoints.Add(roomCenter.position);
         }
         // 3) Run the two waves
-        StartCoroutine(RunTwoWaves());
+       // StartCoroutine(RunTwoWaves());
     }
 
     IEnumerator RunTwoWaves()
@@ -86,8 +104,10 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     }
     public void BeginSpawning()
     {
-        if (_hasStarted) return;     // <-- guard!
+        if (_hasStarted) return;
         _hasStarted = true;
+
+        EnsureInitialized();               // <— make sure spawnPoints exists
         StartCoroutine(RunTwoWaves());
     }
 
@@ -171,7 +191,13 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
 
     Vector3 GetNextFreeSpawnPosition()
     {
-        // Cycle through Poisson points until we find one that doesn't overlap avoidLayers
+        if (spawnPoints == null || spawnPoints.Count == 0)
+        {
+            // last-ditch init + fallback
+            EnsureInitialized();
+            return roomCenter ? roomCenter.position : transform.position;
+        }
+
         int tries = spawnPoints.Count;
         while (tries-- > 0)
         {
@@ -189,8 +215,7 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
             var cand = (Vector2)roomCenter.position + off;
             if (IsFreeWorld(cand)) return cand;
         }
-
-        return roomCenter.position; // absolute fallback
+        return roomCenter.position;
     }
 
     bool IsFreeWorld(Vector2 worldPos)

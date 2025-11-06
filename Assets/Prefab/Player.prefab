@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6419873153816277469}
   - component: {fileID: 5635262260263608711}
   - component: {fileID: 4044735512909601031}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -175,6 +175,10 @@ MonoBehaviour:
   dashSpeed: 10
   dashDuration: 0.5
   dashCooldown: 0.6
+  dashIgnoreLayers:
+  - Enemy
+  - EnemyAttack
+  dashGrantsInvulnerability: 1
   maxHP: 100
   currentHP: 0
   stunDamp: 20
@@ -235,7 +239,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5765724494877978495}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HandMount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,7 +272,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1895577530932261947}
   - component: {fileID: 5301261150828799422}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Spear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -317,7 +321,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1398628061943224492}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -351,6 +355,14 @@ PrefabInstance:
     - target: {fileID: 2407920666920140502, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
       propertyPath: m_Name
       value: SpearVisual
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407920666920140502, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5520710977350450435, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5691185527895705053, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
       propertyPath: m_LocalPosition.x

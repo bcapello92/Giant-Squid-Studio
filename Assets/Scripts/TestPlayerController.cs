@@ -13,6 +13,19 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     public float dashSpeed = 10f;
     public float dashDuration = 0.15f;
     public float dashCooldown = 0.6f;
+   
+    [Header("Dash i-frames")]
+    [Tooltip("Layers the player should NOT collide with while dashing (e.g., Enemy, EnemyAttack).")]
+    public string[] dashIgnoreLayers = new[] { "Enemy", "EnemyAttack" };
+
+    [Tooltip("Also ignore damage while dashing.")]
+    public bool dashGrantsInvulnerability = true;
+
+    public bool IsInvulnerable { get; private set; }
+
+    int playerLayer;
+    int[] ignoreLayerIds;
+    int iframeDepth = 0; // protects against double-enable/disable
 
     [Header("Health")]
     public int maxHP = 100;
@@ -60,6 +73,16 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
         currentHP = maxHP;
         HealthChanged?.Invoke(currentHP, maxHP);
+
+        playerLayer = gameObject.layer;
+        ignoreLayerIds = new int[dashIgnoreLayers.Length];
+        for (int i = 0; i < dashIgnoreLayers.Length; i++)
+        {
+            ignoreLayerIds[i] = LayerMask.NameToLayer(dashIgnoreLayers[i]);
+            if (ignoreLayerIds[i] < 0)
+                Debug.LogWarning($"[Player] Layer '{dashIgnoreLayers[i]}' not found. Check Project Settings > Tags & Layers.");
+        }
+
     }
 
     void OnEnable()
@@ -167,17 +190,54 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         isDashing = true;
         lastDashTime = Time.time;
 
-        // If not moving, dash along aim direction
         Vector2 dir = (moveInput.sqrMagnitude > 0.0001f) ? moveInput : AimDir;
         if (dir.sqrMagnitude < 0.0001f) dir = lastNonZeroDir;
 
         rb.linearVelocity = dir.normalized * dashSpeed;
 
-        yield return new WaitForSeconds(dashDuration);
+        BeginDashIFrames();
+
+        float t = 0f;
+        while (t < dashDuration)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
 
         isDashing = false;
+        EndDashIFrames();
+    }
+    // --- Helpers ---
+    void BeginDashIFrames()
+    {
+        iframeDepth++;
+        if (iframeDepth != 1) return;
+
+        if (dashGrantsInvulnerability) IsInvulnerable = true;
+
+        // Ignore collisions vs. enemy/boss layers ONLY (walls still collide)
+        for (int i = 0; i < ignoreLayerIds.Length; i++)
+        {
+            int other = ignoreLayerIds[i];
+            if (other >= 0)
+                Physics2D.IgnoreLayerCollision(playerLayer, other, true);
+        }
     }
 
+    void EndDashIFrames()
+    {
+        if (iframeDepth <= 0) return;
+        iframeDepth--;
+        if (iframeDepth != 0) return;
+
+        for (int i = 0; i < ignoreLayerIds.Length; i++)
+        {
+            int other = ignoreLayerIds[i];
+            if (other >= 0)
+                Physics2D.IgnoreLayerCollision(playerLayer, other, false);
+        }
+        IsInvulnerable = false;
+    }
     void UpdateAim()
     {
         if (!aimCamera) { AimDir = lastNonZeroDir; return; }
@@ -193,6 +253,8 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     // -------- Health / Damage --------
     public void TakeDamage(int amount)
     {
+        if (IsInvulnerable) return; // i-frames: ignore damage
+
         int prev = currentHP;
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
         if (currentHP != prev)
@@ -200,9 +262,10 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
         if (currentHP == 0)
         {
-            // TODO: death behavior (disable input, play death anim, notify, etc.)
+            // TODO: death behavior
         }
     }
+
 
     public void Heal(int amount)
     {

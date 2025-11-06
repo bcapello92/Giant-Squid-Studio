@@ -35,6 +35,12 @@ public class BlobMonsterController : RoomEnemy, IDamageable
     static readonly int HitTrig = Animator.StringToHash("Hit");
     static readonly int DeathTrig = Animator.StringToHash("Death");
 
+    [Header("Debug / Attack Wiring")]
+    public bool callShockInCodeIfNoEvent = true;   // call ShockNow() directly when the trigger fires
+    public bool debugLogs = false;
+
+    void Log(string msg) { if (debugLogs) Debug.Log($"[Blob] {msg}", this); }
+
     Rigidbody2D rb;
     Animator anim;
     Collider2D[] cols;
@@ -87,22 +93,42 @@ public class BlobMonsterController : RoomEnemy, IDamageable
             desiredVel = toPlayer.normalized * moveSpeed;
         }
 
-        Vector2 vel = rb.linearVelocity;
+        Vector2 vel = rb.linearVelocity; 
         Vector2 step = Vector2.ClampMagnitude(desiredVel - vel, acceleration * Time.fixedDeltaTime);
         rb.linearVelocity = vel + step;
 
-        // drive locomotion param if you use it
         if (anim) anim.SetFloat(MoveSpeedHash, rb.linearVelocity.magnitude);
 
         // --- Attack gating ---
-        if (dist <= stopDistance + 0.1f && Time.time >= lastShockTime + shockCooldown)
+        bool inRange = dist <= (stopDistance + 0.1f);
+        bool offCooldown = Time.time >= lastShockTime + shockCooldown;
+
+        if (inRange && offCooldown)
         {
             lastShockTime = Time.time;
-            if (anim) anim.SetTrigger(AttackTrig);
-            // If you don't use an animation event, call ShockNow() directly:
-            // ShockNow();
+            rb.linearVelocity = Vector2.zero;    // stop to actually attack
+
+            Log($"Attack trigger: dist={dist:F2}, stop={stopDistance}");
+            if (anim)
+            {
+                anim.SetTrigger(AttackTrig);   // Animator must have a Trigger named "Attack"
+            }
+
+            // If your Attack clip doesn't have an Animation Event yet, do it now:
+            if (callShockInCodeIfNoEvent)
+            {
+                // small windup so it isn't instant; tune or remove
+                StartCoroutine(_ShockAfter(0.05f));
+            }
         }
     }
+
+    IEnumerator _ShockAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShockNow();
+    }
+
 
     // Call this from the Attack animation via Animation Event (or call directly above)
     public void ShockNow()
