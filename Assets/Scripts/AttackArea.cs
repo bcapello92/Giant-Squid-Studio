@@ -73,6 +73,7 @@ public class AttackArea : MonoBehaviour
 
         // Apply damage
         dmg.TakeDamage(damage);
+        Debug.Log("take " + damage + " damage");
 
         // Optional knockback
         if (knockback > 0f && other.attachedRigidbody != null)
