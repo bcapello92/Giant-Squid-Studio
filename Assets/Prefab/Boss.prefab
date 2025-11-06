@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8201590141881271221}
   - component: {fileID: 5372134825046829734}
   - component: {fileID: 6151741411655171913}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttackHitbox_Slam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 8738770443847657448}
   - component: {fileID: 1899419244826626827}
   - component: {fileID: 2064915328194293334}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttackHitBox_Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,8 @@ GameObject:
   - component: {fileID: 4848425610529592995}
   - component: {fileID: 1954295664165588344}
   - component: {fileID: 7774596294376491314}
-  m_Layer: 0
+  - component: {fileID: 4802622201955953867}
+  m_Layer: 7
   m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,8 +195,8 @@ Transform:
   m_GameObject: {fileID: 7217473960395430811}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalPosition: {x: 0, y: -0.03, z: 0}
+  m_LocalScale: {x: 8, y: 8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8738770443847657448}
@@ -237,7 +238,7 @@ CapsuleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 200
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -258,8 +259,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.35, y: 0.5}
+  m_Offset: {x: 0.039, y: 0}
+  m_Size: {x: 0.25, y: 0.4}
   m_Direction: 0
 --- !u!114 &4848425610529592995
 MonoBehaviour:
@@ -276,30 +277,38 @@ MonoBehaviour:
   anim: {fileID: 4635396935196048358}
   rb: {fileID: 1954295664165588344}
   player: {fileID: 0}
+  bodyCollider: {fileID: 8470904266223725148}
+  spriteForHide: {fileID: 7774596294376491314}
+  groundHitbox: {fileID: 2064915328194293334}
+  slamHitbox: {fileID: 5372134825046829734}
+  maxHP: 300
+  currentHP: 300
+  idleTimeBetweenAttacks: 1
+  skyAttackChance: 0.399
+  groundAttackRange: 2
+  chaseSpeed: 3
   isMovingParam: IsMoving
   moveXParam: MoveX
   moveYParam: MoveY
-  spriteForFlip: {fileID: 0}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  feetOffset: {x: 0, y: -0.5}
-  groundRayLen: 0.75
-  maxHP: 300
-  currentHP: 0
+  skyRiseHeight: 4
+  skyRiseSpeed: 5
+  skyDiveSpeed: 18
+  alignSpeed: 10
+  telegraphDelay: 1
+  invulnerableDuringVanish: 1
+  hideSpriteDuringVanish: 1
+  vanishTeleportYMargin: 0.5
   invulnerableDuringAppear: 1
   invulnerableDuringSky: 1
-  idleTimeBetweenAttacks: 1
-  skyAttackChance: 0.35
-  groundAttackRange: 3.5
-  chaseSpeed: 2
-  skyRiseHeight: 6
-  skyRiseSpeed: 12.1
-  skyDiveSpeed: 18
-  groundHitbox: {fileID: 2064915328194293334}
-  slamHitbox: {fileID: 5372134825046829734}
-  appearVfx: {fileID: 0}
-  deathVfx: {fileID: 0}
+  arenaCollider: {fileID: 0}
+  wallMargin: 0.5
+  ceilingMargin: 0.5
+  floorMargin: 0.1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  feetOffset: {x: 0, y: -0.5}
+  groundRayLen: 0.75
 --- !u!50 &1954295664165588344
 Rigidbody2D:
   serializedVersion: 5
@@ -371,8 +380,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -529835431
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 5169412095531064444, guid: 1bddb36a5a31e4a4e9a3fcf0eaeacf4b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -385,3 +394,55 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!60 &4802622201955953867
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7217473960395430811}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.55, y: 0.41}
+    newSize: {x: 0.18, y: 0.13}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.065, y: 0.205}
+      - {x: -0.065, y: -0.205}
+      - {x: 0.155, y: -0.205}
+      - {x: 0.16499999, y: -0.195}
+      - {x: 0.16499999, y: 0.205}
+  m_UseDelaunayMesh: 0

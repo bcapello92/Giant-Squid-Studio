@@ -190,17 +190,54 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         isDashing = true;
         lastDashTime = Time.time;
 
-        // If not moving, dash along aim direction
         Vector2 dir = (moveInput.sqrMagnitude > 0.0001f) ? moveInput : AimDir;
         if (dir.sqrMagnitude < 0.0001f) dir = lastNonZeroDir;
 
         rb.linearVelocity = dir.normalized * dashSpeed;
 
-        yield return new WaitForSeconds(dashDuration);
+        BeginDashIFrames();
+
+        float t = 0f;
+        while (t < dashDuration)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
 
         isDashing = false;
+        EndDashIFrames();
+    }
+    // --- Helpers ---
+    void BeginDashIFrames()
+    {
+        iframeDepth++;
+        if (iframeDepth != 1) return;
+
+        if (dashGrantsInvulnerability) IsInvulnerable = true;
+
+        // Ignore collisions vs. enemy/boss layers ONLY (walls still collide)
+        for (int i = 0; i < ignoreLayerIds.Length; i++)
+        {
+            int other = ignoreLayerIds[i];
+            if (other >= 0)
+                Physics2D.IgnoreLayerCollision(playerLayer, other, true);
+        }
     }
 
+    void EndDashIFrames()
+    {
+        if (iframeDepth <= 0) return;
+        iframeDepth--;
+        if (iframeDepth != 0) return;
+
+        for (int i = 0; i < ignoreLayerIds.Length; i++)
+        {
+            int other = ignoreLayerIds[i];
+            if (other >= 0)
+                Physics2D.IgnoreLayerCollision(playerLayer, other, false);
+        }
+        IsInvulnerable = false;
+    }
     void UpdateAim()
     {
         if (!aimCamera) { AimDir = lastNonZeroDir; return; }

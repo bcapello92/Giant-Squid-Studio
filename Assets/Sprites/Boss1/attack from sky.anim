@@ -43,11 +43,7 @@ AnimationClip:
     - time: 0.8333333
       value: {fileID: 672130617338666805, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
     - time: 0.9166667
-      value: {fileID: -5532173464022152454, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
-    - time: 1
       value: {fileID: -2234323065846573101, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
-    - time: 1.0833334
-      value: {fileID: -5990635315074459153, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -81,15 +77,13 @@ AnimationClip:
     - {fileID: 411945300283499548, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
     - {fileID: -2066573116215831925, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
     - {fileID: 672130617338666805, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
-    - {fileID: -5532173464022152454, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
     - {fileID: -2234323065846573101, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
-    - {fileID: -5990635315074459153, guid: 778dbe70550cdf34a8dc47d2e3c750c1, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1.1666667
+    m_StopTime: 1
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -110,7 +104,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: OnSkyDiveStart
+    functionName: SkyAttackRoutine_ReenterFromAir
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
