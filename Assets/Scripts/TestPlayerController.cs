@@ -165,7 +165,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable
             if (horizontal)
                 bodySR.flipX = (face.x < 0f);  // reuse RIGHT-facing clip; flip for left
             else
-                bodySR.flipX = false;          // for up/down, don’t flip
+                bodySR.flipX = false;          // for up/down, donï¿½t flip
         }
     }
 
