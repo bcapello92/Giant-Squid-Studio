@@ -314,7 +314,6 @@ GameObject:
   m_Component:
   - component: {fileID: 683274963}
   - component: {fileID: 683274962}
-  - component: {fileID: 683274964}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -336,7 +335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomManager
   playerSpawnPoint: {fileID: 0}
   roomRoot: {fileID: 60686511}
-  powerupPrefab: {fileID: 0}
+  powerupPrefab: {fileID: 5753975855413512337, guid: ae0d59a6df7f3a344878be1613fc1a2a, type: 3}
 --- !u!4 &683274963
 Transform:
   m_ObjectHideFlags: 0
@@ -353,39 +352,6 @@ Transform:
   - {fileID: 60686511}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &683274964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 683274961}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25e2a8133a9fb2a47a76f3fd3ad5bb1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyWaveSpawnerPoisson
-  areaMode: 0
-  roomCenter: {fileID: 0}
-  circleRadius: 8
-  rectSize: {x: 16, y: 10}
-  poissonRadius: 2
-  samplesPerPoint: 30
-  maxPoissonPoints: 0
-  avoidLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  overlapPadding: 0.15
-  roomDifficulty: 8
-  wave1BudgetPercent: 0.6
-  timeBetweenWaves: 4
-  enemyPool:
-  - prefab: {fileID: 5347680577596769270, guid: e0be6a45d25462e4098384cee4396be4, type: 3}
-    difficultyCost: 1
-    weight: 0
-  logSpawns: 0
-  drawPoissonPoints: 1
-  maxSpawnPerWave: 50
 --- !u!1 &797814300
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,10 +382,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RunManager
   roomSequence: {fileID: 11400000, guid: ba9fc0bc7d81f74478a94410f701ea01, type: 2}
-  currentRoomIndex: 0
+  loopAndReshuffle: 1
+  difficultyBase: 4
+  difficultyPerRoom: 4
   maxHP: 100
   currentHP: 100
-  buffs: []
+  buffs:
+  - 
 --- !u!4 &797814302
 Transform:
   m_ObjectHideFlags: 0
