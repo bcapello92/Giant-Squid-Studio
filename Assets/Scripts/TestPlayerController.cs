@@ -1,134 +1,149 @@
 using UnityEngine;
-using System.Collections;
 using System;
-
-
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
+[DisallowMultipleComponent]
+public class TestPlayerController : MonoBehaviour, IDamageable
 {
     [Header("Move")]
     public float moveSpeed = 5f;
+
+    [Header("Dash")]
+    public float dashSpeed = 10f;
+    public float dashDuration = 0.15f;
+    public float dashCooldown = 0.6f;
 
     [Header("Health")]
     public int maxHP = 100;
     [SerializeField] private int currentHP;
     public int CurrentHP => currentHP;
-
-    [Header("Dash")]
-    [SerializeField] float dashSpeed = 10f;
-    [SerializeField] float dashDuration = 0.15f;
-    [SerializeField] float dashCooldown = 0.6f;
-
-
-    [Header("Attack")]
-    [SerializeField] float attackDuration = 0.5f;
-    [SerializeField] float attackCooldown = 1f;
-
-    GameObject attackArea;
+    public event Action<int, int> HealthChanged; // (current, max)
 
     [Header("Stun")]
-    [SerializeField] float stunDamp = 20f;   // how fast we kill velocity while stunned
-
-    public event Action<int, int> HealthChanged; // current, max
+    public float stunDamp = 20f; // how quickly velocity damps while stunned
     public bool IsStunned { get; private set; }
     float stunUntil;
 
+    [Header("Aiming")]
+    public Camera aimCamera;                 // assign MainCamera or leave empty to auto-find
+    public bool rotateBodyToAim = false;     // true = rotate the Rigidbody2D toward mouse
+
+    //aim direction
+    public Vector2 AimDir { get; private set; } = Vector2.right;
+    [SerializeField] bool faceByAimAlways = true;
+    [Header("Animator (optional)")]
+    public Animator anim;                    
+    public string moveXParam = "MoveX";
+    public string moveYParam = "MoveY";
+    public string lastXParam = "LastX";
+    public string lastYParam = "LastY";
+    public string speedParam = "Speed";
+    public SpriteRenderer bodySR;//for swapping side to side sprite
 
     Rigidbody2D rb;
-    bool isDashing;
-    bool isAttacking;
-    float lastAttackTime = -999f;
-    float lastDashTime = -999f;
+    Vector2 moveInput;
+    Vector2 lastNonZeroDir = Vector2.right;  // used for facing when idle
 
-    Vector2 moveDirection;
-    Vector2 mouseWorld;
+    bool isDashing;
+    float lastDashTime = -999f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        // Top-down defaults
         rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
-        currentHP = maxHP;
+        if (!aimCamera) aimCamera = Camera.main;
+        if (!anim) anim = GetComponentInChildren<Animator>();
 
-        // Initial fire (some UIs subscribe later; we re-fire in OnEnable)
+        currentHP = maxHP;
         HealthChanged?.Invoke(currentHP, maxHP);
     }
 
     void OnEnable()
     {
-        // Re-broadcast current health so late subscribers (UI) catch up
+        // Resend current health for late UI subscribers
         HealthChanged?.Invoke(currentHP, maxHP);
-        attackArea = transform.GetChild(0).gameObject;
-    }
-
-    public bool ApplyStun(float seconds)
-    {
-        if (seconds <= 0f) return false;
-
-        IsStunned = true;
-        stunUntil = Mathf.Max(stunUntil, Time.time + seconds);
-
-        // Cancel dash immediately
-        if (isDashing)
-        {
-            StopAllCoroutines();
-            isDashing = false;
-        }
-
-        // Kill current motion
-        rb.linearVelocity = Vector2.zero;
-        return true;
     }
 
     void Update()
     {
-
-        // --- Input ---
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
-        moveDirection = new Vector2(moveX, moveY).normalized;
-
-        // Mouse aim (guard against null camera in editor)
-        if (Camera.main != null)
-            mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Dash trigger
-        if (!isDashing && Time.time >= lastDashTime + dashCooldown && Input.GetKeyDown(KeyCode.LeftShift))
-            StartCoroutine(Dash());
-            
-
-        // Clear stun when time passes
-
+        // ----- Clear stun when time passes -----
         if (IsStunned && Time.time >= stunUntil)
             IsStunned = false;
 
-        // --- Input (blocked while stunned) ---
+        // ----- Input (block while stunned) -----
         if (!IsStunned)
         {
-             moveX = Input.GetAxisRaw("Horizontal");
-             moveY = Input.GetAxisRaw("Vertical");
-            moveDirection = new Vector2(moveX, moveY).normalized;
+            float mx = Input.GetAxisRaw("Horizontal");
+            float my = Input.GetAxisRaw("Vertical");
+            moveInput = new Vector2(mx, my).normalized;
 
-            if (Camera.main != null)
-                mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (moveInput.sqrMagnitude > 0.0001f)
+                lastNonZeroDir = moveInput;
 
-            // Dash trigger
+            // Dash
             if (!isDashing && Time.time >= lastDashTime + dashCooldown && Input.GetKeyDown(KeyCode.LeftShift))
                 StartCoroutine(Dash());
         }
         else
         {
-            // While stunned, ignore input and slowly damp any drift
-            moveDirection = Vector2.zero;
+            moveInput = Vector2.zero;
         }
 
-        if (!isAttacking && Time.time >= lastAttackTime + attackCooldown && Input.GetMouseButtonDown(0))
-            StartCoroutine(Attack());
- 
+        // ----- Mouse aim -----
+        UpdateAim();
+
+        // Optional body rotation to aim
+        if (rotateBodyToAim)
+        {
+            float z = Mathf.Atan2(AimDir.y, AimDir.x) * Mathf.Rad2Deg - 90f;
+            rb.rotation = z;
+        }
+
+        // ----- Animator parameters (optional) -----
+        if (anim)
+        {
+            float speedMag = rb ? rb.linearVelocity.magnitude : 0f;
+            if (!string.IsNullOrEmpty(speedParam))
+                SafeSetFloat(anim, speedParam, speedMag);
+
+            // Movement vector you actually apply
+            SafeSetFloat(anim, moveXParam, moveInput.x);
+            SafeSetFloat(anim, moveYParam, moveInput.y);
+
+            // Choose which direction to FACE
+            Vector2 faceDir;
+            if (faceByAimAlways)
+            {
+                //faces the mouse direction
+                faceDir = AimDir;
+            }
+            else
+            {
+                // Face movement while moving; face mouse when idle
+                faceDir = (moveInput.sqrMagnitude > 0.0001f) ? moveInput : AimDir;
+            }
+
+            SafeSetFloat(anim, lastXParam, faceDir.x);
+            SafeSetFloat(anim, lastYParam, faceDir.y);
+        }
+        if (bodySR)
+        {
+            // Face vector you already computed for the Animator (mouse aim)
+            Vector2 face = new Vector2(
+                anim ? anim.GetFloat(lastXParam) : AimDir.x,
+                anim ? anim.GetFloat(lastYParam) : AimDir.y
+            );
+
+            bool horizontal = Mathf.Abs(face.x) >= Mathf.Abs(face.y);
+            if (horizontal)
+                bodySR.flipX = (face.x < 0f);  // reuse RIGHT-facing clip; flip for left
+            else
+                bodySR.flipX = false;          // for up/down, don’t flip
+        }
     }
 
     void FixedUpdate()
@@ -142,13 +157,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
 
         if (!isDashing)
         {
-            // Top-down movement
-            rb.linearVelocity = moveDirection * moveSpeed;
-
-            // Rotate to face the mouse
-            Vector2 aimDir = mouseWorld - rb.position;
-            float aimAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg - 90f;
-            rb.rotation = aimAngle;
+            rb.linearVelocity = moveInput * moveSpeed;
         }
         // else: Dash coroutine controls velocity
     }
@@ -158,15 +167,27 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
         isDashing = true;
         lastDashTime = Time.time;
 
-        // Dash in move direction, or toward aim if idle
-        Vector2 dashDir = moveDirection.sqrMagnitude > 0.001f
-            ? moveDirection
-            : (mouseWorld - rb.position).normalized;
+        // If not moving, dash along aim direction
+        Vector2 dir = (moveInput.sqrMagnitude > 0.0001f) ? moveInput : AimDir;
+        if (dir.sqrMagnitude < 0.0001f) dir = lastNonZeroDir;
 
-        rb.linearVelocity = dashDir * dashSpeed;
+        rb.linearVelocity = dir.normalized * dashSpeed;
+
         yield return new WaitForSeconds(dashDuration);
 
         isDashing = false;
+    }
+
+    void UpdateAim()
+    {
+        if (!aimCamera) { AimDir = lastNonZeroDir; return; }
+
+        Vector3 mouseWorld = aimCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 v = (Vector2)(mouseWorld - transform.position);
+        if (v.sqrMagnitude > 0.000001f)
+            AimDir = v.normalized;
+        else
+            AimDir = lastNonZeroDir;
     }
 
     // -------- Health / Damage --------
@@ -179,7 +200,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
 
         if (currentHP == 0)
         {
-            // TODO: death behavior (disable input, play anim, etc.)
+            // TODO: death behavior (disable input, play death anim, notify, etc.)
         }
     }
 
@@ -191,17 +212,36 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
             HealthChanged?.Invoke(currentHP, maxHP);
     }
 
-
-    IEnumerator Attack()
+    // -------- Stun --------
+    public void ApplyStun(float seconds)
     {
-        lastAttackTime = Time.time;
-        isAttacking = true;
-        attackArea.SetActive(isAttacking);
+        if (seconds <= 0f) return;
 
-        yield return new WaitForSeconds(attackDuration);
+        IsStunned = true;
+        stunUntil = Mathf.Max(stunUntil, Time.time + seconds);
 
-        isAttacking = false;
-        attackArea.SetActive(isAttacking);
+        if (isDashing)
+        {
+            StopAllCoroutines();
+            isDashing = false;
+        }
+
+        rb.linearVelocity = Vector2.zero;
     }
 
+    // ----- Animator safe helpers -----
+    bool HasParam(Animator a, string name, AnimatorControllerParameterType type)
+    {
+        if (!a || string.IsNullOrEmpty(name)) return false;
+        var ps = a.parameters;
+        for (int i = 0; i < ps.Length; i++)
+            if (ps[i].name == name && ps[i].type == type) return true;
+        return false;
+    }
+
+    void SafeSetFloat(Animator a, string name, float v)
+    {
+        if (HasParam(a, name, AnimatorControllerParameterType.Float))
+            a.SetFloat(name, v);
+    }
 }

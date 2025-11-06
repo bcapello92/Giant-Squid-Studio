@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: 9c710de6ad4b1dc4d96a362c195c1f89
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2706789157528534910
+    second: jab2_0
+  - first:
+      213: 5469728104645547044
+    second: jab2_1
+  - first:
+      213: 1818508968598536930
+    second: jab2_2
+  - first:
+      213: -8134120199749221014
+    second: jab2_3
+  - first:
+      213: -888567597175623099
+    second: jab2_4
+  - first:
+      213: -1120770911323201462
+    second: jab2_5
+  - first:
+      213: -3994892754045597585
+    second: jab2_6
+  - first:
+      213: 6587843034245607900
+    second: jab2_7
+  - first:
+      213: 9209334574355149962
+    second: jab2_8
+  - first:
+      213: 7191479213370959912
+    second: jab2_9
+  - first:
+      213: -369414155873741748
+    second: jab2_10
+  - first:
+      213: -6938380456489069442
+    second: jab2_11
+  - first:
+      213: -1022256914433283045
+    second: jab2_12
+  - first:
+      213: -7195979053627148411
+    second: jab2_13
+  - first:
+      213: 2051859723422247320
+    second: jab2_14
+  - first:
+      213: -6311602113252810520
+    second: jab2_15
+  - first:
+      213: -9108761632863825692
+    second: jab2_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 150
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: jab2_0
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 359
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7ffd58c562709520800000000000000
+      internalID: 2706789157528534910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_1
+      rect:
+        serializedVersion: 2
+        x: 1139
+        y: 375
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4245e573bb068eb40800000000000000
+      internalID: 5469728104645547044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_2
+      rect:
+        serializedVersion: 2
+        x: 2219
+        y: 407
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e28d26a544ac3910800000000000000
+      internalID: 1818508968598536930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_3
+      rect:
+        serializedVersion: 2
+        x: 3315
+        y: 431
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a654e9556cccd1f80800000000000000
+      internalID: -8134120199749221014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_4
+      rect:
+        serializedVersion: 2
+        x: 4427
+        y: 447
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 542bc6b6a7c2ba3f0800000000000000
+      internalID: -888567597175623099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_5
+      rect:
+        serializedVersion: 2
+        x: 5539
+        y: 447
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a406df35bc83270f0800000000000000
+      internalID: -1120770911323201462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_6
+      rect:
+        serializedVersion: 2
+        x: 6579
+        y: 447
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f68845fb43a4f88c0800000000000000
+      internalID: -3994892754045597585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_7
+      rect:
+        serializedVersion: 2
+        x: 7579
+        y: 447
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd1bd34f558bc6b50800000000000000
+      internalID: 6587843034245607900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_8
+      rect:
+        serializedVersion: 2
+        x: 8515
+        y: 447
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a84792290012ecf70800000000000000
+      internalID: 9209334574355149962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_9
+      rect:
+        serializedVersion: 2
+        x: 9467
+        y: 423
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 828e4921e344dc360800000000000000
+      internalID: 7191479213370959912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_10
+      rect:
+        serializedVersion: 2
+        x: 10379
+        y: 399
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c44152058c39fdaf0800000000000000
+      internalID: -369414155873741748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_11
+      rect:
+        serializedVersion: 2
+        x: 11315
+        y: 375
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e74d4766cbbe5bf90800000000000000
+      internalID: -6938380456489069442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_12
+      rect:
+        serializedVersion: 2
+        x: 12243
+        y: 351
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1c6402a0c630d1f0800000000000000
+      internalID: -1022256914433283045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_13
+      rect:
+        serializedVersion: 2
+        x: 14083
+        y: 367
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 587f6693d2fb22c90800000000000000
+      internalID: -7195979053627148411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_14
+      rect:
+        serializedVersion: 2
+        x: 16043
+        y: 359
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 899a3871c8ba97c10800000000000000
+      internalID: 2051859723422247320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_15
+      rect:
+        serializedVersion: 2
+        x: 13163
+        y: 327
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e026fb715fa868a0800000000000000
+      internalID: -6311602113252810520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jab2_16
+      rect:
+        serializedVersion: 2
+        x: 15059
+        y: 343
+        width: 386
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e0d1712e8d279180800000000000000
+      internalID: -9108761632863825692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      jab2_0: 2706789157528534910
+      jab2_1: 5469728104645547044
+      jab2_10: -369414155873741748
+      jab2_11: -6938380456489069442
+      jab2_12: -1022256914433283045
+      jab2_13: -7195979053627148411
+      jab2_14: 2051859723422247320
+      jab2_15: -6311602113252810520
+      jab2_16: -9108761632863825692
+      jab2_2: 1818508968598536930
+      jab2_3: -8134120199749221014
+      jab2_4: -888567597175623099
+      jab2_5: -1120770911323201462
+      jab2_6: -3994892754045597585
+      jab2_7: 6587843034245607900
+      jab2_8: 9209334574355149962
+      jab2_9: 7191479213370959912
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
