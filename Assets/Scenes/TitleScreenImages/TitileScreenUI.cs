@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class GameTitleUI : MonoBehaviour
 {
@@ -93,7 +94,7 @@ public class GameTitleUI : MonoBehaviour
 
     // ---------------- Button Clicks ----------------
 
-    void OnStartClicked() => Debug.Log("Start Game clicked");
-    void OnLevelSelectClicked() => Debug.Log("Level Select clicked");
+    void OnStartClicked() => SceneManager.LoadScene("Level 1");
+    void OnLevelSelectClicked() => SceneManager.LoadScene("Level Select");
     void OnOptionsClicked() => Debug.Log("Options clicked");
 }
