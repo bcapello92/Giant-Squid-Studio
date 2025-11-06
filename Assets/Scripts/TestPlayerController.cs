@@ -126,8 +126,8 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
             moveDirection = Vector2.zero;
         }
 
-        if (!isAttacking && Time.time >= lastAttackTime + attackCooldown && Input.GetMouseButtonDown(0))
-            StartCoroutine(Attack());
+        //if (!isAttacking && Time.time >= lastAttackTime + attackCooldown && Input.GetMouseButtonDown(0))
+           // StartCoroutine(Attack());
  
     }
 
@@ -192,7 +192,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
     }
 
 
-    IEnumerator Attack()
+   /* IEnumerator Attack()
     {
         lastAttackTime = Time.time;
         isAttacking = true;
@@ -203,5 +203,5 @@ public class TestPlayerController : MonoBehaviour, IDamageable, IStunnable
         isAttacking = false;
         attackArea.SetActive(isAttacking);
     }
-
+   */
 }
