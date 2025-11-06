@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
-public class EnemyController : MonoBehaviour
+public class EnemyController : RoomEnemy
 {
     [Header("Target")]
     public Transform target;                 // Drag the player here, or will find by tag

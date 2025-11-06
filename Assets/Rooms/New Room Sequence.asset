@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomSequence
   rooms:
   - {fileID: 910256880883783234, guid: d655ee9f5700f3a40ad79cc05add2762, type: 3}
+  - {fileID: 6351054626104583616, guid: b371528fee173804facda1af3ad5ba9c, type: 3}
+  - {fileID: 2502868146605453225, guid: 3dd2033b73ae3c144949f526f5e8a59a, type: 3}
+  - {fileID: 6592232806383898738, guid: a1de4952f9869d24c87fd4d72db53c02, type: 3}
+  - {fileID: 6051357333106511042, guid: 07c4243393c8a9b4fa5671ac9215430e, type: 3}
+  - {fileID: 1135559370595884886, guid: cf2937d15e163eb4f82ee86212c0fbcd, type: 3}
