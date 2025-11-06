@@ -336,7 +336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomManager
   playerSpawnPoint: {fileID: 0}
   roomRoot: {fileID: 60686511}
-  powerupPrefab: {fileID: 0}
+  powerupPrefab: {fileID: 5753975855413512337, guid: ae0d59a6df7f3a344878be1613fc1a2a, type: 3}
 --- !u!4 &683274963
 Transform:
   m_ObjectHideFlags: 0
