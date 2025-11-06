@@ -1423,8 +1423,12 @@ MonoBehaviour:
   - prefab: {fileID: 5347680577596769270, guid: e0be6a45d25462e4098384cee4396be4, type: 3}
     difficultyCost: 1
     weight: 0
+  - prefab: {fileID: 3509470243309741848, guid: 1f49b5bd5f283024f8680ac5f91d39c8, type: 3}
+    difficultyCost: 2
+    weight: 0
   logSpawns: 0
   drawPoissonPoints: 1
+  maxSpawnPerWave: 50
 --- !u!1 &6096506327581249943
 GameObject:
   m_ObjectHideFlags: 0

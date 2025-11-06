@@ -1,8 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-public class OctopusScript : MonoBehaviour
+public class OctopusScript : RoomEnemy, IDamageable
 {
+    [Header("Health")]
+    public int maxHP = 75;
+    [SerializeField] int currentHP;
+
+    public float deathDespawnDelay = 1.5f;
+    private bool disablePhysicsOnDeath = true;
+
     [Header("Fade & Attack")]
     public float fadeSpeed = 2f;
     public float invisibleTime = 3f;
@@ -22,16 +29,21 @@ public class OctopusScript : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
+    private Collider2D cols;
     private Transform player;
     private Vector2 startPos;
     private bool isInvisible = false;
     private bool canAttack = true;
     private bool isLatched = false;
+    bool isDead = false;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        cols = GetComponent<Collider2D>();
+
+        currentHP = Mathf.Max(1, maxHP);
 
         // Rigidbody settings to prevent dropping
         rb.gravityScale = 0f;
@@ -212,5 +224,44 @@ public class OctopusScript : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+    IEnumerator DespawnAfterDelay()
+    {
+        yield return new WaitForSeconds(deathDespawnDelay);
+        Destroy(gameObject);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (isDead) return;
+
+        currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+        if (currentHP == 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // notify room ONCE
+        DieInRoom();
+
+        // the rest of your death stuff...
+        if (rb)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            if (disablePhysicsOnDeath) rb.simulated = false;
+        }
+
+        if (cols != null)
+            cols.enabled = false;
+
+        StartCoroutine(DespawnAfterDelay());
     }
 }
