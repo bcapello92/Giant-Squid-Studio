@@ -10,7 +10,7 @@ public class GameTitleUI : MonoBehaviour
 
     VisualElement root, bg;
     Label title;
-    Button startBtn, levelBtn, optionsBtn;
+    Button startBtn, levelBtn, exitBtn;
 
     Dictionary<Button, string> baseTexts = new Dictionary<Button, string>();
 
@@ -23,7 +23,7 @@ public class GameTitleUI : MonoBehaviour
         title = root.Q<Label>("Title"); // adjust if your label is named "GameTitle"
         startBtn = root.Q<Button>("StartBtn");
         levelBtn = root.Q<Button>("LevelBtn");
-        optionsBtn = root.Q<Button>("OptionsBtn");
+        exitBtn = root.Q<Button>("ExitBtn");
 
         // Optional: background setup
         if (bg != null && backgroundTexture != null)
@@ -35,12 +35,12 @@ public class GameTitleUI : MonoBehaviour
         // Click handlers
         if (startBtn != null) startBtn.clicked += OnStartClicked;
         if (levelBtn != null) levelBtn.clicked += OnLevelSelectClicked;
-        if (optionsBtn != null) optionsBtn.clicked += OnOptionsClicked;
+        if (exitBtn != null) exitBtn.clicked += OnExitClicked;
 
         // Focus + hover setup
         SetupBrackets(startBtn);
         SetupBrackets(levelBtn);
-        SetupBrackets(optionsBtn);
+        SetupBrackets(exitBtn);
 
         // initial focus
         startBtn?.Focus();
@@ -51,7 +51,7 @@ public class GameTitleUI : MonoBehaviour
     {
         RemoveHandlers(startBtn);
         RemoveHandlers(levelBtn);
-        RemoveHandlers(optionsBtn);
+        RemoveHandlers(exitBtn);
     }
 
     // ---------------- Helper Functions ----------------
@@ -96,5 +96,5 @@ public class GameTitleUI : MonoBehaviour
 
     void OnStartClicked() => SceneManager.LoadScene("Level 1");
     void OnLevelSelectClicked() => SceneManager.LoadScene("Level Select");
-    void OnOptionsClicked() => Debug.Log("Options clicked");
+    void OnExitClicked() => Application.Quit();
 }
