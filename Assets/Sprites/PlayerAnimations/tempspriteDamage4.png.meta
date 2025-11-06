@@ -1,0 +1,585 @@
+fileFormatVersion: 2
+guid: 553c1adf1428f34428a67917f82e8054
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3771264063686310899
+    second: tempspriteDamage4_0
+  - first:
+      213: 7659862853472064656
+    second: tempspriteDamage4_1
+  - first:
+      213: -5173564891011823162
+    second: tempspriteDamage4_2
+  - first:
+      213: -4765034998225100772
+    second: tempspriteDamage4_3
+  - first:
+      213: 2831298494308362085
+    second: tempspriteDamage4_4
+  - first:
+      213: -2866198219403245667
+    second: tempspriteDamage4_5
+  - first:
+      213: -9113514947834820153
+    second: tempspriteDamage4_6
+  - first:
+      213: 3366617110221167123
+    second: tempspriteDamage4_7
+  - first:
+      213: 5052584599608795875
+    second: tempspriteDamage4_8
+  - first:
+      213: -6075408350464507105
+    second: tempspriteDamage4_9
+  - first:
+      213: -8699406866793935783
+    second: tempspriteDamage4_10
+  - first:
+      213: 8590685166377004892
+    second: tempspriteDamage4_11
+  - first:
+      213: -3928934179515031754
+    second: tempspriteDamage4_12
+  - first:
+      213: 4257628889476855862
+    second: tempspriteDamage4_13
+  - first:
+      213: 3589437590089958504
+    second: tempspriteDamage4_14
+  - first:
+      213: 4591595198856162671
+    second: tempspriteDamage4_15
+  - first:
+      213: -799575627745752183
+    second: tempspriteDamage4_16
+  - first:
+      213: -3438490594740304437
+    second: tempspriteDamage4_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 150
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: tempspriteDamage4_0
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 1623
+        width: 220
+        height: 338
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fbf7365fa8365430800000000000000
+      internalID: 3771264063686310899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_1
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 1629
+        width: 220
+        height: 338
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09499697eac4d4a60800000000000000
+      internalID: 7659862853472064656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_2
+      rect:
+        serializedVersion: 2
+        x: 1039
+        y: 1622
+        width: 193
+        height: 339
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c9cec0742ec338b0800000000000000
+      internalID: -5173564891011823162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_3
+      rect:
+        serializedVersion: 2
+        x: 1274
+        y: 1623
+        width: 197
+        height: 338
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c102d745ae13fddb0800000000000000
+      internalID: -4765034998225100772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_4
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 1280
+        width: 178
+        height: 317
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 567295ecafaca4720800000000000000
+      internalID: 2831298494308362085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_5
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 1279
+        width: 186
+        height: 319
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d97cc9cb7e73938d0800000000000000
+      internalID: -2866198219403245667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_6
+      rect:
+        serializedVersion: 2
+        x: 1034
+        y: 1279
+        width: 206
+        height: 319
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c9c71fb07a468180800000000000000
+      internalID: -9113514947834820153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_7
+      rect:
+        serializedVersion: 2
+        x: 1267
+        y: 1280
+        width: 192
+        height: 318
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31a1c75bc60a8be20800000000000000
+      internalID: 3366617110221167123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_8
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 975
+        width: 200
+        height: 283
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e2aa417ce26e1640800000000000000
+      internalID: 5052584599608795875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_9
+      rect:
+        serializedVersion: 2
+        x: 787
+        y: 975
+        width: 192
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f130f1d4b40dfaba0800000000000000
+      internalID: -6075408350464507105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_10
+      rect:
+        serializedVersion: 2
+        x: 1015
+        y: 975
+        width: 219
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95c472ccb8f754780800000000000000
+      internalID: -8699406866793935783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_11
+      rect:
+        serializedVersion: 2
+        x: 1279
+        y: 1063
+        width: 6
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5f6e17b4ae383770800000000000000
+      internalID: 8590685166377004892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_12
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 975
+        width: 192
+        height: 283
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63f9d1c1e2f9979c0800000000000000
+      internalID: -3928934179515031754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_13
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 558
+        width: 187
+        height: 344
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63875b6cae2261b30800000000000000
+      internalID: 4257628889476855862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_14
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 583
+        width: 181
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8640fb4787e30d130800000000000000
+      internalID: 3589437590089958504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_15
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 554
+        width: 82
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6de53c818f98bf30800000000000000
+      internalID: 4591595198856162671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_16
+      rect:
+        serializedVersion: 2
+        x: 1051
+        y: 558
+        width: 186
+        height: 344
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98b8721f33657e4f0800000000000000
+      internalID: -799575627745752183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tempspriteDamage4_17
+      rect:
+        serializedVersion: 2
+        x: 1299
+        y: 584
+        width: 173
+        height: 317
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc58bf0a5070840d0800000000000000
+      internalID: -3438490594740304437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      tempspriteDamage4_0: 3771264063686310899
+      tempspriteDamage4_1: 7659862853472064656
+      tempspriteDamage4_10: -8699406866793935783
+      tempspriteDamage4_11: 8590685166377004892
+      tempspriteDamage4_12: -3928934179515031754
+      tempspriteDamage4_13: 4257628889476855862
+      tempspriteDamage4_14: 3589437590089958504
+      tempspriteDamage4_15: 4591595198856162671
+      tempspriteDamage4_16: -799575627745752183
+      tempspriteDamage4_17: -3438490594740304437
+      tempspriteDamage4_2: -5173564891011823162
+      tempspriteDamage4_3: -4765034998225100772
+      tempspriteDamage4_4: 2831298494308362085
+      tempspriteDamage4_5: -2866198219403245667
+      tempspriteDamage4_6: -9113514947834820153
+      tempspriteDamage4_7: 3366617110221167123
+      tempspriteDamage4_8: 5052584599608795875
+      tempspriteDamage4_9: -6075408350464507105
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

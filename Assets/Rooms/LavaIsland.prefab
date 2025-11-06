@@ -2736,7 +2736,7 @@ MonoBehaviour:
   verticalPushPerTick: 0
   targetLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   logHits: 0
 --- !u!1001 &1183347550502265697
 PrefabInstance:

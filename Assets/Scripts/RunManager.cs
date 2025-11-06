@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RunManager : MonoBehaviour
@@ -6,24 +8,32 @@ public class RunManager : MonoBehaviour
     public static RunManager I { get; private set; }
 
     [Header("Rooms")]
-    public RoomSequence roomSequence;           // holds the full pool
-    [Tooltip("If true, reshuffle when you finish the list and keep going.")]
+    public RoomSequence roomSequence;
     public bool loopAndReshuffle = true;
 
     [Header("Difficulty Curve")]
-    [Min(1)] public int difficultyBase = 1;     // starting difficulty
-    [Min(0)] public int difficultyPerRoom = 1;  // + per room advanced
+    [Min(1)] public int difficultyBase = 1;
+    [Min(0)] public int difficultyPerRoom = 1;
 
     [Header("Player State")]
     public int maxHP = 100;
     public int currentHP = 100;
     public List<string> buffs = new List<string>();
 
+    [Header("UI (optional)")]
+    public GameObject gameOverUIPrefab;     // world- or screen-space canvas prefab
+    GameObject gameOverUIInstance;
+
     // runtime
-    List<GameObject> runRooms = new List<GameObject>();
-    int currentIndex = 0;    // which room in the run we’re on (0..runRooms.Count-1)
-    int loopCount = 0;       // how many times we’ve finished the list
-    RoomManager rm;          // cached
+    List<GameObject> runRooms = new();
+    int currentIndex = 0;
+    int loopCount = 0;
+    RoomManager rm;
+    Coroutine _boot;
+    int _runVersion = 0;          // cancels stale boots
+
+    public System.Action<bool> RunActiveChanged;
+    public bool runActive { get; private set; } = false;                 // <- gate loading/advancing while dead
 
     void Awake()
     {
@@ -34,104 +44,192 @@ public class RunManager : MonoBehaviour
 
     void Start()
     {
-        // cache RoomManager once (scene should already have one)
-        rm = FindObjectOfType<RoomManager>();
-        if (!rm) Debug.LogError("[RunManager] No RoomManager in scene.");
+       
         StartNewRun();
     }
 
     public void StartNewRun()
     {
-        runRooms.Clear();
-        if (roomSequence != null && roomSequence.rooms != null)
-            runRooms.AddRange(roomSequence.rooms);
+        _runVersion++;
 
-        if (runRooms.Count == 0)
+        // Stop any in-flight boot
+        if (_boot != null) { StopCoroutine(_boot); _boot = null; }
+
+        // Fresh state
+        runActive = true;
+        RunActiveChanged?.Invoke(true);
+
+        currentHP = maxHP;
+        buffs?.Clear();
+
+        // Rebuild & shuffle the room list for this run
+        if (runRooms == null) runRooms = new List<GameObject>();
+        runRooms.Clear();
+
+        if (roomSequence != null && roomSequence.rooms != null && roomSequence.rooms.Length > 0)
         {
-            Debug.LogError("[RunManager] No rooms in RoomSequence.");
+            runRooms.AddRange(roomSequence.rooms);
+            Shuffle(runRooms);
+        }
+        else
+        {
+            Debug.LogError("[Run] No rooms in RoomSequence.");
             return;
         }
 
-        Shuffle(runRooms);
         currentIndex = 0;
         loopCount = 0;
 
-        currentHP = maxHP;
-        buffs.Clear();
-
-        LoadCurrentRoom();
+        // Begin boot AFTER the scene is ready
+        _boot = StartCoroutine(BootstrapRun(_runVersion));
     }
 
-    void Shuffle<T>(IList<T> list)
+    public void StopRun()
     {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int j = Random.Range(i, list.Count);
-            (list[i], list[j]) = (list[j], list[i]);
-        }
+        runActive = false;
+        RunActiveChanged?.Invoke(false);
+
+        if (_boot != null) { StopCoroutine(_boot); _boot = null; }
     }
+
+    public void OnPlayerDied()
+    {
+        EndRun();
+    }
+
+    void EndRun()
+    {
+        if (!runActive) return;
+
+        runActive = false;
+        RunActiveChanged?.Invoke(false);
+
+        // Show Game Over overlay if assigned
+        if (gameOverUIPrefab && !gameOverUIInstance)
+            gameOverUIInstance = Instantiate(gameOverUIPrefab);
+
+        // Optional: pause game behind UI; UI should use unscaled time
+        Time.timeScale = 0f;
+
+        // (Optional) log once for debugging
+        Debug.Log("[Run] EndRun: run deactivated, Game Over UI shown.");
+    }
+    // Wait until the scene actually has what we need, then load the room and wire the camera
+    IEnumerator BootstrapRun(int version)
+    {
+        // Give scene a frame
+        yield return null;
+
+        // Wait up to 2s for RoomManager & Player to exist in the loaded scene
+        float t = 0f, timeout = 2f;
+        RoomManager foundRM = null;
+        TestPlayerController player = null;
+
+        while (t < timeout)
+        {
+            if (version != _runVersion) yield break; // stale boot
+
+            foundRM = FindObjectOfType<RoomManager>();
+            player = FindObjectOfType<TestPlayerController>();
+            if (foundRM && player) break;
+
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (version != _runVersion) yield break; // stale boot
+        if (!foundRM)
+        {
+            Debug.LogError("[Run] No RoomManager in scene after load.");
+            yield break;
+        }
+
+        rm = foundRM;
+
+        // Load first room (RoomManager moves player to entrance & wires camera)
+        LoadCurrentRoom();
+
+        // Belt & suspenders: ensure camera follows the player
+        var cam = Camera.main;
+        if (cam != null)
+        {
+            var follow = cam.GetComponent<CameraFollow>();
+            if (follow != null && player != null) follow.SetTarget(player.transform);
+        }
+
+        if (version == _runVersion) _boot = null;
+    }
+
+        void Shuffle<T>(IList<T> list)
+        {
+
+            for (int i = 0; i < list.Count; i++) { int j = Random.Range(i, list.Count); (list[i], list[j]) = (list[j], list[i]); }
+        }
+    
 
     public void LoadCurrentRoom()
     {
-        if (!rm) { Debug.LogError("[RunManager] No RoomManager."); return; }
-        if (runRooms.Count == 0) { Debug.LogError("[RunManager] No rooms!"); return; }
+        if (!runActive) return;
+
+        // Reacquire rm every call (fresh scene)
+        if (rm == null) rm = FindObjectOfType<RoomManager>();
+        if (rm == null) { Debug.LogError("[Run] No RoomManager in scene."); return; }
+
+        if (runRooms == null || runRooms.Count == 0)
+        {
+            Debug.LogError("[Run] No rooms in sequence.");
+            return;
+        }
 
         currentIndex = Mathf.Clamp(currentIndex, 0, runRooms.Count - 1);
-        rm.LoadRoom(runRooms[currentIndex]);
+        var prefab = runRooms[currentIndex];
+        if (!prefab) { Debug.LogError($"[Run] Room at index {currentIndex} is null."); return; }
+
+        rm.LoadRoom(prefab);
     }
 
-    // === Difficulty exposed to RoomManager / Spawners ===
+    public void GoToNextRoom()
+    {
+        if (!runActive) return;
+
+        currentIndex++;
+        if (currentIndex >= runRooms.Count)
+        {
+            // End or reshuffle loop here (your preference)
+            // Example: reshuffle and continue
+            Shuffle(runRooms);
+            currentIndex = 0;
+        }
+        LoadCurrentRoom();
+    }
+
     public int GetCurrentDifficulty()
     {
-        // Linear curve: base + rooms_passed * slope
-        // rooms_passed counts across loops: loopCount*runRooms.Count + currentIndex
         int roomsPassed = loopCount * runRooms.Count + currentIndex;
         int diff = difficultyBase + roomsPassed * difficultyPerRoom;
         return Mathf.Max(1, diff);
     }
 
-    public void GoToNextRoom()
-    {
-        if (runRooms.Count == 0) return;
+  
 
-        currentIndex++;
-
-        if (currentIndex >= runRooms.Count)
-        {
-            if (!loopAndReshuffle)
-            {
-                // End of run; restart a fresh run
-                StartNewRun();
-                return;
-            }
-
-            // Loop: reshuffle and keep climbing difficulty
-            loopCount++;
-            Shuffle(runRooms);
-            currentIndex = 0;
-        }
-
-        LoadCurrentRoom();
-    }
-
-    // --- Player state helpers ---
+    // ==== Player state ====
     public void ApplyDamage(int amount)
     {
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
-        if (currentHP == 0)
-            OnPlayerDied();
+        if (currentHP == 0) OnPlayerDied();
     }
 
-    public void Heal(int amount) => currentHP = Mathf.Min(maxHP, currentHP + Mathf.Abs(amount));
+    public void Heal(int amount)
+    {
+        currentHP = Mathf.Min(maxHP, currentHP + Mathf.Abs(amount));
+    }
 
     public void AddBuff(string id)
     {
         if (!buffs.Contains(id)) buffs.Add(id);
     }
 
-    public void OnPlayerDied()
-    {
-        // Simple reset; you can add lose-screen flow here if you want
-        StartNewRun();
-    }
+    
+  
+
 }

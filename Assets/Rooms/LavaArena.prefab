@@ -625,7 +625,7 @@ MonoBehaviour:
   verticalPushPerTick: 0
   targetLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   logHits: 0
 --- !u!1 &3133855822471922687
 GameObject:

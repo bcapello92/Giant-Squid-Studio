@@ -326,9 +326,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TitleScreenUI
   uiDocument: {fileID: 1173064282}
   backgroundTexture: {fileID: 0}
-  firstSceneName: GameScene
-  levelSelectUxml: {fileID: 0}
-  optionsUxml: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

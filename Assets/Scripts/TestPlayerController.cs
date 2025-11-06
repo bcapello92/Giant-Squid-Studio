@@ -53,6 +53,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     public string lastYParam = "LastY";
     public string speedParam = "Speed";
     public SpriteRenderer bodySR;//for swapping side to side sprite
+    public string DamageTrigParam = "TakeDamage";
 
     Rigidbody2D rb;
     Vector2 moveInput;
@@ -258,11 +259,15 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         int prev = currentHP;
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
         if (currentHP != prev)
+        {
             HealthChanged?.Invoke(currentHP, maxHP);
+            if (amount > 0 && anim && !string.IsNullOrEmpty(DamageTrigParam))
+                anim.SetTrigger(DamageTrigParam);
+        }
 
         if (currentHP == 0)
         {
-            // TODO: death behavior
+            RunManager.I?.OnPlayerDied();
         }
     }
 

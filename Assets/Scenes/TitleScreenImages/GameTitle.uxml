@@ -5,8 +5,8 @@
         <ui:VisualElement name="Content" class="content" style="background-image: url(&quot;project://database/Assets/Scenes/TitleScreenImages/TitleBackground.svg?fileID=7388822144124034973&amp;guid=f560454c9e4dad04abfb7a84f2d2e23a&amp;type=3#TitleBackground&quot;); top: 3px; bottom: -2px; right: 0; left: 3px;">
             <ui:Label name="Title" text="Into the Depths" class="title" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;);" />
             <ui:Button name="StartBtn" text="Start Game" class="menu-btn" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;); width: 633px;" />
-            <ui:VisualElement name="Menu" class="menu" />
             <ui:Button name="LevelBtn" text="Level Select" class="menu-btn" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;); width: 474px; height: 41px;" />
+            <ui:VisualElement name="Menu" class="menu" />
             <ui:Label text="&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;Contact: Brendan C.  discord: capello237,&#10;joe W.  Discord: itsmenotfunny,&#10;Cole k. Discord nyarlatmkii&#10;" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;); font-size: 16px; color: rgb(255, 255, 255); justify-content: space-between; height: 194px; width: 426px;" />
         </ui:VisualElement>
     </ui:VisualElement>

@@ -222,8 +222,8 @@ MonoBehaviour:
     m_Bits: 64
   detectionRange: 6
   stopDistance: 1
-  shockRadius: 3
-  shockDamage: 8
+  shockRadius: 2
+  shockDamage: 5
   shockCooldown: 1
   shockKnockback: 2.5
   moveSpeed: 2

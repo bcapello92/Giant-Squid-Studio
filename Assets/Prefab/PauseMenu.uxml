@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="pause-root" class="root">
+        <ui:VisualElement name="scrim" class="scrim" />
+        <ui:VisualElement name="panel" class="panel">
+            <ui:Label name="pause-title" text="PAUSED" class="title" />
+            <ui:Button name="resume-btn" text="Resume Game" style="background-size: 25% 25%;" />
+            <ui:Button name="restart-btn" text="Restart Run" style="background-size: 25% 100%;" />
+            <ui:Button name="menu-btn" text="Return to Menu" style="height: 43px; background-size: 25% 100%;" />
+            <ui:Button name="quit-btn" text="Quit Game" style="background-size: 25% 25%; -unity-background-image-tint-color: rgb(118, 118, 118);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

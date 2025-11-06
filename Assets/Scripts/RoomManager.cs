@@ -16,6 +16,7 @@ public class RoomManager : MonoBehaviour
     readonly List<RoomEnemy> liveEnemies = new List<RoomEnemy>();
     DoorController currentDoorOut;
 
+
     void Awake()
     {
         if (roomRoot == null)
@@ -118,8 +119,8 @@ public class RoomManager : MonoBehaviour
 
     public void OnExitDoorUsed()
     {
-        if (RunManager.I != null)
-            RunManager.I.GoToNextRoom();
+        if (RunManager.I != null && !RunManager.I.runActive) return;
+        RunManager.I?.GoToNextRoom();
     }
     public void RegisterEnemy(RoomEnemy enemy)
     {
@@ -130,5 +131,6 @@ public class RoomManager : MonoBehaviour
             enemy.SetRoomManager(this);
         }
     }
+
 
 }
