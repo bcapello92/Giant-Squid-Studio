@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.SceneManagement;
 using System;
+using System.Collections;                 // for IEnumerator
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
 public class GameOverUIControllerUITK : MonoBehaviour
@@ -28,20 +29,20 @@ public class GameOverUIControllerUITK : MonoBehaviour
         restartBtn = root.Q<Button>("RestartBtn");
         menuBtn = root.Q<Button>("MainMenuBtn");
 
-        // Button-only interaction
         if (restartBtn != null) restartBtn.clicked += OnRestart;
         if (menuBtn != null) menuBtn.clicked += OnMenu;
 
-        // Fade + pause + cursor unlock
+        // Fade in + pause + cursor unlock
         root.style.opacity = 0f;
         StartCoroutine(FadeIn());
+
         Time.timeScale = 0f;
         prevCursorVisible = UnityEngine.Cursor.visible;
         prevLock = UnityEngine.Cursor.lockState;
         UnityEngine.Cursor.visible = true;
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
-        // Don’t accidentally trigger Restart with Enter; focus nothing or Menu:
+        // Focus menu by default so Enter doesn't accidentally restart
         menuBtn?.Focus();
     }
 
@@ -55,7 +56,7 @@ public class GameOverUIControllerUITK : MonoBehaviour
         UnityEngine.Cursor.lockState = prevLock;
     }
 
-    System.Collections.IEnumerator FadeIn()
+    IEnumerator FadeIn()
     {
         float t = 0f;
         while (t < fadeInTime)
@@ -65,30 +66,21 @@ public class GameOverUIControllerUITK : MonoBehaviour
             yield return null;
         }
         root.style.opacity = 1f;
-        root.pickingMode = PickingMode.Position;
+        root.pickingMode = PickingMode.Position; // accept clicks immediately
     }
 
     void OnRestart()
     {
-        LoadSceneThen(level1SceneName, () =>
-        {
-            // re-enable gameplay and restart the run AFTER Level1 is loaded
-            RunManager.I?.StartNewRun();
-        });
+        // Stop any current run; Level 1's RunSceneBootstrap will StartNewRun()
+        RunManager.I?.StopRun();
+        LoadSceneThen(level1SceneName, after: null);
     }
 
     void OnMenu()
     {
-        LoadSceneThen(mainMenuSceneName, () =>
-        {
-            // stop gameplay input while on menu
-            if (RunManager.I != null)
-            {
-                // ensure your RunManager won’t advance rooms on menu
-                // (if you added IsRunActive, flip it off; otherwise, you can add a StopRun() API)
-               RunManager.I?.StopRun(); // make this 'internal set' or expose a StopRun()
-            }
-        });
+        // Stop gameplay and go to main menu; no run starts here
+        RunManager.I?.StopRun();
+        LoadSceneThen(mainMenuSceneName, after: null);
     }
 
     void LoadSceneThen(string sceneName, Action after)
@@ -104,21 +96,30 @@ public class GameOverUIControllerUITK : MonoBehaviour
             return;
         }
 
-        // restore timescale BEFORE scene load
+        // Unpause BEFORE loading the new scene
         if (Mathf.Approximately(Time.timeScale, 0f)) Time.timeScale = 1f;
 
-        // run callback when the requested scene finishes loading
         void Handler(Scene s, LoadSceneMode m)
         {
-            if (s.name == sceneName)
+            if (s.name != sceneName) return;
+            SceneManager.sceneLoaded -= Handler;
+
+            // Give one frame if you need to do anything after load
+            if (after != null)
             {
-                SceneManager.sceneLoaded -= Handler;
-                after?.Invoke();
+                // run deferred
+                StartCoroutine(Deferred(after));
             }
         }
         SceneManager.sceneLoaded += Handler;
 
         SceneManager.LoadScene(sceneName);
         Destroy(gameObject); // remove the overlay
+    }
+
+    IEnumerator Deferred(Action after)
+    {
+        yield return null;
+        after?.Invoke();
     }
 }

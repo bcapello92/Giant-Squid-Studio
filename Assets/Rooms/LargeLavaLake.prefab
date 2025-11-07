@@ -1788,8 +1788,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 271ffeb8208164646ac1e5f75472ea70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LavaHazard2D
-  damagePerTick: 5
-  tickInterval: 0.5
+  damagePerTick: 2
+  tickInterval: 1
   verticalPushPerTick: 0
   targetLayers:
     serializedVersion: 2

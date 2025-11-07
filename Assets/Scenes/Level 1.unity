@@ -341,6 +341,14 @@ MonoBehaviour:
   playerSpawnPoint: {fileID: 0}
   roomRoot: {fileID: 60686511}
   powerupPrefab: {fileID: 5753975855413512337, guid: ae0d59a6df7f3a344878be1613fc1a2a, type: 3}
+  pickupMarkerName: PickupSpawn
+  powerupOffset: {x: 0, y: 1}
+  avoidLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  spawnClearRadius: 0.25
+  nudgeStep: 0.15
+  nudgeTries: 10
 --- !u!4 &683274963
 Transform:
   m_ObjectHideFlags: 0
@@ -388,6 +396,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RunManager
   roomSequence: {fileID: 11400000, guid: ba9fc0bc7d81f74478a94410f701ea01, type: 2}
   loopAndReshuffle: 0
+  roomsUntilBoss: 4
+  bossRoomPrefab: {fileID: 1267140214647661739, guid: 70bdb2a3bf2dfed45a352c4b5f5f40ea, type: 3}
   difficultyBase: 4
   difficultyPerRoom: 4
   maxHP: 100
@@ -395,6 +405,7 @@ MonoBehaviour:
   buffs:
   - 
   gameOverUIPrefab: {fileID: 2301578770528507454, guid: ee4d0cdf57e61a842a16625af3cd41ea, type: 3}
+  youWinUIPrefab: {fileID: 6455434437521660598, guid: 64c541a2448d3464e8a881146a228561, type: 3}
 --- !u!4 &797814302
 Transform:
   m_ObjectHideFlags: 0
@@ -628,6 +639,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4358310634af0f4683398a29f71e139, type: 3}
+--- !u!1 &1418720159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1418720160}
+  - component: {fileID: 1418720161}
+  m_Layer: 0
+  m_Name: RunSceneBootstrap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1418720160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418720159}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 451.88696, y: 260.09268, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1418720161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418720159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb7b190cc097fdb44950b228d81f83ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunSceneBootstrap
 --- !u!1001 &1707576243
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -699,3 +754,4 @@ SceneRoots:
   - {fileID: 1707576243}
   - {fileID: 825864700}
   - {fileID: 1402041311}
+  - {fileID: 1418720160}

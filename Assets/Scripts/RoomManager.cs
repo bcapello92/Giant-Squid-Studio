@@ -1,10 +1,10 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
 {
     [Header("Optional fallback (only used if room has no entrance marker)")]
-    [Tooltip("If a room has no DoorEntranceMarker, we’ll spawn the player here. Can be left null.")]
+    [Tooltip("If a room has no DoorEntranceMarker, weâ€™ll spawn the player here. Can be left null.")]
     public Transform playerSpawnPoint;
 
     [Header("Room root (where room instances go)")]
@@ -33,6 +33,7 @@ public class RoomManager : MonoBehaviour
 
     // ----- Runtime -----
     GameObject currentRoomInstance;
+    bool isBossRoom = false;
     readonly List<RoomEnemy> liveEnemies = new List<RoomEnemy>();
     DoorController currentExitDoor;                   // for pickup spawn
     DoorController[] allDoorsInRoom;
@@ -56,7 +57,7 @@ public class RoomManager : MonoBehaviour
         // 2) Spawn new room under root
         currentRoomInstance = Instantiate(roomPrefab, roomRoot);
         currentRoomInstance.name = roomPrefab.name;
-
+        isBossRoom = currentRoomInstance.GetComponentInChildren<BossRoomMarker>(true) != null;
         // 3) Find entrance marker (if any)
         DoorEntranceMarker entrance = currentRoomInstance.GetComponentInChildren<DoorEntranceMarker>(true);
 
@@ -131,29 +132,29 @@ public class RoomManager : MonoBehaviour
     // =========================================================
     void OnRoomCleared()
     {
-        // 1) Unlock all doors
+        if (isBossRoom)
+        {
+            // Boss defeated â†’ win the game
+            RunManager.I?.OnBossDefeated();
+            return;
+        }
+
+        // Normal room clear:
         if (allDoorsInRoom != null)
             foreach (var d in allDoorsInRoom) if (d) d.Unlock();
 
-        // 2) Heal player (+ RunManager mirror)
         const int clearHeal = 10;
         var player = FindObjectOfType<TestPlayerController>();
         if (player) player.Heal(clearHeal);
         RunManager.I?.Heal(clearHeal);
 
-        // 3) Spawn power-up at the exit door
         if (powerupPrefab && currentExitDoor)
         {
             Vector3 pos = GetPowerupSpawnPosition(currentExitDoor.transform);
             Instantiate(powerupPrefab, pos, Quaternion.identity);
         }
-        else
-        {
-            // Optional logs to help diagnose config issues
-            if (!powerupPrefab) Debug.LogWarning("[Room] powerupPrefab not assigned.");
-            if (!currentExitDoor) Debug.LogWarning("[Room] No exit door available for pickup spawn.");
-        }
     }
+
 
     // Called by DoorController when player uses the exit
     public void OnExitDoorUsed()
@@ -176,14 +177,14 @@ public class RoomManager : MonoBehaviour
         if (avoidLayers.value == 0)
             return basePos;
 
-        // If blocked, nudge around in 90° steps (simple + predictable)
+        // If blocked, nudge around in 90Â° steps (simple + predictable)
         bool blocked = Physics2D.OverlapCircle(basePos, spawnClearRadius, avoidLayers);
         if (!blocked) return basePos;
 
         float angle = 0f;
         for (int i = 0; i < nudgeTries; i++)
         {
-            angle += Mathf.PI * 0.5f; // 90° step
+            angle += Mathf.PI * 0.5f; // 90Â° step
             float radius = nudgeStep * (1 + i * 0.5f);
             Vector2 off = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
             Vector3 candidate = basePos + (Vector3)off;

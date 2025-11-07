@@ -4,7 +4,7 @@ using System.Collections;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class BossController2D : MonoBehaviour, IDamageable // implement IDamageableEx if you want rich logs
+public class BossController2D : RoomEnemy, IDamageable
 {
     // -------------------- REFS --------------------
     [Header("Core Refs")]
@@ -32,6 +32,8 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
     [Range(0f, 1f)] public float skyAttackChance = 0.35f;
     public float groundAttackRange = 3.5f;
     public float chaseSpeed = 2.0f;
+    [Header("Chase")]
+    public float chaseAccel = 50f;  // smoothing for velocity changes
 
     [Header("Walk Animation Params (optional)")]
     public string isMovingParam = "IsMoving";
@@ -39,17 +41,33 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
     public string moveYParam = "MoveY";
 
     // -------------------- SKY / VANISH --------------------
+    [Header("Sky Attack Targeting")]
+    public bool trackDuringHover = true;   // follow player's X before diving
+    public float hoverTrackTime = 0.8f;    // how long to track before dive
+    public float hoverMaxXSpeed = 10f;     // max horizontal speed while tracking
+    public float hoverSnapEpsilon = 0.05f; // if close enough, stop moving X
+
     [Header("Sky Attack Tuning")]
     public float skyRiseHeight = 6f;
     public float skyRiseSpeed = 12f;
     public float skyDiveSpeed = 18f;
     public float alignSpeed = 10f;       // slide speed over target X
-    public float telegraphDelay = 0.18f;    // pause before diving
+    public float telegraphDelay = 0.18f; // pause before diving
 
     [Header("Vanish")]
     public bool invulnerableDuringVanish = true;
     public bool hideSpriteDuringVanish = true;
     public float vanishTeleportYMargin = 0.5f; // reappear just below ceiling
+    public bool useOnVanishDoneEvent = true;   // wait for anim event to finish vanish
+    public float vanishEventTimeout = 1.5f;    // failsafe if event missing
+
+    [Header("Melee (Overlap)")]
+    public int meleeDamage = 12;
+    public float meleeRadius = 0.6f;
+    public Vector2 meleeOffset = new Vector2(0.7f, 0.0f); // local, when facing right
+    public LayerMask meleeTargets; // include Player
+    public float meleeKnockback = 4f;
+
 
     // -------------------- I-FRAMES --------------------
     [Header("I-frames")]
@@ -58,7 +76,7 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
 
     // -------------------- ARENA LIMITS --------------------
     [Header("Arena Limits")]
-    public Collider2D arenaCollider;     // Box/Composite/Polygon collider that bounds the room
+    public Collider2D arenaCollider;     // Box/Composite/Polygon collider that bounds the room (always enabled)
     public float wallMargin = 0.5f;
     public float ceilingMargin = 0.5f;
     public float floorMargin = 0.1f;
@@ -79,12 +97,20 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
     static readonly string P_TRIG_DAMAGE = "Trig_Damage";
     static readonly string P_BOOL_DEAD = "IsDead";
 
+    [Header("Animator State Names (match your controller)")]
+    public string vanishStateName = "vanish";
+    public string skyStateName = "attack from sky";
+    public string impactStateName = "impact";
+
     // -------------------- STATE --------------------
     bool busy;               // true while in attacks/cinematics
     bool appeared;           // after appear finishes
     public bool IsInvulnerable { get; private set; }
     int iframeDepth = 0;     // nested i-frames safety
     Vector2 spawnPos;
+
+    // vanish event flag
+    bool vanishDoneFlag;
 
     // -------------------- UNITY --------------------
     void Reset()
@@ -106,7 +132,6 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
 
         DisableAllHitboxes();
 
-        // Try auto-find player by tag
         if (!player)
         {
             var p = GameObject.FindGameObjectWithTag("Player");
@@ -114,46 +139,56 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
         }
         if (!spriteForHide) spriteForHide = GetComponentInChildren<SpriteRenderer>(true);
         if (!bodyCollider) bodyCollider = GetComponent<Collider2D>();
+
+        // Guard: arenaCollider must not be the boss's own collider
+        if (arenaCollider && bodyCollider && ReferenceEquals(arenaCollider, bodyCollider))
+            Debug.LogWarning("[Boss] arenaCollider references bodyCollider. Use a separate, always-enabled room collider.");
     }
 
     void Start()
     {
-        // Start Appear cinematic (Animator Entry → Appear)
         busy = true;
         if (invulnerableDuringAppear) BeginIFrames();
         StartCoroutine(AppearRoutine());
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (IsDead || !appeared) return;
 
-        // Simple chase if not in an attack
-        Vector2 vel = Vector2.zero;
-        if (!busy && player)
+        // don’t move while performing attacks/cinematics
+        if (busy || !player)
         {
-            Vector2 toPlayer = (player.position - transform.position);
-            float dist = toPlayer.magnitude;
-            vel = (dist > groundAttackRange * 0.8f) ? toPlayer.normalized * chaseSpeed : Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
+            return;
         }
 
-        rb.linearVelocity = vel;
+        Vector2 toPlayer = (Vector2)(player.position - transform.position);
+        float dist = toPlayer.magnitude;
 
-        // Drive walk animation (optional)
-        bool moving = vel.sqrMagnitude > 0.0001f;
+        Vector2 desired = (dist > groundAttackRange * 0.8f) ? toPlayer.normalized * chaseSpeed
+                                                            : Vector2.zero;
+
+        // smooth toward desired velocity (prevents jitter when starting/stopping)
+        Vector2 v = rb.linearVelocity;
+        Vector2 step = Vector2.ClampMagnitude(desired - v, chaseAccel * Time.fixedDeltaTime);
+        rb.linearVelocity = v + step;
+
+        // optional: drive walk params
+        bool moving = rb.linearVelocity.sqrMagnitude > 0.001f;
         if (anim && !string.IsNullOrEmpty(isMovingParam)) anim.SetBool(isMovingParam, moving);
         if (anim)
         {
-            Vector2 dir = moving ? vel.normalized : (player ? (Vector2)(player.position - transform.position).normalized : Vector2.right);
+            Vector2 dir = moving ? rb.linearVelocity.normalized : (player ? (Vector2)(player.position - transform.position).normalized : Vector2.right);
             if (!string.IsNullOrEmpty(moveXParam)) anim.SetFloat(moveXParam, dir.x);
             if (!string.IsNullOrEmpty(moveYParam)) anim.SetFloat(moveYParam, dir.y);
         }
     }
 
+
     // -------------------- APPEAR --------------------
     IEnumerator AppearRoutine()
     {
-        // If the animation event never fires, safety-finish in 2s
         float safety = 2f;
         while (!appeared && safety > 0f)
         {
@@ -180,14 +215,12 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
     {
         while (!IsDead)
         {
-            // pick attack
             bool doSky = (Random.value < skyAttackChance);
             if (doSky && player)
                 yield return StartCoroutine(VanishIntoSkyRoutine());
             else
                 yield return StartCoroutine(GroundAttackRoutine());
 
-            // small idle
             float t = 0f;
             while (t < idleTimeBetweenAttacks && !IsDead)
             {
@@ -206,8 +239,6 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
 
         SafeSetTrigger(anim, P_TRIG_ATTACK);
 
-        // Animation events should call StartGroundDamage/StopGroundDamage.
-        // Safety timeout so we never hang.
         float safety = 2.5f;
         while (safety > 0f && !IsDead)
         {
@@ -217,6 +248,41 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
 
         DisableAllHitboxes();
         busy = false;
+    }
+    float FacingSign()
+    {
+        // if you flip sprites, prefer that; else use localScale.x
+        var sr = spriteForHide;
+        if (sr) return sr.flipX ? -1f : 1f;
+        float sx = transform.localScale.x;
+        return Mathf.Approximately(sx, 0f) ? 1f : Mathf.Sign(sx);
+    }
+
+    public void MeleeHitEvent() // call this from the peak frame of the attack animation
+    {
+        Vector2 pos = (Vector2)transform.position + new Vector2(meleeOffset.x * FacingSign(), meleeOffset.y);
+        var hits = Physics2D.OverlapCircleAll(pos, meleeRadius, meleeTargets);
+        foreach (var h in hits)
+        {
+            if (!h) continue;
+            var dmg = h.GetComponentInParent<IDamageable>() ?? h.GetComponentInChildren<IDamageable>();
+            if (dmg != null)
+            {
+                dmg.TakeDamage(meleeDamage);
+                var prb = h.attachedRigidbody;
+                if (prb) prb.AddForce(((Vector2)h.transform.position - (Vector2)transform.position).normalized * meleeKnockback, ForceMode2D.Impulse);
+            }
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // existing gizmo code...
+        // add melee sphere viz:
+        Gizmos.color = Color.red;
+        float s = Application.isPlaying ? FacingSign() : Mathf.Sign(transform.localScale.x == 0 ? 1 : transform.localScale.x);
+        Vector2 pos = (Vector2)transform.position + new Vector2(meleeOffset.x * s, meleeOffset.y);
+        Gizmos.DrawWireSphere(pos, meleeRadius);
     }
 
     // Called by animation events in ground swing
@@ -232,10 +298,16 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
 
         // Enter Vanish state
         SafeSetTrigger(anim, P_TRIG_VANISH);
-        OnVanishStart(); // in case events are missing, apply immediately
+        OnVanishStart(); // apply invis / iframes immediately even if event fails
 
-        // wait a short beat so the vanish pose shows
-        yield return new WaitForSeconds(0.25f);
+        // Wait for OnVanishDone() event or timeout
+        vanishDoneFlag = false;
+        float t = 0f;
+        while (useOnVanishDoneEvent && !vanishDoneFlag && t < vanishEventTimeout)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
 
         // Compute reappear position (near ceiling, clamped)
         float ceilingY = ArenaCeilingY();
@@ -259,39 +331,76 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
         if (bodyCollider) bodyCollider.enabled = false;
         DisableAllHitboxes();
     }
-    public void OnVanishEnd() { /* if your clip re-materializes visually, you can re-enable sprite here */ }
-    public void OnVanishDone() { SafeSetTrigger(anim, P_TRIG_VANISH_DONE); }
+    public void OnVanishEnd() { /* optional mid-vanish hook */ }
+    public void OnVanishDone()
+    {
+        vanishDoneFlag = true;
+        SafeSetTrigger(anim, P_TRIG_VANISH_DONE);
+    }
 
-    // Assumes we already teleported near the ceiling; reappear, telegraph, dive
     IEnumerator SkyAttackRoutine_ReenterFromAir()
     {
+        // Tell Animator to go to sky state
         SafeSetTrigger(anim, P_TRIG_SKY);
+
+        // Wait briefly for transition to consume trigger; force if blocked
+        yield return WaitToEnterState(skyStateName, 0.6f, 0);
+        if (!IsInState(skyStateName, 0))
+        {
+            anim.ResetTrigger(P_TRIG_SKY);
+            anim.Play(skyStateName, 0, 0f); // force enter
+            yield return null;
+        }
 
         // Keep invuln from vanish and ensure invuln during sky
         if (invulnerableDuringSky && !IsInvulnerable) BeginIFrames();
 
-        // Reappear visually before telegraph
+        // Reappear visually before hover/telegraph
         if (hideSpriteDuringVanish && spriteForHide) spriteForHide.enabled = true;
 
-        // Lock X at reappearance and pause (no continuous tracking)
+        // --- HOVER & TRACK PLAYER.X (optional) ---
         float lockedTargetX = rb.position.x;
+        float hoverTimer = hoverTrackTime;
+        float hoverY = rb.position.y;
+
+        while (!IsDead && trackDuringHover && hoverTimer > 0f)
+        {
+            hoverTimer -= Time.deltaTime;
+
+            float targetX = rb.position.x;
+            if (player) targetX = ClampArenaX(player.position.x);
+
+            float nextX = Mathf.MoveTowards(rb.position.x, targetX, hoverMaxXSpeed * Time.deltaTime);
+            if (Mathf.Abs(nextX - targetX) < hoverSnapEpsilon) nextX = targetX;
+
+            rb.MovePosition(new Vector2(ClampArenaX(nextX), ClampArenaY(hoverY)));
+            yield return null;
+        }
+
+        // Final lock before the dive
+        lockedTargetX = ClampArenaX(rb.position.x);
+
+        // Telegraph pause
         if (telegraphDelay > 0f) yield return new WaitForSeconds(telegraphDelay);
 
-        // Dive straight down, clamped to arena floor
+        // --- DIVE STRAIGHT DOWN (X locked) ---
         float diveTimeout = 2.0f;
         float arenaFloorY = ArenaFloorY();
+
+        var oldConstraints = rb.constraints;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
 
         while (!IsDead && diveTimeout > 0f)
         {
             diveTimeout -= Time.deltaTime;
 
             Vector2 next = new Vector2(
-                ClampArenaX(lockedTargetX),
+                lockedTargetX,
                 Mathf.Max(transform.position.y - skyDiveSpeed * Time.deltaTime, arenaFloorY)
             );
-            rb.MovePosition(next);
+            rb.MovePosition(new Vector2(ClampArenaX(next.x), next.y));
 
-            // Ground check: ray from feet
+            // Ground check
             Vector2 origin = (Vector2)transform.position + feetOffset;
             RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, groundRayLen, groundMask);
             bool hitFloor = (transform.position.y <= arenaFloorY + 0.02f);
@@ -306,11 +415,12 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
             yield return null;
         }
 
+        rb.constraints = oldConstraints;
+
         // End invulnerability windows
         if (invulnerableDuringSky) EndIFrames();
         if (invulnerableDuringVanish) EndIFrames();
 
-        // Restore collision if we hid it
         if (bodyCollider) bodyCollider.enabled = true;
 
         SafeSetTrigger(anim, P_TRIG_SKY_DONE);
@@ -319,7 +429,6 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
         DisableAllHitboxes();
     }
 
-    // Called on impact window during sky slam
     public void StartSlamDamage() { if (slamHitbox) slamHitbox.enabled = true; }
     public void StopSlamDamage() { if (slamHitbox) slamHitbox.enabled = false; }
 
@@ -348,7 +457,6 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
         anim.SetBool(P_BOOL_DEAD, true);
         SafeSetTrigger(anim, "Trig_Death");
 
-        // destroy after short delay (or use animation event)
         StartCoroutine(DespawnAfter(2.5f));
     }
 
@@ -356,6 +464,7 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
     {
         yield return new WaitForSeconds(s);
         Destroy(gameObject);
+        DieInRoom();
     }
 
     // -------------------- UTIL: HITBOX / I-FRAME / ANIM --------------------
@@ -392,11 +501,33 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
             a.SetTrigger(name);
     }
 
+    // Animator helpers
+    bool IsInState(string stateName, int layer = 0)
+    {
+        if (!anim || string.IsNullOrEmpty(stateName)) return false;
+        var st = anim.GetCurrentAnimatorStateInfo(layer);
+        return st.IsName(stateName);
+    }
+    IEnumerator WaitToEnterState(string stateName, float timeout, int layer)
+    {
+        float t = 0f;
+        while (t < timeout)
+        {
+            if (IsInState(stateName, layer)) yield break;
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
     // -------------------- UTIL: ARENA & CLAMP --------------------
     bool TryGetArena(out Bounds b)
     {
-        if (arenaCollider) { b = arenaCollider.bounds; return true; }
-        b = default; return false;
+        b = default;
+        if (!arenaCollider) return false;
+        if (!arenaCollider.enabled) return false;
+        var bb = arenaCollider.bounds;
+        if (bb.size.x < 0.01f || bb.size.y < 0.01f) return false; // avoid zero/tiny
+        b = bb; return true;
     }
     float ClampArenaX(float x)
     {
@@ -412,10 +543,5 @@ public class BossController2D : MonoBehaviour, IDamageable // implement IDamagea
     float ArenaFloorY() => TryGetArena(out var b) ? b.min.y + floorMargin : transform.position.y - 100f;
 
     // -------------------- GIZMOS (debug ground ray) --------------------
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Vector2 ro = (Vector2)transform.position + feetOffset;
-        Gizmos.DrawLine(ro, ro + Vector2.down * groundRayLen);
-    }
+  
 }

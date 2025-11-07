@@ -11,6 +11,10 @@ public class RunManager : MonoBehaviour
     public RoomSequence roomSequence;
     public bool loopAndReshuffle = true;
 
+    [Header("Boss Flow")]
+    [Min(1)] public int roomsUntilBoss = 4;       // boss after N normal rooms
+    public GameObject bossRoomPrefab;             // room that contains the boss (or a BossSpawn marker)
+
     [Header("Difficulty Curve")]
     [Min(1)] public int difficultyBase = 1;
     [Min(0)] public int difficultyPerRoom = 1;
@@ -21,19 +25,23 @@ public class RunManager : MonoBehaviour
     public List<string> buffs = new List<string>();
 
     [Header("UI (optional)")]
-    public GameObject gameOverUIPrefab;     // world- or screen-space canvas prefab
-    GameObject gameOverUIInstance;
+    public GameObject gameOverUIPrefab;     // Game Over (lose)
+    public GameObject youWinUIPrefab;       // You Win (boss defeated)
 
     // runtime
     List<GameObject> runRooms = new();
     int currentIndex = 0;
     int loopCount = 0;
+    int roomsClearedThisRun = 0;
+    bool inBossRoom = false;
+
     RoomManager rm;
     Coroutine _boot;
-    int _runVersion = 0;          // cancels stale boots
+    int _runVersion = 0;
 
     public System.Action<bool> RunActiveChanged;
-    public bool runActive { get; private set; } = false;                 // <- gate loading/advancing while dead
+    public bool runActive { get; private set; } = false;
+    public bool IsRunActive => runActive;
 
     void Awake()
     {
@@ -44,28 +52,25 @@ public class RunManager : MonoBehaviour
 
     void Start()
     {
-       
-        StartNewRun();
+        
     }
 
     public void StartNewRun()
     {
         _runVersion++;
-
-        // Stop any in-flight boot
         if (_boot != null) { StopCoroutine(_boot); _boot = null; }
 
-        // Fresh state
         runActive = true;
         RunActiveChanged?.Invoke(true);
 
         currentHP = maxHP;
         buffs?.Clear();
 
-        // Rebuild & shuffle the room list for this run
+        roomsClearedThisRun = 0;
+        inBossRoom = false;
+
         if (runRooms == null) runRooms = new List<GameObject>();
         runRooms.Clear();
-
         if (roomSequence != null && roomSequence.rooms != null && roomSequence.rooms.Length > 0)
         {
             runRooms.AddRange(roomSequence.rooms);
@@ -80,7 +85,6 @@ public class RunManager : MonoBehaviour
         currentIndex = 0;
         loopCount = 0;
 
-        // Begin boot AFTER the scene is ready
         _boot = StartCoroutine(BootstrapRun(_runVersion));
     }
 
@@ -88,7 +92,6 @@ public class RunManager : MonoBehaviour
     {
         runActive = false;
         RunActiveChanged?.Invoke(false);
-
         if (_boot != null) { StopCoroutine(_boot); _boot = null; }
     }
 
@@ -100,117 +103,145 @@ public class RunManager : MonoBehaviour
     void EndRun()
     {
         if (!runActive) return;
-
         runActive = false;
         RunActiveChanged?.Invoke(false);
 
-        // Show Game Over overlay if assigned
-        if (gameOverUIPrefab && !gameOverUIInstance)
-            gameOverUIInstance = Instantiate(gameOverUIPrefab);
+        if (gameOverUIPrefab && !GameObject.FindObjectOfType<Canvas>()) // optional guard
+            Instantiate(gameOverUIPrefab);
 
-        // Optional: pause game behind UI; UI should use unscaled time
-        Time.timeScale = 0f;
-
-        // (Optional) log once for debugging
-        Debug.Log("[Run] EndRun: run deactivated, Game Over UI shown.");
+        Time.timeScale = 0f; // pause behind UI (your UI should use unscaled time)
+        Debug.Log("[Run] EndRun: Game Over.");
     }
-    // Wait until the scene actually has what we need, then load the room and wire the camera
+
+    public void OnBossDefeated()
+    {
+        if (!runActive) return; // ignore if already ended
+        runActive = false;
+        RunActiveChanged?.Invoke(false);
+
+        if (youWinUIPrefab)
+            Instantiate(youWinUIPrefab);
+
+        Time.timeScale = 0f;
+        Debug.Log("[Run] You Win! Boss defeated.");
+    }
+
     IEnumerator BootstrapRun(int version)
     {
-        // Give scene a frame
-        yield return null;
+        yield return null; // let scene objects initialize
 
-        // Wait up to 2s for RoomManager & Player to exist in the loaded scene
         float t = 0f, timeout = 2f;
         RoomManager foundRM = null;
         TestPlayerController player = null;
 
         while (t < timeout)
         {
-            if (version != _runVersion) yield break; // stale boot
-
+            if (version != _runVersion) yield break; // stale
             foundRM = FindObjectOfType<RoomManager>();
             player = FindObjectOfType<TestPlayerController>();
             if (foundRM && player) break;
-
             t += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        if (version != _runVersion) yield break; // stale boot
-        if (!foundRM)
-        {
-            Debug.LogError("[Run] No RoomManager in scene after load.");
-            yield break;
-        }
+        if (version != _runVersion) yield break;
+        if (!foundRM) { Debug.LogError("[Run] No RoomManager in scene after load."); yield break; }
 
         rm = foundRM;
-
-        // Load first room (RoomManager moves player to entrance & wires camera)
         LoadCurrentRoom();
 
-        // Belt & suspenders: ensure camera follows the player
         var cam = Camera.main;
-        if (cam != null)
+        if (cam)
         {
             var follow = cam.GetComponent<CameraFollow>();
-            if (follow != null && player != null) follow.SetTarget(player.transform);
+            if (follow && player) follow.SetTarget(player.transform);
         }
 
         if (version == _runVersion) _boot = null;
     }
 
-        void Shuffle<T>(IList<T> list)
+    void Shuffle<T>(IList<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
         {
-
-            for (int i = 0; i < list.Count; i++) { int j = Random.Range(i, list.Count); (list[i], list[j]) = (list[j], list[i]); }
+            int j = Random.Range(i, list.Count);
+            (list[i], list[j]) = (list[j], list[i]);
         }
-    
+    }
 
     public void LoadCurrentRoom()
     {
         if (!runActive) return;
 
-        // Reacquire rm every call (fresh scene)
         if (rm == null) rm = FindObjectOfType<RoomManager>();
         if (rm == null) { Debug.LogError("[Run] No RoomManager in scene."); return; }
 
-        if (runRooms == null || runRooms.Count == 0)
+        // Decide which room to load:
+        GameObject prefabToLoad;
+
+        if (inBossRoom)
         {
-            Debug.LogError("[Run] No rooms in sequence.");
-            return;
+            if (!bossRoomPrefab)
+            {
+                Debug.LogError("[Run] inBossRoom = true but bossRoomPrefab is not assigned.");
+                return;
+            }
+            prefabToLoad = bossRoomPrefab;
+        }
+        else
+        {
+            if (runRooms == null || runRooms.Count == 0) { Debug.LogError("[Run] No rooms in sequence."); return; }
+            currentIndex = Mathf.Clamp(currentIndex, 0, runRooms.Count - 1);
+            prefabToLoad = runRooms[currentIndex];
+            if (!prefabToLoad) { Debug.LogError($"[Run] Room at index {currentIndex} is null."); return; }
         }
 
-        currentIndex = Mathf.Clamp(currentIndex, 0, runRooms.Count - 1);
-        var prefab = runRooms[currentIndex];
-        if (!prefab) { Debug.LogError($"[Run] Room at index {currentIndex} is null."); return; }
-
-        rm.LoadRoom(prefab);
+        rm.LoadRoom(prefabToLoad);
     }
 
     public void GoToNextRoom()
     {
         if (!runActive) return;
 
+        // If we just cleared a normal room, count it
+        if (!inBossRoom)
+            roomsClearedThisRun++;
+
+        // Should we switch to boss now?
+        if (!inBossRoom && roomsClearedThisRun >= roomsUntilBoss)
+        {
+            inBossRoom = true;
+            LoadCurrentRoom();
+            return;
+        }
+
+        // Otherwise advance normal rooms
         currentIndex++;
         if (currentIndex >= runRooms.Count)
         {
-            // End or reshuffle loop here (your preference)
-            // Example: reshuffle and continue
-            Shuffle(runRooms);
-            currentIndex = 0;
+            if (loopAndReshuffle)
+            {
+                Shuffle(runRooms);
+                currentIndex = 0;
+                loopCount++;
+            }
+            else
+            {
+                // If you don't want looping, you could end run here instead
+                currentIndex = runRooms.Count - 1;
+            }
         }
+
         LoadCurrentRoom();
     }
 
     public int GetCurrentDifficulty()
     {
+        // Scale during normal rooms; boss difficulty can be handled in boss controller if needed
         int roomsPassed = loopCount * runRooms.Count + currentIndex;
         int diff = difficultyBase + roomsPassed * difficultyPerRoom;
         return Mathf.Max(1, diff);
     }
-
-  
 
     // ==== Player state ====
     public void ApplyDamage(int amount)
@@ -228,8 +259,4 @@ public class RunManager : MonoBehaviour
     {
         if (!buffs.Contains(id)) buffs.Add(id);
     }
-
-    
-  
-
 }
