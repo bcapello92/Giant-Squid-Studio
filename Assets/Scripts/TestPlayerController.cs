@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [DisallowMultipleComponent]
@@ -262,7 +263,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
         if (currentHP == 0)
         {
-            // TODO: death behavior
+            SceneManager.LoadScene("Game Over");
         }
     }
 
