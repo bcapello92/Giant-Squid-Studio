@@ -3,14 +3,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
-public class GameTitleUI : MonoBehaviour
+public class GameOverUI : MonoBehaviour
 {
     [SerializeField] UIDocument uiDocument;
     [SerializeField] Texture2D backgroundTexture;
 
     VisualElement root, bg;
     Label title;
-    Button startBtn, levelBtn, exitBtn;
+    Button restartBtn, menuBtn;
 
     Dictionary<Button, string> baseTexts = new Dictionary<Button, string>();
 
@@ -21,9 +21,8 @@ public class GameTitleUI : MonoBehaviour
 
         bg = root.Q<VisualElement>("BG");
         title = root.Q<Label>("Title"); // adjust if your label is named "GameTitle"
-        startBtn = root.Q<Button>("StartBtn");
-        levelBtn = root.Q<Button>("LevelBtn");
-        exitBtn = root.Q<Button>("ExitBtn");
+        restartBtn = root.Q<Button>("RestartBtn");
+        menuBtn = root.Q<Button>("MenuBtn");
 
         // Optional: background setup
         if (bg != null && backgroundTexture != null)
@@ -33,25 +32,22 @@ public class GameTitleUI : MonoBehaviour
         }
 
         // Click handlers
-        if (startBtn != null) startBtn.clicked += OnStartClicked;
-        if (levelBtn != null) levelBtn.clicked += OnLevelSelectClicked;
-        if (exitBtn != null) exitBtn.clicked += OnExitClicked;
+        if (restartBtn != null) restartBtn.clicked += OnRestartClicked;
+        if (menuBtn != null) menuBtn.clicked += OnMenuClicked;
 
         // Focus + hover setup
-        SetupBrackets(startBtn);
-        SetupBrackets(levelBtn);
-        SetupBrackets(exitBtn);
+        SetupBrackets(restartBtn);
+        SetupBrackets(menuBtn);
 
         // initial focus
-        startBtn?.Focus();
-        ApplyBrackets(startBtn, true);
+        restartBtn?.Focus();
+        ApplyBrackets(restartBtn, true);
     }
 
     void OnDisable()
     {
-        RemoveHandlers(startBtn);
-        RemoveHandlers(levelBtn);
-        RemoveHandlers(exitBtn);
+        RemoveHandlers(restartBtn);
+        RemoveHandlers(menuBtn);
     }
 
     // ---------------- Helper Functions ----------------
@@ -94,7 +90,6 @@ public class GameTitleUI : MonoBehaviour
 
     // ---------------- Button Clicks ----------------
 
-    void OnStartClicked() => SceneManager.LoadScene("Level 1");
-    void OnLevelSelectClicked() => SceneManager.LoadScene("Level Select");
-    void OnExitClicked() => Application.Quit();
+    void OnRestartClicked() => SceneManager.LoadScene("Level 1");
+    void OnMenuClicked() => SceneManager.LoadScene("Title Scene");
 }

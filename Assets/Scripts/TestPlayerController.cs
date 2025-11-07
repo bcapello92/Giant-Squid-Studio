@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [DisallowMultipleComponent]
@@ -267,7 +268,11 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
         if (currentHP == 0)
         {
+<<<<<<< HEAD
             RunManager.I?.OnPlayerDied();
+=======
+            SceneManager.LoadScene("Game Over");
+>>>>>>> 187f4aad990f4250cf8b6d007b2df292f21adbe7
         }
     }
 
