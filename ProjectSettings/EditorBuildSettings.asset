@@ -9,14 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/Level 1.unity
-    guid: 27999d0c9cfe1c440b42153778df04bf
-  - enabled: 1
     path: Assets/Scenes/Title Scene.unity
     guid: 11000228ed19be84cbf65fc31ef4d0b3
   - enabled: 1
     path: Assets/Scenes/Level Select.unity
     guid: c8b3f405e550b0845b2b17f48592bd44
+  - enabled: 1
+    path: Assets/Scenes/Level 1.unity
+    guid: 27999d0c9cfe1c440b42153778df04bf
   - enabled: 1
     path: Assets/Scenes/Game Over.unity
     guid: 2cf78ea16bf85834c95226724cbfc553
