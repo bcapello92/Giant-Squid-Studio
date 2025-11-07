@@ -86,7 +86,7 @@ public class PauseMenuController : MonoBehaviour
     {
         Time.timeScale = 1f;
         RunManager.I?.StopRun();
-        SceneManager.LoadScene("MainMenu"); // set to your exact scene name
+        SceneManager.LoadScene("Title Scene"); // set to your exact scene name
     }
 
     void OnQuit()
