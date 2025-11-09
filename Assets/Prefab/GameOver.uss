@@ -1,70 +1,105 @@
-/* Fullscreen layout root */
 #Root {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-
-#BG, .bg {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+#BG {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-/* Centered content column */
-#Content, .content {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;   /* vertical center */
-  align-items: center;       /* horizontal center */
-
-  padding-top: 32px;
-  padding-right: 32px;
-  padding-bottom: 32px;
-  padding-left: 32px;
+.bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-/* Title label */
-#Title, .title {
-  font-size: 64px;
-  -unity-font-style: bold;
-  color: white;
-  margin-bottom: 32px;
-  -unity-text-align: middle-center;
+#Content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 32px;
+    padding-right: 32px;
+    padding-bottom: 32px;
+    padding-left: 32px;
 }
 
-/* Menu column */
-#Menu, .menu {
-  display: flex;
-  flex-direction: column;
-  width: 320px;
+.content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 32px;
+    padding-right: 32px;
+    padding-bottom: 32px;
+    padding-left: 32px;
 }
 
-/* Buttons */
+#Title {
+    font-size: 64px;
+    -unity-font-style: bold;
+    color: white;
+    margin-bottom: 32px;
+    -unity-text-align: middle-center;
+    opacity: 1;
+}
+
+.title {
+    font-size: 64px;
+    -unity-font-style: bold;
+    color: white;
+    margin-bottom: 32px;
+    -unity-text-align: middle-center;
+    opacity: 1;
+}
+
+#Menu {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+}
+
 .menu-btn {
-
-  
-  background-color: transparent;
-  border-color:transparent;
-  border-width: 0;
-  padding: 0;
-  margin: 0;
-
-  color: white;
-  font-size: 36px;
-  font-weight: bold;
-  text-align: center;
-  min-width:0 ;
-  
+    background-color: transparent;
+    border-color: transparent;
+    border-width: 0;
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 0;
 }
 
-/* Focus/hover states */
 .menu-btn:focus {
-  color:yellow;
+    color: yellow;
 }
 
 .menu-btn:hover {
-  
 }

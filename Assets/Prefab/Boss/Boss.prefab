@@ -429,7 +429,7 @@ MonoBehaviour:
   moveXParam: MoveX
   moveYParam: MoveY
   trackDuringHover: 1
-  hoverTrackTime: 0.8
+  hoverTrackTime: 1
   hoverMaxXSpeed: 10
   hoverSnapEpsilon: 0.05
   skyRiseHeight: 4
@@ -437,9 +437,10 @@ MonoBehaviour:
   skyDiveSpeed: 10
   alignSpeed: 10
   telegraphDelay: 0.18
+  playerTopAimXOffset: 0
   invulnerableDuringVanish: 1
-  hideSpriteDuringVanish: 1
-  vanishTeleportYMargin: 0.5
+  hideSpriteDuringVanish: 0
+  vanishTeleportYMargin: 5
   useOnVanishDoneEvent: 1
   vanishEventTimeout: 1.5
   meleeDamage: 12

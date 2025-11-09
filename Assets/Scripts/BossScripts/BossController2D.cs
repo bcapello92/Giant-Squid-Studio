@@ -53,6 +53,7 @@ public class BossController2D : RoomEnemy, IDamageable
     public float skyDiveSpeed = 18f;
     public float alignSpeed = 10f;       // slide speed over target X
     public float telegraphDelay = 0.18f; // pause before diving
+    public float playerTopAimXOffset = 0f;
 
     [Header("Vanish")]
     public bool invulnerableDuringVanish = true;
@@ -312,7 +313,8 @@ public class BossController2D : RoomEnemy, IDamageable
         // Compute reappear position (near ceiling, clamped)
         float ceilingY = ArenaCeilingY();
         float reappearY = ClampArenaY(ceilingY - vanishTeleportYMargin);
-        float targetX = player ? ClampArenaX(player.position.x) : ClampArenaX(transform.position.x);
+        float targetX = player ? ClampArenaX(GetPlayerTopCenter().x + playerTopAimXOffset)
+                       : ClampArenaX(transform.position.x);
 
         // Teleport invisible boss to the air start
         rb.position = new Vector2(targetX, reappearY);
@@ -330,12 +332,6 @@ public class BossController2D : RoomEnemy, IDamageable
         if (hideSpriteDuringVanish && spriteForHide) spriteForHide.enabled = false;
         if (bodyCollider) bodyCollider.enabled = false;
         DisableAllHitboxes();
-    }
-    public void OnVanishEnd() { /* optional mid-vanish hook */ }
-    public void OnVanishDone()
-    {
-        vanishDoneFlag = true;
-        SafeSetTrigger(anim, P_TRIG_VANISH_DONE);
     }
 
     IEnumerator SkyAttackRoutine_ReenterFromAir()
@@ -368,7 +364,11 @@ public class BossController2D : RoomEnemy, IDamageable
             hoverTimer -= Time.deltaTime;
 
             float targetX = rb.position.x;
-            if (player) targetX = ClampArenaX(player.position.x);
+           if (player)
+            {
+                var top = GetPlayerTopCenter();
+                targetX = ClampArenaX(top.x + playerTopAimXOffset);
+            }
 
             float nextX = Mathf.MoveTowards(rb.position.x, targetX, hoverMaxXSpeed * Time.deltaTime);
             if (Mathf.Abs(nextX - targetX) < hoverSnapEpsilon) nextX = targetX;
@@ -428,7 +428,31 @@ public class BossController2D : RoomEnemy, IDamageable
 
         DisableAllHitboxes();
     }
+    bool TryGetPlayerBounds(out Bounds b)
+    {
+        b = default;
+        if (!player) return false;//check for player
 
+        //aim at player collider
+        var col = player.GetComponentInChildren<Collider2D>();
+        if (col && col.enabled) { b = col.bounds; return true; }
+
+        // Fallback to SpriteRenderer
+        var sr = player.GetComponentInChildren<SpriteRenderer>();
+        if (sr && sr.enabled && sr.sprite) { b = sr.bounds; return true; }
+
+        // Last resort: approximate 1×1 around transform
+        b = new Bounds(player.position, Vector3.one);
+        return true;
+
+    }
+
+    Vector2 GetPlayerTopCenter()
+    {
+        if (TryGetPlayerBounds(out var bb))
+            return new Vector2(bb.center.x, bb.max.y);
+        return (Vector2)player.position;
+    }
     public void StartSlamDamage() { if (slamHitbox) slamHitbox.enabled = true; }
     public void StopSlamDamage() { if (slamHitbox) slamHitbox.enabled = false; }
 
