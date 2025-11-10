@@ -17,8 +17,9 @@ public class AsciiRoomImporterWindow : EditorWindow
     public TileBase wallRightTile;    // ']'
     public TileBase wallCapTile;      // top cap
     public TileBase cornerCapTile;    // '^' manual corner
-
-    public TileBase foregroundWallTile; // 'F'
+    public TileBase cornerForegroundTile; // 'v'
+    public TileBase foregroundWallTileLeft; // 'F'
+    public TileBase foregroundWallTileRight;//'G'
     public TileBase lavaTile;           // 'L'
 
     public GameObject doorInPrefab;   // 'E'
@@ -70,8 +71,9 @@ public class AsciiRoomImporterWindow : EditorWindow
         wallRightTile = (TileBase)EditorGUILayout.ObjectField("Wall Right (])", wallRightTile, typeof(TileBase), false);
         wallCapTile = (TileBase)EditorGUILayout.ObjectField("Wall cap (top)", wallCapTile, typeof(TileBase), false);
         cornerCapTile = (TileBase)EditorGUILayout.ObjectField("Corner cap (^)", cornerCapTile, typeof(TileBase), false);
-
-        foregroundWallTile = (TileBase)EditorGUILayout.ObjectField("Foreground wall (F)", foregroundWallTile, typeof(TileBase), false);
+        cornerForegroundTile = (TileBase)EditorGUILayout.ObjectField("Corner foreground (v)", cornerForegroundTile, typeof(TileBase), false);
+        foregroundWallTileLeft = (TileBase)EditorGUILayout.ObjectField("Foreground wall (F)", foregroundWallTileLeft, typeof(TileBase), false);
+        foregroundWallTileRight = (TileBase)EditorGUILayout.ObjectField("Foreground wall (G)", foregroundWallTileRight, typeof(TileBase), false);
         lavaTile = (TileBase)EditorGUILayout.ObjectField("Lava (L)", lavaTile, typeof(TileBase), false);
 
         doorInPrefab = (GameObject)EditorGUILayout.ObjectField("Door In (E)", doorInPrefab, typeof(GameObject), false);
@@ -119,7 +121,7 @@ public class AsciiRoomImporterWindow : EditorWindow
 
         // Tilemaps
         var floorTM = CreateTilemap(root.transform, "Floor", collider: false, sortingLayer: worldSortingLayer, orderInLayer: 1);
-        var wallsFrontTM = CreateTilemap(root.transform, "WallsFront", collider: true, sortingLayer: worldSortingLayer, orderInLayer: 2);
+        var wallsFrontTM = CreateTilemap(root.transform, "WallsFront", collider: true, sortingLayer: worldSortingLayer, orderInLayer: 3);
         var wallsTM = CreateTilemap(root.transform, "Walls", collider: true, sortingLayer: worldSortingLayer, orderInLayer: 3);
         var wallsTopTM = CreateTilemap(root.transform, "WallsTop", collider: true, sortingLayer: worldSortingLayer, orderInLayer: 3);
         var lavaTM = CreateTilemap(root.transform, "Lava", collider: true, sortingLayer: lavaSortingLayer, orderInLayer: 0);
@@ -149,6 +151,10 @@ public class AsciiRoomImporterWindow : EditorWindow
                         if (cornerCapTile) wallsTopTM.SetTile(cell, cornerCapTile);
                         break;
 
+                    case 'v': // manual corner cap for foreground/front walls
+                        if (cornerForegroundTile) wallsFrontTM.SetTile(cell, cornerForegroundTile);
+                        break;
+
                     case '[': // force left wall
                         if (wallLeftTile) wallsTM.SetTile(cell, wallLeftTile);
                         else if (wallTile) wallsTM.SetTile(cell, wallTile);
@@ -174,8 +180,12 @@ public class AsciiRoomImporterWindow : EditorWindow
                         break;
 
                     case 'F': // foreground rim (blocking)
-                        if (foregroundWallTile) wallsFrontTM.SetTile(cell, foregroundWallTile);
+                        if (foregroundWallTileLeft) wallsFrontTM.SetTile(cell, foregroundWallTileLeft);
                         else if (wallTile) wallsFrontTM.SetTile(cell, wallTile);
+                        break;
+
+                    case 'G'://forgeround front wall right
+                        if (foregroundWallTileRight) wallsFrontTM.SetTile(cell, foregroundWallTileRight);
                         break;
 
                     case '.': // floor
