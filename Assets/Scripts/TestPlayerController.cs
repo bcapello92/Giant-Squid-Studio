@@ -94,6 +94,13 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
     void Update()
     {
+        // stop input/aim/anim parameter writes while paused
+        if (Mathf.Approximately(Time.timeScale, 0f))
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
+
         // ----- Clear stun when time passes -----
         if (IsStunned && Time.time >= stunUntil)
             IsStunned = false;
@@ -172,6 +179,14 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
     void FixedUpdate()
     {
+
+        //stop input and physics while paused
+        if (Mathf.Approximately(Time.timeScale, 0f))
+        {
+            if (rb) rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         if (IsStunned)
         {
             // Strong damping while stunned
@@ -241,6 +256,10 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     }
     void UpdateAim()
     {
+        //stop aim tracking while paused
+        if (Mathf.Approximately(Time.timeScale, 0f)) return;
+
+
         if (!aimCamera) { AimDir = lastNonZeroDir; return; }
 
         Vector3 mouseWorld = aimCamera.ScreenToWorldPoint(Input.mousePosition);

@@ -108,7 +108,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 2
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -353,6 +353,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1398628061943224492}
     m_Modifications:
+    - target: {fileID: 674112579722621788, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
+      propertyPath: knockback
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674112579722621788, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
+      propertyPath: targetLayers.m_Bits
+      value: 447
+      objectReference: {fileID: 0}
     - target: {fileID: 2407920666920140502, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
       propertyPath: m_Name
       value: SpearVisual
