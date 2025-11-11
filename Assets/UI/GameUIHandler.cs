@@ -18,7 +18,7 @@ public class UIPlayerHealthToolkit : MonoBehaviour
 
         frame = root.Q<VisualElement>("HealthBarBackground");
         bar = root.Q<ProgressBar>("HealthBar");
-        label = root.Q<Label>("HealthLabel");
+       
 
         // Apply background image in code (no XML URL)
         if (frame != null && healthFrame != null)
@@ -47,8 +47,9 @@ public class UIPlayerHealthToolkit : MonoBehaviour
             bar.lowValue = 0;
             bar.highValue = max;
             bar.value = Mathf.Clamp(current, 0, max);
-            bar.title = string.Empty;
+            bar.title = $"{current}/{max}";
         }
-        if (label != null) label.text = $"{current}/{max}";
+        else { return; 
+        }
     }
 }

@@ -2,9 +2,43 @@
   background-image: none;                  /* or url(...) for a track */
   background-color: transparent;
 }
-
+/*
 #HealthBar .unity-progress-bar__progress {
   background-image: url("project://database/Assets/UI/greenBar.png");
-  -unity-background-scale-mode: scale-and-crop; /* or scale-to-fit */
+  -unity-background-scale-mode: scale-and-crop; /* or scale-to-fit 
   background-color: transparent;
+}
+/* Container (optional) */
+.health-bg {
+    background-color: transparent;
+}
+
+/* Bar size */
+.health {
+    width: 226px;
+    height: 24px;
+    border-radius: 4px;
+    overflow: hidden; /* keep rounded corners on fill */
+}
+
+/* Black background behind the fill */
+.health .unity-progress-bar__background {
+    background-color: rgb(0, 0, 0);
+}
+
+/* Red fill */
+.health .unity-progress-bar__progress {
+    background-color: rgb(190, 25, 25);
+}
+
+/* Text over the bar (centered, on top of fill) */
+.health .unity-progress-bar__title {
+    ccolor: white;                     /* overrides inherited color */
+    unity-font-style: bold;
+    unity-text-align: middle-center;
+    -unity-text-outline-color: rgb(32,32,32);
+    -unity-text-outline-width: 1px;
+    display: flex;                    /* ensure it actually lays out */
+    align-items: center;
+    justify-content: center;
 }
