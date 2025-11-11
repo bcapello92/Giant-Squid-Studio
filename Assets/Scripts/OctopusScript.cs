@@ -26,7 +26,7 @@ public class OctopusScript : RoomEnemy, IDamageable
     private Vector2 roamTarget;
     private bool hasRoamTarget = false;
     private Vector2 currentRoamOrigin; // center for roaming
-
+    Animator anim;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
     private Collider2D cols;
@@ -36,13 +36,13 @@ public class OctopusScript : RoomEnemy, IDamageable
     private bool canAttack = true;
     private bool isLatched = false;
     bool isDead = false;
-
+    static readonly int HitTrig = Animator.StringToHash("IsHit");
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         cols = GetComponent<Collider2D>();
-
+        anim = GetComponent<Animator>();
         currentHP = Mathf.Max(1, maxHP);
 
         // Rigidbody settings to prevent dropping
@@ -240,6 +240,10 @@ public class OctopusScript : RoomEnemy, IDamageable
         if (currentHP == 0)
         {
             Die();
+        }
+        else
+        {
+            if (anim) anim.SetTrigger(HitTrig);
         }
     }
 
