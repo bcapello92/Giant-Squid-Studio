@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Prefab/UI/EnemyHealthBar.uss?fileID=7433441132597879392&amp;guid=ad4405653e3a3fa449cbd88a3ec7b34f&amp;type=3#EnemyHealthBar" />
+    <ui:VisualElement name="EnemyHealthRoot" class="enemy-health-root">
+        <ui:ProgressBar name="EnemyHealthBar" value="100" high-value="100" class="enemy-health-bar" />
+    </ui:VisualElement>
+</ui:UXML>

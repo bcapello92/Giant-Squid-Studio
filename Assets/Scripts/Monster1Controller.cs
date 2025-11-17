@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class BlobMonsterController : RoomEnemy, IDamageable
 {
@@ -48,7 +49,8 @@ public class BlobMonsterController : RoomEnemy, IDamageable
     RoomManager roomManager;
     bool isDead;
     float lastShockTime = -999f;
-
+    public event Action<int, int> OnHealthChanged; // (current, max)
+    public event Action<BlobMonsterController> OnDied;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -56,7 +58,7 @@ public class BlobMonsterController : RoomEnemy, IDamageable
         cols = GetComponentsInChildren<Collider2D>(true);
 
         currentHP = Mathf.Max(1, maxHP);
-
+        OnHealthChanged?.Invoke(currentHP, maxHP);
         // Best-effort: if you forgot to set playerLayers, include "Player" layer
         if (playerLayers.value == 0)
         {
@@ -130,7 +132,6 @@ public class BlobMonsterController : RoomEnemy, IDamageable
     }
 
 
-    // Call this from the Attack animation via Animation Event (or call directly above)
     public void ShockNow()
     {
         if (isDead) return;
@@ -162,6 +163,7 @@ public class BlobMonsterController : RoomEnemy, IDamageable
         if (isDead) return;
 
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+        OnHealthChanged?.Invoke(currentHP, maxHP);
         if (currentHP == 0)
         {
             Die();
@@ -181,7 +183,9 @@ public class BlobMonsterController : RoomEnemy, IDamageable
         // notify room ONCE
         DieInRoom();
 
-        // the rest of your death stuff...
+
+        OnDied?.Invoke(this);
+        
         if (rb)
         {
             rb.linearVelocity = Vector2.zero;
@@ -207,6 +211,19 @@ public class BlobMonsterController : RoomEnemy, IDamageable
     }
 
     public void OnDeathAnimationComplete() { Destroy(gameObject); }
+
+    void Start()
+    {
+        // Register with healthbar manager if available
+        if (EnemyHealthBarManager.Instance != null)
+        {
+            EnemyHealthBarManager.Instance.RegisterBlob(this);
+        }
+
+        // also push initial health just in case
+        OnHealthChanged?.Invoke(currentHP, maxHP);
+    }
+
 
     void OnDrawGizmosSelected()
     {

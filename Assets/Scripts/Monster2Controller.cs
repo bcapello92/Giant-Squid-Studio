@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
-public class EnemyController : RoomEnemy
+public class EnemyController : RoomEnemy, IDamageable
 {
     [Header("Target")]
     public Transform target;                 // Drag the player here, or will find by tag
@@ -16,10 +18,21 @@ public class EnemyController : RoomEnemy
     public float stopDistance = 1.0f;        // stop just short of target
     public float acceleration = 25f;         // smoothing
 
+    [Header("Health")]
+    public int maxHP = 40;
+    [SerializeField] int currentHP;
+    bool isDead;
+
     [Header("Attacks")]
     public float attackRange = 1.2f;         // MUST be > stopDistance
     public float attackCooldown = 0.7f;
     public Vector2 attackIndices = new Vector2(0, 2); // inclusive [min,max] (0=Attack1,1=Attack2,2=ATTACK)
+    [Header("Death")]
+    public float deathDespawnDelay = 1.5f;
+    public bool disablePhysicsOnDeath = true;
+    public Behaviour[] componentsToDisableOnDeath;
+    Collider2D[] cols;
+
 
     [Header("Hit Logic (OverlapCircle)")]
     public LayerMask targetLayers;           // include Player layer
@@ -30,6 +43,8 @@ public class EnemyController : RoomEnemy
     public Vector2 attackOffset = new Vector2(0.6f, 0.0f);
     [Tooltip("Only used if sideScroller=true, to lift/lower hit circle.")]
     public float sideScrollerYOffset = 0f;
+    public event Action<int, int> OnHealthChanged;
+    public event Action<EnemyController> OnDied;
 
     [Header("Debug")]
     public bool debugAttack = false;                 // show detailed logs
@@ -57,6 +72,17 @@ public class EnemyController : RoomEnemy
     bool attackWindowOpen = false;
     readonly HashSet<Collider2D> hitThisSwing = new HashSet<Collider2D>();
 
+    void Start()
+    {
+        if (EnemyHealthBarManager.Instance != null)
+        {
+            EnemyHealthBarManager.Instance.RegisterEnemy(this);
+        }
+
+        // make sure UI starts in sync
+        OnHealthChanged?.Invoke(currentHP, maxHP);
+    }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -67,7 +93,9 @@ public class EnemyController : RoomEnemy
             var go = GameObject.FindGameObjectWithTag(targetTag);
             if (go) target = go.transform;
         }
-
+        currentHP = Mathf.Max(1, maxHP);
+        OnHealthChanged?.Invoke(currentHP, maxHP);
+        cols = GetComponentsInChildren<Collider2D>(true);
         // Physics defaults
         rb.gravityScale = sideScroller ? 1f : 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -166,7 +194,7 @@ public class EnemyController : RoomEnemy
         {
             int min = Mathf.RoundToInt(attackIndices.x);
             int max = Mathf.RoundToInt(attackIndices.y);
-            int pick = Random.Range(min, max + 1);
+            int pick = UnityEngine.Random.Range(min, max + 1);
 
             if (debugAttack) Debug.Log($"[Enemy] Attack fire: dist={dist:F2}, idx={pick}");
 
@@ -181,7 +209,62 @@ public class EnemyController : RoomEnemy
         if (attackWindowOpen)
             DoHitOverlap(singleFrame: false);
     }
+    // ===== Health / Damage =====
+    public void TakeDamage(int amount)
+    {
+        if (isDead) return;
 
+        currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+
+        // notify UI
+        OnHealthChanged?.Invoke(currentHP, maxHP);
+
+        if (currentHP == 0)
+        {
+            Die();
+        }
+        else
+        {
+            anim.SetTrigger(HitTrig);
+        }
+    }
+
+    void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // notify room
+        DieInRoom();
+
+        // notify UI
+        OnDied?.Invoke(this);
+
+        // stop movement / physics
+        if (rb)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            if (disablePhysicsOnDeath) rb.simulated = false;
+        }
+
+        if (componentsToDisableOnDeath != null)
+            foreach (var b in componentsToDisableOnDeath)
+                if (b) b.enabled = false;
+
+        if (cols != null)
+            foreach (var c in cols)
+                if (c) c.enabled = false;
+
+        anim.SetTrigger(DeathTrig);
+        StartCoroutine(DespawnAfterDelay());
+    }
+
+    System.Collections.IEnumerator DespawnAfterDelay()
+    {
+        yield return new WaitForSeconds(deathDespawnDelay);
+        Destroy(gameObject);
+    }
     // ====== DAMAGE HOOKS (Animation Events) ======
     public void DealDamageEvent()
     {
