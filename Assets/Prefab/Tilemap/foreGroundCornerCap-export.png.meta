@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e08f238fa95cd614a859d6b803808e16
+guid: 04d94581599dc5142be4b93d7976fa42
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5643105228771564274
-    second: Sprite-0003_0
+      213: 1273390321729860277
+    second: foreGroundCornerCap-export_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 25
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,36 +100,38 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sprite-0003_0
+      name: foreGroundCornerCap-export_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 0
-        width: 98
-        height: 95
+        x: 7
+        y: 196
+        width: 839
+        height: 505
       alignment: 9
-      pivot: {x: 0.5112996, y: 0.5505139}
-      border: {x: 3, y: 0, z: 0, w: 0}
+      pivot: {x: 0.49120033, y: 0.40497413}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape:
-      - - {x: 8, y: -15.5}
-        - {x: 17, y: -5.5}
-        - {x: 17, y: 8.5}
-        - {x: 12, y: 16.5}
-        - {x: 1, y: 18.5}
-        - {x: -12, y: 12.5}
-        - {x: -20, y: -0.5}
-        - {x: -14, y: -9.5}
-        - {x: -2, y: -19.5}
-      - - {x: -2, y: -17.5}
-        - {x: -2, y: -17.5}
-        - {x: -2, y: -10.5}
-        - {x: -2, y: -10.5}
+      - - {x: 388.5, y: -56.5}
+        - {x: 385.5, y: 139.5}
+        - {x: 257.5, y: 197.5}
+        - {x: -12.5, y: 79.5}
+        - {x: -275.5, y: 226.5}
+        - {x: -419.5, y: 154.5}
+        - {x: -419.5, y: -54.5}
+        - {x: -30.5, y: -252.5}
+        - {x: -5.5, y: -252.5}
+      - - {x: 419.5, y: -20.5}
+        - {x: 414.5, y: -20.5}
+        - {x: 413.5, y: -22.5}
+        - {x: 413.5, y: -49.5}
+        - {x: 414.5, y: -52.5}
+        - {x: 419.5, y: -52.5}
       tessellationDetail: 0
       bones: []
-      spriteID: e05ebe061b9afa1b0800000000000000
-      internalID: -5643105228771564274
+      spriteID: 5b2f02b30cdfba110800000000000000
+      internalID: 1273390321729860277
       vertices: []
       indices: 
       edges: []
@@ -138,7 +140,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 57921a6947bbc56489239a18634071c4
+    spriteID: f2e8b87c80769d44799c9e2341fb14e2
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Sprite-0003_0: -5643105228771564274
+      foreGroundCornerCap-export_0: 1273390321729860277
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

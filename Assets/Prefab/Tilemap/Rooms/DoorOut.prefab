@@ -42,9 +42,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1473011307171527688}
   - component: {fileID: 6565215620439192881}
-  - component: {fileID: 4543094599371213922}
   - component: {fileID: 8757014610075102808}
   - component: {fileID: 4802810607068913314}
+  - component: {fileID: 7055427416315470461}
+  - component: {fileID: 554876408720899133}
   m_Layer: 0
   m_Name: DoorOut
   m_TagString: Untagged
@@ -127,8 +128,65 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &4543094599371213922
-BoxCollider2D:
+--- !u!114 &8757014610075102808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3748599051893772432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b627d29577000564bbdabe85ff1a8ac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorTrigger
+  destinationScene: 
+  destinationPoint: {fileID: 0}
+--- !u!114 &4802810607068913314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3748599051893772432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a6e6aea1faf78f4daf4559919c21a93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorController
+  promptRoot: {fileID: 3711717698008066240}
+  interactKey: 101
+  locked: 1
+  _roomManager: {fileID: 0}
+--- !u!50 &7055427416315470461
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3748599051893772432}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!60 &554876408720899133
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -161,7 +219,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.6}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.50646764, y: 0.17303216}
@@ -171,38 +229,15 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.5, y: 2}
-  m_EdgeRadius: 0
---- !u!114 &8757014610075102808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3748599051893772432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b627d29577000564bbdabe85ff1a8ac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DoorTrigger
-  destinationScene: 
-  destinationPoint: {fileID: 0}
---- !u!114 &4802810607068913314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3748599051893772432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a6e6aea1faf78f4daf4559919c21a93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DoorController
-  promptRoot: {fileID: 3711717698008066240}
-  interactKey: 101
-  locked: 1
-  _roomManager: {fileID: 0}
+  m_Points:
+    m_Paths:
+    - - {x: 1.0216119, y: 2.5122519}
+      - {x: 1.001612, y: 2.5122519}
+      - {x: -1.008388, y: 1.5722519}
+      - {x: -0.9575076, y: -0.6295099}
+      - {x: -0.033542633, y: 0.4029026}
+      - {x: 1.0470521, y: 0.4135542}
+  m_UseDelaunayMesh: 0
 --- !u!1 &5330581219118712877
 GameObject:
   m_ObjectHideFlags: 0
