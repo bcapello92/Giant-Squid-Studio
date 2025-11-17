@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6115936990216640652}
   - component: {fileID: 4473117450887362662}
   - component: {fileID: 8064285692204347605}
+  - component: {fileID: 5840481753107282955}
   m_Layer: 0
   m_Name: ExplosiveCrate
   m_TagString: Untagged
@@ -80,9 +81,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -529835431
+  m_SortingLayer: 4
+  m_SortingOrder: 1
   m_Sprite: {fileID: -4810500421755725605, guid: 7c8810f950e54164c9a9d6e3b81ec354, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -106,7 +107,7 @@ Animation:
   m_Animation: {fileID: 0}
   m_Animations: []
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
@@ -196,10 +197,41 @@ MonoBehaviour:
   knockback: 6
   targetLayers:
     serializedVersion: 2
-    m_Bits: 0
-  armOnStart: 1
+    m_Bits: 64
+  armOnStart: 0
   armDuration: 1.2
-  anim: {fileID: 0}
+  flashRoot: {fileID: 0}
+  flashAnimator: {fileID: 0}
   armedBoolParam: Armed
+  explosionRoot: {fileID: 0}
+  explosionAnimator: {fileID: 0}
   explodeTriggerParam: Explode
+  authoredExplosionRadius: 1
   debugLogs: 0
+--- !u!50 &5840481753107282955
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6448667952903092051}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,14 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     {
         public GameObject prefab;
         [Min(1)] public int difficultyCost = 1;
+        [Range(0f, 1f)] public float weight = 1f;
+    }
+
+    // --- HAZARDS ---
+    [System.Serializable]
+    public class HazardData
+    {
+        public GameObject prefab;
         [Range(0f, 1f)] public float weight = 1f;
     }
 
@@ -43,6 +52,14 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
 
     [Header("Enemy Pool")]
     public List<EnemyData> enemyPool = new();
+    // --- HAZARDS ---
+    [Header("Hazard Pool")]
+    [Tooltip("Random hazards to place at room start. Weighted by 'weight'.")]
+    public List<HazardData> hazardPool = new();
+    [Tooltip("Maximum hazards to place in a room.")]
+    [Min(0)] public int maxHazardsPerRoom = 4;
+    [Tooltip("Spawn hazards immediately when BeginSpawning() is called.")]
+    public bool spawnHazardsAtStart = true;
 
     [Header("Debug")]
     public bool logSpawns = false;
@@ -55,14 +72,20 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     // --- runtime
     List<Vector2> spawnPoints;
     int nextPointIndex;
+
     List<EnemyData> weightedPool;
-    // Add this helper:
+    List<HazardData> weightedHazards;
+    int hazardsSpawnedThisRoom = 0;
     void EnsureInitialized()
     {
         if (!roomCenter) roomCenter = transform;
 
         if (weightedPool == null)
             weightedPool = BuildWeightedList(enemyPool);
+
+        // --- HAZARDS ---
+        if (weightedHazards == null)
+            weightedHazards = BuildWeightedList(hazardPool);
 
         if (spawnPoints == null)
             spawnPoints = GenerateSpawnField();
@@ -80,15 +103,16 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
         if (!roomCenter) roomCenter = transform;
 
         weightedPool = BuildWeightedList(enemyPool);
+        weightedHazards=BuildWeightedList(hazardPool);
         spawnPoints = GenerateSpawnField();
+
 
         if (spawnPoints.Count == 0)
         {
             Debug.LogWarning("[SpawnerPoisson] No spawn points generated. Falling back to room center.");
             spawnPoints.Add(roomCenter.position);
         }
-        // 3) Run the two waves
-       // StartCoroutine(RunTwoWaves());
+      
     }
 
     IEnumerator RunTwoWaves()
@@ -108,7 +132,43 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
         _hasStarted = true;
 
         EnsureInitialized();               // <— make sure spawnPoints exists
+        // --- HAZARDS ---
+        if (spawnHazardsAtStart)
+            SpawnRandomHazards();
         StartCoroutine(RunTwoWaves());
+    }
+    void SpawnRandomHazards()
+    {
+        if (hazardPool == null || hazardPool.Count == 0 || maxHazardsPerRoom <= 0)
+            return;
+
+        hazardsSpawnedThisRoom = 0;
+
+        // Build a working list of valid hazard prefabs
+        var usable = hazardPool.FindAll(h => h != null && h.prefab != null);
+        if (usable.Count == 0) return;
+
+        // Ensure weighted list (in case pool changed at runtime)
+        weightedHazards = BuildWeightedList(usable);
+
+        int safety = 200;
+        while (hazardsSpawnedThisRoom < maxHazardsPerRoom && safety-- > 0)
+        {
+            var pick = PickHazard(weightedHazards);
+            if (pick == null || pick.prefab == null) break;
+
+            var pos = GetNextFreeSpawnPosition();
+            var go = Instantiate(pick.prefab, pos, Quaternion.identity);
+            hazardsSpawnedThisRoom++;
+
+            
+
+            if (logSpawns)
+                Debug.Log($"[SpawnerPoisson] {name} hazard: {pick.prefab.name} @ {pos}  ({hazardsSpawnedThisRoom}/{maxHazardsPerRoom})");
+        }
+
+        if (logSpawns)
+            Debug.Log($"[SpawnerPoisson] {name} hazards done. spawned={hazardsSpawnedThisRoom}");
     }
 
     public void SetDifficulty(int difficulty)
@@ -250,6 +310,24 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
     }
 
     // --------- Weighted selection ----------
+    List<HazardData> BuildWeightedList(List<HazardData> pool)
+    {
+        var list = new List<HazardData>();
+        foreach (var h in pool)
+        {
+            if (h == null || h.prefab == null) continue;
+            int count = Mathf.Clamp(Mathf.RoundToInt(Mathf.Max(0.01f, h.weight) * 10f), 1, 50);
+            for (int i = 0; i<count; i++) list.Add(h);
+        }
+return list.Count > 0 ? list : pool;
+    }
+
+    HazardData PickHazard(List<HazardData> weighted)
+    {
+        if (weighted == null || weighted.Count == 0) return null;
+        return weighted[Random.Range(0, weighted.Count)];
+    }
+
     List<EnemyData> BuildWeightedList(List<EnemyData> pool)
     {
         var list = new List<EnemyData>();

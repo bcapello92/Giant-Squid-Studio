@@ -4,7 +4,7 @@ using UnityEngine;
 /// Explosive crate that flashes when armed, then switches to a separate explosion visual which is scaled to match gameplay radius.
 /// Flashing visuals are never scaled.
 [RequireComponent(typeof(Collider2D))]
-public class ExplosiveCrate2D : MonoBehaviour
+public class ExplosiveCrate2D : MonoBehaviour, IDamageable 
 {
     [Header("Explosion (gameplay)")]
     public float explosionRadius = 2.5f;   // damage radius in world units
@@ -166,7 +166,16 @@ public class ExplosiveCrate2D : MonoBehaviour
             }
         }
     }
+   public void TakeDamage(int damage)
+    {
+        if (exploded) return;
+        if (armed) return; // already counting down
 
+        if (debugLogs)
+            Debug.Log($"[Crate] Took {damage} damage → arm fuse for {armDuration} seconds");
+
+        ArmAndExplodeAfter(armDuration);
+    }
     // Call this from an Animation Event on the last frame of the Explosion clip (Animator B)
     public void DestroySelf()
     {
