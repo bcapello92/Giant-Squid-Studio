@@ -30,6 +30,9 @@ public class BlobMonsterController : RoomEnemy, IDamageable
     public bool disablePhysicsOnDeath = true;
     public Behaviour[] componentsToDisableOnDeath;
 
+    [Header("Audio")]
+    public AudioSource slimeNoise;
+
     // Animator hashes (adjust to your controller)
     static readonly int MoveSpeedHash = Animator.StringToHash("Speed");
     static readonly int AttackTrig = Animator.StringToHash("Attack");
@@ -150,6 +153,7 @@ public class BlobMonsterController : RoomEnemy, IDamageable
             if (dmg != null)
             {
                 dmg.TakeDamage(shockDamage);
+                slimeNoise.Play();
 
                 var prb = h.attachedRigidbody;
                 if (prb) prb.AddForce((h.transform.position - transform.position).normalized * shockKnockback, ForceMode2D.Impulse);
@@ -179,6 +183,8 @@ public class BlobMonsterController : RoomEnemy, IDamageable
     {
         if (isDead) return;
         isDead = true;
+
+        slimeNoise.Play();
 
         // notify room ONCE
         DieInRoom();

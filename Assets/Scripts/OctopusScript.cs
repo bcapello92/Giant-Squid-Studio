@@ -11,7 +11,7 @@ public class OctopusScript : RoomEnemy, IDamageable
     public event Action<int, int> OnHealthChanged;          
     public event Action<OctopusScript> OnDied;
 
-    public float deathDespawnDelay = 0.5f;
+    public float deathDespawnDelay = 1f;
     private bool disablePhysicsOnDeath = true;
 
     [Header("Fade & Attack")]
@@ -41,6 +41,10 @@ public class OctopusScript : RoomEnemy, IDamageable
     private bool isLatched = false;
     bool isDead = false;
     static readonly int HitTrig = Animator.StringToHash("IsHit");
+
+    [Header("Audio")]
+    public AudioSource squidAudio;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -149,6 +153,8 @@ public class OctopusScript : RoomEnemy, IDamageable
         rb.linearVelocity = Vector2.zero;
         isLatched = true;
 
+        squidAudio.Play();
+
         // Start dealing damage
         StartCoroutine(DealDamageWhileLatched());
 
@@ -196,7 +202,7 @@ public class OctopusScript : RoomEnemy, IDamageable
         IDamageable damageable = player.GetComponent<IDamageable>();
         if (damageable == null) yield break;
 
-        while (isLatched)
+        while (isLatched && !isDead)
         {
             damageable.TakeDamage(damagePerSecond);
             yield return new WaitForSeconds(1f);
@@ -236,6 +242,12 @@ public class OctopusScript : RoomEnemy, IDamageable
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
+    IEnumerator DespawnAfterDelay()
+    {
+        yield return new WaitForSeconds(deathDespawnDelay);
+        Destroy(gameObject);
+    }
+
     public void TakeDamage(int amount)
     {
         if (isDead) return;
@@ -257,6 +269,8 @@ public class OctopusScript : RoomEnemy, IDamageable
         if (isDead) return;
         isDead = true;
 
+        squidAudio.Play();
+
         // notify room ONCE
         DieInRoom();
         OnDied?.Invoke(this);
@@ -271,6 +285,6 @@ public class OctopusScript : RoomEnemy, IDamageable
         if (cols != null)
             cols.enabled = false;
 
-        Destroy(gameObject);
+        StartCoroutine(DespawnAfterDelay());
     }
 }

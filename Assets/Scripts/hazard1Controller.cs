@@ -30,6 +30,9 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
     public float authoredExplosionRadius = 1f;
 
     [Header("Debug")]
+    public AudioSource explodeAudio;
+
+    [Header("Debug")]
     public bool debugLogs = false;
 
     // runtime
@@ -179,6 +182,7 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
     // 🔴 Call this from an Animation Event near the START of the Explosion clip
     public void ExplosionImpactEvent()
     {
+        explodeAudio.Play();
         if (exploded && !hasHit)
         {
             if (debugLogs) Debug.Log("[Crate] ExplosionImpactEvent → DoExplosionHit()");

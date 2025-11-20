@@ -1,7 +1,9 @@
 using UnityEngine;
+using System.Collections;
 
 public class DamageUp : MonoBehaviour
 {
+    public AudioSource powerUpAudio;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,7 +29,15 @@ public class DamageUp : MonoBehaviour
             }
             AttackArea damageMod = weapon.GetComponent<AttackArea>();
             damageMod.damage++;
-            Destroy(this.gameObject);
+            StartCoroutine(Pickup());
         }
+    }
+
+    IEnumerator Pickup()
+    {
+        this.gameObject.transform.localScale = new Vector3(0, 0, 0);
+        powerUpAudio.Play();
+        yield return new WaitForSeconds(1);
+        Destroy(this.gameObject);
     }
 }
