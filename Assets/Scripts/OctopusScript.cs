@@ -11,7 +11,7 @@ public class OctopusScript : RoomEnemy, IDamageable
     public event Action<int, int> OnHealthChanged;          
     public event Action<OctopusScript> OnDied;
 
-    public float deathDespawnDelay = 1.5f;
+    public float deathDespawnDelay = 0.5f;
     private bool disablePhysicsOnDeath = true;
 
     [Header("Fade & Attack")]
@@ -236,12 +236,6 @@ public class OctopusScript : RoomEnemy, IDamageable
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    IEnumerator DespawnAfterDelay()
-    {
-        yield return new WaitForSeconds(deathDespawnDelay);
-        Destroy(gameObject);
-    }
-
     public void TakeDamage(int amount)
     {
         if (isDead) return;
@@ -277,6 +271,6 @@ public class OctopusScript : RoomEnemy, IDamageable
         if (cols != null)
             cols.enabled = false;
 
-        StartCoroutine(DespawnAfterDelay());
+        Destroy(gameObject);
     }
 }
