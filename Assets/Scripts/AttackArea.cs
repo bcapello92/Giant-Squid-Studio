@@ -17,6 +17,9 @@ public class AttackArea : MonoBehaviour
     [Tooltip("GameObject that owns this hitbox (e.g., the attacker root).")]
     public GameObject owner;
 
+    [Header("Audio")]
+    public AudioSource stabAudio;
+
     // runtime
     readonly HashSet<Collider2D> hitThisSwing = new HashSet<Collider2D>();
     float lastStayTickTime;
@@ -27,6 +30,7 @@ public class AttackArea : MonoBehaviour
         hitThisSwing.Clear();
         lastStayTickTime = -999f;
         enabled = true; // if you disable this component between swings
+        stabAudio.Play();
     }
 
     /// Call this at the end of the active frames

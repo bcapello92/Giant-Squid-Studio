@@ -46,6 +46,10 @@ public class EnemyController : RoomEnemy, IDamageable
     public event Action<int, int> OnHealthChanged;
     public event Action<EnemyController> OnDied;
 
+    [Header("Audio")]
+    public AudioSource attackAudio;
+    public AudioSource hurtAudio;
+
     [Header("Debug")]
     public bool debugAttack = false;                 // show detailed logs
     public KeyCode manualAttackKey = KeyCode.K;      // press to force an overlap test
@@ -234,6 +238,8 @@ public class EnemyController : RoomEnemy, IDamageable
         if (isDead) return;
         isDead = true;
 
+        hurtAudio.Play();
+
         // notify room
         DieInRoom();
 
@@ -269,6 +275,7 @@ public class EnemyController : RoomEnemy, IDamageable
     public void DealDamageEvent()
     {
         if (debugAttack) Debug.Log("[Enemy] DealDamageEvent()");
+        attackAudio.Play();
         DoHitOverlap(singleFrame: true);
     }
 

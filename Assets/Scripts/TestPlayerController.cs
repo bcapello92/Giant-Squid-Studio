@@ -55,6 +55,10 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     public SpriteRenderer bodySR;//for swapping side to side sprite
     public string DamageTrigParam = "TakeDamage";
 
+    [Header("Audio")]
+    public AudioSource hurtAudio;
+    public AudioSource dashAudio;
+
     Rigidbody2D rb;
     Vector2 moveInput;
     Vector2 lastNonZeroDir = Vector2.right;  // used for facing when idle
@@ -196,6 +200,8 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
         rb.linearVelocity = dir.normalized * dashSpeed;
 
+        dashAudio.Play();
+
         BeginDashIFrames();
 
         float t = 0f;
@@ -269,6 +275,8 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         {
             RunManager.I?.OnPlayerDied();
         }
+
+        hurtAudio.Play();
     }
 
 
