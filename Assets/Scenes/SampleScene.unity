@@ -593,6 +593,7 @@ MonoBehaviour:
   lastYParam: LastY
   speedParam: Speed
   bodySR: {fileID: 0}
+  DamageTrigParam: TakeDamage
 --- !u!50 &1039616282
 Rigidbody2D:
   serializedVersion: 5
@@ -653,6 +654,7 @@ MonoBehaviour:
   lastYParam: LastY
   speedParam: Speed
   bodySR: {fileID: 0}
+  DamageTrigParam: TakeDamage
 --- !u!58 &1039616284
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -854,6 +856,7 @@ GameObject:
   - component: {fileID: 1380411782}
   - component: {fileID: 1380411784}
   - component: {fileID: 1380411785}
+  - component: {fileID: 1380411786}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -952,23 +955,82 @@ MonoBehaviour:
   anim: {fileID: 1380411782}
   rb: {fileID: 0}
   player: {fileID: 0}
-  isMovingParam: IsMoving
-  moveXParam: MoveX
-  moveYParam: MoveY
-  spriteForFlip: {fileID: 0}
+  bodyCollider: {fileID: 0}
+  spriteForHide: {fileID: 0}
+  groundHitbox: {fileID: 0}
+  slamHitbox: {fileID: 0}
   maxHP: 300
   currentHP: 0
   idleTimeBetweenAttacks: 0.8
   skyAttackChance: 0.35
   groundAttackRange: 3.5
   chaseSpeed: 2
+  chaseAccel: 50
+  isMovingParam: IsMoving
+  moveXParam: MoveX
+  moveYParam: MoveY
+  trackDuringHover: 1
+  hoverTrackTime: 0.8
+  hoverMaxXSpeed: 10
+  hoverSnapEpsilon: 0.05
   skyRiseHeight: 6
   skyRiseSpeed: 12
   skyDiveSpeed: 18
-  groundHitbox: {fileID: 0}
-  slamHitbox: {fileID: 0}
-  appearVfx: {fileID: 0}
-  deathVfx: {fileID: 0}
+  alignSpeed: 10
+  telegraphDelay: 0.18
+  invulnerableDuringVanish: 1
+  hideSpriteDuringVanish: 1
+  vanishTeleportYMargin: 0.5
+  useOnVanishDoneEvent: 1
+  vanishEventTimeout: 1.5
+  meleeDamage: 12
+  meleeRadius: 0.6
+  meleeOffset: {x: 0.7, y: 0}
+  meleeTargets:
+    serializedVersion: 2
+    m_Bits: 0
+  meleeKnockback: 4
+  invulnerableDuringAppear: 1
+  invulnerableDuringSky: 1
+  arenaCollider: {fileID: 0}
+  wallMargin: 0.5
+  ceilingMargin: 0.5
+  floorMargin: 0.1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  feetOffset: {x: 0, y: -0.5}
+  groundRayLen: 0.8
+  vanishStateName: vanish
+  skyStateName: attack from sky
+  impactStateName: impact
+--- !u!50 &1380411786
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380411781}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1828947859
 GameObject:
   m_ObjectHideFlags: 0
