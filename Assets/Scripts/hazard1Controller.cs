@@ -4,7 +4,7 @@ using UnityEngine;
 /// Explosive crate that flashes when armed, then switches to a separate explosion visual which is scaled to match gameplay radius.
 /// Flashing visuals are never scaled.
 [RequireComponent(typeof(Collider2D))]
-public class ExplosiveCrate2D : MonoBehaviour, IDamageable 
+public class ExplosiveCrate2D : MonoBehaviour, IDamageable
 {
     [Header("Explosion (gameplay)")]
     public float explosionRadius = 2.5f;   // damage radius in world units
@@ -34,6 +34,7 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
 
     // runtime
     bool armed, exploded;
+    bool hasHit;   // ensure we only apply explosion damage once
     int armedHash, explodeHash;
 
     void OnValidate()
@@ -96,6 +97,7 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
     {
         if (exploded) return;
         exploded = true;
+        hasHit = false;
 
         if (debugLogs) Debug.Log("[Crate] BOOM!");
 
@@ -109,7 +111,7 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
             ApplyExplosionVisualScale(explosionRoot);
         }
 
-        // 3) Optionally hide the flash visuals now (prevents seeing last flash frame)
+        // 3) Hide the flash visuals
         if (flashRoot) flashRoot.gameObject.SetActive(false);
 
         // 4) Trigger explosion animation (Animator B)
@@ -119,16 +121,11 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
             explosionAnimator.SetTrigger(explodeHash);
         }
 
-        // 5) Gameplay effect instantly (or call from an Animation Event if you want precise timing)
-        DoExplosionHit();
+        // 5) Disable collider so it no longer blocks anything after detonation
+        var col = GetComponent<Collider2D>();
+        if (col) col.enabled = false;
 
-        // 6) Disable collider so it no longer blocks anything after detonation
-        var col = GetComponent<Collider2D>(); if (col) col.enabled = false;
-
-        // 7) Destroy when explosion anim finishes:
-        //    Add an Animation Event at the END of the Explosion clip (Animator B) that calls DestroySelf().
-        //    Or uncomment the timed fallback below (match to clip length):
-        // Destroy(gameObject, 0.6f);
+        // NOTE: Damage is now applied by ExplosionImpactEvent() via Animation Event
     }
 
     void ApplyExplosionVisualScale(Transform toScale)
@@ -166,7 +163,9 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
             }
         }
     }
-   public void TakeDamage(int damage)
+
+    // IDamageable
+    public void TakeDamage(int damage)
     {
         if (exploded) return;
         if (armed) return; // already counting down
@@ -176,7 +175,19 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
 
         ArmAndExplodeAfter(armDuration);
     }
-    // Call this from an Animation Event on the last frame of the Explosion clip (Animator B)
+
+    // 🔴 Call this from an Animation Event near the START of the Explosion clip
+    public void ExplosionImpactEvent()
+    {
+        if (exploded && !hasHit)
+        {
+            if (debugLogs) Debug.Log("[Crate] ExplosionImpactEvent → DoExplosionHit()");
+            hasHit = true;
+            DoExplosionHit();
+        }
+    }
+
+    // Call this from an Animation Event on the LAST frame of the Explosion clip (Animator B)
     public void DestroySelf()
     {
         if (debugLogs) Debug.Log("[Crate] DestroySelf()");

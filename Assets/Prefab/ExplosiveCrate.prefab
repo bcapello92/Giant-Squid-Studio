@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8086983697415240209}
   - component: {fileID: 6282754761989103857}
-  - component: {fileID: 160120703765455178}
   - component: {fileID: 6115936990216640652}
   - component: {fileID: 4473117450887362662}
   - component: {fileID: 8064285692204347605}
@@ -95,22 +94,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!111 &160120703765455178
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6448667952903092051}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!61 &6115936990216640652
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -191,20 +174,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8034ea85e5b73174880a3a86f5eb9fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveCrate2D
-  explosionRadius: 2.5
+  explosionRadius: 2
   damage: 25
-  stunSeconds: 1.25
-  knockback: 6
+  stunSeconds: 0
+  knockback: 0
   targetLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   armOnStart: 0
-  armDuration: 1.2
+  armDuration: 3
   flashRoot: {fileID: 0}
   flashAnimator: {fileID: 0}
   armedBoolParam: Armed
-  explosionRoot: {fileID: 0}
-  explosionAnimator: {fileID: 0}
+  explosionRoot: {fileID: 8086983697415240209}
+  explosionAnimator: {fileID: 4473117450887362662}
   explodeTriggerParam: Explode
   authoredExplosionRadius: 1
   debugLogs: 0

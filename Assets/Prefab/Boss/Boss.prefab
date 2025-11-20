@@ -431,17 +431,17 @@ MonoBehaviour:
   trackDuringHover: 1
   hoverTrackTime: 0.8
   hoverMaxXSpeed: 10
-  hoverSnapEpsilon: 0.05
-  skyRiseHeight: 4
+  hoverSnapEpsilon: 1
+  skyRiseHeight: 1
   skyRiseSpeed: 1
   skyDiveSpeed: 10
   alignSpeed: 10
-  telegraphDelay: 0.18
+  telegraphDelay: 0.5
   invulnerableDuringVanish: 1
-  hideSpriteDuringVanish: 1
+  hideSpriteDuringVanish: 0
   vanishTeleportYMargin: 0.5
-  useOnVanishDoneEvent: 1
-  vanishEventTimeout: 1.5
+  useOnVanishDoneEvent: 0
+  vanishEventTimeout: 1
   meleeDamage: 12
   meleeRadius: 3.5
   meleeOffset: {x: 0.7, y: 0}

@@ -1,11 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using System;
 
 public class OctopusScript : RoomEnemy, IDamageable
 {
     [Header("Health")]
     public int maxHP = 75;
     [SerializeField] int currentHP;
+
+    public event Action<int, int> OnHealthChanged;          
+    public event Action<OctopusScript> OnDied;
 
     public float deathDespawnDelay = 1.5f;
     private bool disablePhysicsOnDeath = true;
@@ -56,7 +60,13 @@ public class OctopusScript : RoomEnemy, IDamageable
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             player = playerObj.transform;
+        if (EnemyHealthBarManager.Instance != null)
+        {
+            EnemyHealthBarManager.Instance.RegisterOctopus(this);
+        }
 
+        // Initial health event for UI
+        OnHealthChanged?.Invoke(currentHP, maxHP);
         StartCoroutine(InvisibilityCycle());
     }
 
@@ -199,7 +209,7 @@ public class OctopusScript : RoomEnemy, IDamageable
         // Pick a new roam target if needed
         if (!hasRoamTarget || Vector2.Distance(transform.position, roamTarget) < 0.1f)
         {
-            Vector2 randomOffset = Random.insideUnitCircle * roamRadius;
+            Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * roamRadius;
             Vector2 potentialTarget = currentRoamOrigin + randomOffset;
 
             // Clamp to camera bounds
@@ -237,6 +247,7 @@ public class OctopusScript : RoomEnemy, IDamageable
         if (isDead) return;
 
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+        OnHealthChanged?.Invoke(currentHP, maxHP);
         if (currentHP == 0)
         {
             Die();
@@ -254,8 +265,8 @@ public class OctopusScript : RoomEnemy, IDamageable
 
         // notify room ONCE
         DieInRoom();
+        OnDied?.Invoke(this);
 
-        // the rest of your death stuff...
         if (rb)
         {
             rb.linearVelocity = Vector2.zero;
