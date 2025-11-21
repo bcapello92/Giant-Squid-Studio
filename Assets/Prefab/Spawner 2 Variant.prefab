@@ -76,6 +76,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: 5242617356785652239, guid: d0cf0ebb1cefe2147b7d6cc928517c99, type: 3}
+      propertyPath: timeBetweenWaves
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8396621575281393568, guid: d0cf0ebb1cefe2147b7d6cc928517c99, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.23

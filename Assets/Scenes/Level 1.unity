@@ -396,7 +396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RunManager
   roomSequence: {fileID: 11400000, guid: ba9fc0bc7d81f74478a94410f701ea01, type: 2}
   loopAndReshuffle: 0
-  roomsUntilBoss: 4
+  roomsUntilBoss: 2
   bossRoomPrefab: {fileID: 1267140214647661739, guid: 70bdb2a3bf2dfed45a352c4b5f5f40ea, type: 3}
   difficultyBase: 4
   difficultyPerRoom: 4
