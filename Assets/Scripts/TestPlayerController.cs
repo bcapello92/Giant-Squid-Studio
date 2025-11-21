@@ -272,6 +272,8 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         // Generic damage: lava, explosive crates, melee, etc.
         // Only dash i-frames can stop this.
         if (IsInvulnerable) return;
+        if (combat != null && combat.IsBlocking)
+            return;
 
         ApplyDamage(amount);
     }
@@ -288,7 +290,13 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
         ApplyDamage(amount);
     }
+    public void TakeHazardDamage(int amount)
+    {
+        // Hazards still respect dash i-frames, but ignore block
+        if (IsInvulnerable) return;
 
+        ApplyDamage(amount);
+    }
     // Shared logic
     void ApplyDamage(int amount)
     {

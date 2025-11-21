@@ -72,12 +72,29 @@ public class LavaHazard2D : MonoBehaviour
             if (!IsStillOverlapping(target))
                 break;
 
-            var dmg = GetDamageable(target);
-            if (dmg != null)
+            // --- Player vs everything else ---
+            // First, see if this is the player
+            var player = target.GetComponentInParent<TestPlayerController>()
+                       ?? target.GetComponentInChildren<TestPlayerController>();
+
+            if (player != null)
             {
-                dmg.TakeDamage(damagePerTick);
+                // Hazards ignore block; only dash i-frames matter
+                player.TakeHazardDamage(damagePerTick);
+
                 if (logHits)
-                    Debug.Log($"[Lava] Tick hit {target.name} for {damagePerTick}");
+                    Debug.Log($"[Lava] Tick hit PLAYER {target.name} for {damagePerTick}");
+            }
+            else
+            {
+                // Non-player: use normal IDamageable
+                var dmg = GetDamageable(target);
+                if (dmg != null)
+                {
+                    dmg.TakeDamage(damagePerTick);
+                    if (logHits)
+                        Debug.Log($"[Lava] Tick hit {target.name} for {damagePerTick}");
+                }
             }
 
             if (verticalPushPerTick != 0f && rb != null)

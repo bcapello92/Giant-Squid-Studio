@@ -149,7 +149,30 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
         {
             if (!h) continue;
 
-            // Damage
+            // 1) Check for player first
+            var player = h.GetComponentInParent<TestPlayerController>()
+                       ?? h.GetComponentInChildren<TestPlayerController>();
+
+            if (player != null)
+            {
+                // Hazards ignore block, but still respect dash i-frames
+                player.TakeHazardDamage(damage);
+
+                // Stun + knockback still apply
+                var stunP = h.GetComponentInParent<IStunnable>() ?? h.GetComponentInChildren<IStunnable>();
+                if (stunP != null) stunP.ApplyStun(stunSeconds);
+
+                var rbP = h.attachedRigidbody;
+                if (rbP)
+                {
+                    Vector2 dirP = ((Vector2)h.transform.position - (Vector2)transform.position).normalized;
+                    rbP.AddForce(dirP * knockback, ForceMode2D.Impulse);
+                }
+
+                continue; // done handling this hit
+            }
+
+            // 2) Non-player targets: use normal IDamageable
             var dmg = h.GetComponentInParent<IDamageable>() ?? h.GetComponentInChildren<IDamageable>();
             if (dmg != null) dmg.TakeDamage(damage);
 
@@ -167,6 +190,7 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
         }
     }
 
+
     // IDamageable
     public void TakeDamage(int damage)
     {
@@ -179,7 +203,7 @@ public class ExplosiveCrate2D : MonoBehaviour, IDamageable
         ArmAndExplodeAfter(armDuration);
     }
 
-    // 🔴 Call this from an Animation Event near the START of the Explosion clip
+    
     public void ExplosionImpactEvent()
     {
         explodeAudio.Play();
