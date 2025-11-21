@@ -297,16 +297,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8825523356925825357}
-  m_LocalRotation: {x: -0.06892042, y: -0.010287362, z: 0.05612566, w: 0.995989}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.069657125, y: 0.0019003786, z: 0.22913742, w: 0.97089666}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5278694717124871922}
-  m_LocalEulerAnglesHint: {x: -7.824, y: -1.633, z: 6.562}
+  m_LocalEulerAnglesHint: {x: -7.824, y: -1.633, z: 26.67}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1.41, y: -0.14}
+  m_AnchoredPosition: {x: 1.12, y: 0.36}
   m_SizeDelta: {x: 15, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7151932320107610577
@@ -440,7 +440,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '''E'' to exit
+  m_text: 'Press ''E''
 
 '
   m_isRightToLeft: 0
@@ -507,7 +507,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 3.6989183, y: -0.16504598, z: -0.0038437843, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
