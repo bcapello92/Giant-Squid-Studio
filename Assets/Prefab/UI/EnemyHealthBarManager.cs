@@ -292,4 +292,56 @@ public class EnemyHealthBarManager : MonoBehaviour
             RemoveEntry(entry);
         };
     }
+    public void RegisterBoss(BossController2D boss)
+    {
+        if (boss == null) return;
+        if (healthBarTemplate == null || container == null)
+            return;
+
+        // Instantiate UI
+        VisualElement ve = healthBarTemplate.Instantiate();
+        ve.name = "EnemyHealthRoot";
+
+        ProgressBar bar = ve.Q<ProgressBar>("EnemyHealthBar");
+        if (bar == null)
+        {
+            Debug.LogError("[EnemyHealthBarManager] EnemyHealthBar not found in template.");
+            return;
+        }
+
+        bar.lowValue = 0;
+        bar.highValue = boss.maxHP;
+        bar.value = boss.maxHP;
+
+        container.Add(ve);
+
+        // Create entry
+        var entry = new Entry
+        {
+            targetTransform = boss.transform,
+            root = ve,
+            bar = bar
+        };
+        entries.Add(entry);
+
+        // Hook health update event
+        boss.OnHealthChanged += (cur, max) =>
+        {
+            if (entry.bar != null)
+            {
+                entry.bar.highValue = max;
+                entry.bar.value = cur;
+            }
+        };
+
+        // Hook death event: remove bar
+        boss.OnDied += _ =>
+        {
+            RemoveEntry(entry);
+        };
+
+        // Sync initial health
+        entry.bar.value = boss.maxHP;
+    }
+
 }
