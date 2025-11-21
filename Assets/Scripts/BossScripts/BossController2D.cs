@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Animator))]
@@ -27,6 +28,9 @@ public class BossController2D : RoomEnemy, IDamageable
     [Header("Health")]
     public int maxHP = 300;
     [SerializeField] int currentHP;
+
+    public event Action<int, int> OnHealthChanged;
+    public event Action<BossController2D> OnDied;
     public bool IsDead { get; private set; }
 
     // -------------------- AI / MOVEMENT --------------------
@@ -158,6 +162,14 @@ public class BossController2D : RoomEnemy, IDamageable
 
     void Start()
     {
+        
+        if (EnemyHealthBarManager.Instance != null)
+        {
+            EnemyHealthBarManager.Instance.RegisterBoss(this);
+        }
+
+        // sync UI with starting HP
+        OnHealthChanged?.Invoke(currentHP, maxHP);
         busy = true;
         if (invulnerableDuringAppear) BeginIFrames();
         StartCoroutine(AppearRoutine());
@@ -225,7 +237,7 @@ public class BossController2D : RoomEnemy, IDamageable
     {
         while (!IsDead)
         {
-            bool doSky = (Random.value < skyAttackChance);
+            bool doSky = (UnityEngine.Random.value < skyAttackChance);
             if (doSky && player)
                 yield return StartCoroutine(VanishIntoSkyRoutine());
             else
@@ -487,6 +499,9 @@ public class BossController2D : RoomEnemy, IDamageable
         if (IsDead || IsInvulnerable) return;
 
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
+
+        OnHealthChanged?.Invoke(currentHP, maxHP);
+
         if (currentHP == 0) { Die(); return; }
 
         if (!busy)
@@ -503,6 +518,7 @@ public class BossController2D : RoomEnemy, IDamageable
 
         deathAudio.Play();
 
+        OnDied?.Invoke(this);
         DisableAllHitboxes();
         rb.linearVelocity = Vector2.zero;
         anim.SetBool(P_BOOL_DEAD, true);

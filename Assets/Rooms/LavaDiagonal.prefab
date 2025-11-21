@@ -1243,6 +1243,7 @@ GameObject:
   - component: {fileID: 8398404046604499710}
   - component: {fileID: 8393373369034500202}
   - component: {fileID: 7811708260061971391}
+  - component: {fileID: 5592858284066221300}
   m_Layer: 0
   m_Name: Lava
   m_TagString: Untagged
@@ -1552,6 +1553,25 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 5700356777451890813}
+--- !u!114 &5592858284066221300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5700356777451890813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271ffeb8208164646ac1e5f75472ea70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LavaHazard2D
+  damagePerTick: 5
+  tickInterval: 0.5
+  verticalPushPerTick: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  logHits: 0
 --- !u!1 &8530900888644734707
 GameObject:
   m_ObjectHideFlags: 0
