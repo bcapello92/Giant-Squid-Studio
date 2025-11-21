@@ -329,8 +329,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -768001485
-  m_SortingOrder: 0
+  m_SortingLayerID: -529835431
+  m_SortingOrder: 11
   m_TargetDisplay: 0
 --- !u!114 &400311092238648280
 MonoBehaviour:
@@ -440,7 +440,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Press E to exit
+  m_text: '''E'' to exit
 
 '
   m_isRightToLeft: 0

@@ -4,48 +4,102 @@ using UnityEngine;
 public class WeaponDriver : MonoBehaviour
 {
     [Header("Animator")]
-    public string attackTrigger = "jab";  // must match Animator parameter
-    public Animator animator;             // auto-filled in Awake
+    public string lightAttackTrigger = "jab";       // left-click / normal
+    public string blockBool = "IsBlocking";         // MUST match Animator bool
+    public Animator animator;                       // auto-filled in Awake
 
     [Header("Optional hitbox")]
-    public AttackArea attackArea;         // can be null
-    public float autoDisableHitboxDelay = 0f; // 0 = use animation events
+    public AttackArea attackArea;
+    public float autoDisableHitboxDelay = 0f;
+
+    public bool IsBlocking { get; private set; }
 
     void Awake()
     {
         if (!animator) animator = GetComponent<Animator>();
         if (!animator) animator = GetComponentInChildren<Animator>(true);
-        if (!animator) Debug.LogError("[WeaponDriver] No Animator found on Weapon_Harpoon 1.");
+        if (!animator) Debug.LogError("[WeaponDriver] No Animator found on Weapon.");
+
         if (attackArea) attackArea.gameObject.SetActive(false);
     }
 
-    public void PlayAttack()
+    // ---------------- ATTACK ----------------
+    // old name kept if anything still calls it
+    public void PlayAttack() => PlayLightAttack();
+
+    public void PlayLightAttack()
+    {
+        PlayTrigger(lightAttackTrigger);
+    }
+
+    void PlayTrigger(string triggerName)
     {
         if (!animator)
         {
-            Debug.LogError("[WeaponDriver] PlayAttack called but no Animator.");
+            Debug.LogError("[WeaponDriver] PlayTrigger called but no Animator.");
             return;
         }
 
-        // Ensure the trigger exists and is a Trigger
         bool hasTrig = false;
         foreach (var p in animator.parameters)
-            if (p.name == attackTrigger && p.type == AnimatorControllerParameterType.Trigger)
-            { hasTrig = true; break; }
+        {
+            if (p.name == triggerName && p.type == AnimatorControllerParameterType.Trigger)
+            {
+                hasTrig = true;
+                break;
+            }
+        }
 
         if (!hasTrig)
         {
-            Debug.LogError($"[WeaponDriver] Animator missing Trigger '{attackTrigger}'.");
+            Debug.LogError($"[WeaponDriver] Animator missing Trigger '{triggerName}'.");
             return;
         }
 
-        animator.ResetTrigger(attackTrigger);
-        animator.SetTrigger(attackTrigger);
+        animator.ResetTrigger(triggerName);
+        animator.SetTrigger(triggerName);
+
         if (animator.speed == 0f) animator.speed = 1f;
         animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
     }
 
-    // Animation Events (optional)
+    // ---------------- BLOCK ----------------
+    public void StartBlock()
+    {
+        IsBlocking = true;
+        SetBlockAnimator(true);
+    }
+
+    public void StopBlock()
+    {
+        IsBlocking = false;
+        SetBlockAnimator(false);
+    }
+
+    void SetBlockAnimator(bool value)
+    {
+        if (!animator || string.IsNullOrEmpty(blockBool)) return;
+
+        // Make sure the parameter exists & is a bool (optional safety)
+        bool hasBool = false;
+        foreach (var p in animator.parameters)
+        {
+            if (p.name == blockBool && p.type == AnimatorControllerParameterType.Bool)
+            {
+                hasBool = true;
+                break;
+            }
+        }
+        if (!hasBool)
+        {
+            Debug.LogWarning($"[WeaponDriver] Animator missing Bool '{blockBool}' for blocking.");
+            return;
+        }
+
+        animator.SetBool(blockBool, value);
+    }
+
+    // ---------------- HITBOX EVENTS (for light attack) ----------------
     public void StartSwing()
     {
         if (!attackArea) return;

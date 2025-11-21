@@ -20,6 +20,9 @@ public class BossController2D : RoomEnemy, IDamageable
     public DamageHitbox2D groundHitbox;          // enable during ground swing
     public DamageHitbox2D slamHitbox;            // enable on sky impact
 
+    [Header("VFX")]
+    public GameObject slamVfxPrefab;             // *** optional impact VFX
+
     // -------------------- HEALTH --------------------
     [Header("Health")]
     public int maxHP = 300;
@@ -68,7 +71,6 @@ public class BossController2D : RoomEnemy, IDamageable
     public LayerMask meleeTargets; // include Player
     public float meleeKnockback = 4f;
 
-
     // -------------------- I-FRAMES --------------------
     [Header("I-frames")]
     public bool invulnerableDuringAppear = true;
@@ -100,7 +102,7 @@ public class BossController2D : RoomEnemy, IDamageable
     [Header("Animator State Names (match your controller)")]
     public string vanishStateName = "vanish";
     public string skyStateName = "attack from sky";
-    public string impactStateName = "impact";
+    
 
     // -------------------- STATE --------------------
     bool busy;               // true while in attacks/cinematics
@@ -111,6 +113,9 @@ public class BossController2D : RoomEnemy, IDamageable
 
     // vanish event flag
     bool vanishDoneFlag;
+
+  
+    Vector2 lockedImpactPos;
 
     // -------------------- UNITY --------------------
     void Reset()
@@ -185,7 +190,6 @@ public class BossController2D : RoomEnemy, IDamageable
         }
     }
 
-
     // -------------------- APPEAR --------------------
     IEnumerator AppearRoutine()
     {
@@ -249,6 +253,7 @@ public class BossController2D : RoomEnemy, IDamageable
         DisableAllHitboxes();
         busy = false;
     }
+
     float FacingSign()
     {
         // if you flip sprites, prefer that; else use localScale.x
@@ -277,12 +282,15 @@ public class BossController2D : RoomEnemy, IDamageable
 
     void OnDrawGizmosSelected()
     {
-        // existing gizmo code...
-        // add melee sphere viz:
+        // melee gizmo
         Gizmos.color = Color.red;
         float s = Application.isPlaying ? FacingSign() : Mathf.Sign(transform.localScale.x == 0 ? 1 : transform.localScale.x);
         Vector2 pos = (Vector2)transform.position + new Vector2(meleeOffset.x * s, meleeOffset.y);
         Gizmos.DrawWireSphere(pos, meleeRadius);
+
+        // optional: visualize locked impact
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(lockedImpactPos, 0.2f);
     }
 
     // Called by animation events in ground swing
@@ -380,12 +388,18 @@ public class BossController2D : RoomEnemy, IDamageable
         // Final lock before the dive
         lockedTargetX = ClampArenaX(rb.position.x);
 
+        
+        float arenaFloorY = ArenaFloorY();
+        lockedImpactPos = new Vector2(lockedTargetX, arenaFloorY);
+
         // Telegraph pause
         if (telegraphDelay > 0f) yield return new WaitForSeconds(telegraphDelay);
 
-        // --- DIVE STRAIGHT DOWN (X locked) ---
+        // Optionally, you could play an "impact windup" animation here:
+        // anim.Play(impactStateName, 0, 0f);
+
+        // --- DIVE STRAIGHT DOWN TOWARD lockedImpactPos ---
         float diveTimeout = 2.0f;
-        float arenaFloorY = ArenaFloorY();
 
         var oldConstraints = rb.constraints;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
@@ -394,24 +408,23 @@ public class BossController2D : RoomEnemy, IDamageable
         {
             diveTimeout -= Time.deltaTime;
 
-            Vector2 next = new Vector2(
-                lockedTargetX,
-                Mathf.Max(transform.position.y - skyDiveSpeed * Time.deltaTime, arenaFloorY)
-            );
-            rb.MovePosition(new Vector2(ClampArenaX(next.x), next.y));
+            float nextY = Mathf.MoveTowards(transform.position.y, lockedImpactPos.y, skyDiveSpeed * Time.deltaTime);
+            Vector2 next = new Vector2(lockedImpactPos.x, nextY);
 
-            // Ground check
-            Vector2 origin = (Vector2)transform.position + feetOffset;
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, groundRayLen, groundMask);
-            bool hitFloor = (transform.position.y <= arenaFloorY + 0.02f);
+            // keep within arena
+            next.x = ClampArenaX(next.x);
+            next.y = ClampArenaY(next.y);
 
-            if (hit.collider || hitFloor)
+            rb.MovePosition(next);
+
+            // When we reach the impact Y, snap to lockedImpactPos and perform slam
+            if (Mathf.Abs(nextY - lockedImpactPos.y) <= 0.02f)
             {
-                StartSlamDamage();
-                yield return new WaitForSeconds(0.10f);
-                StopSlamDamage();
+                rb.position = lockedImpactPos; // hard snap to avoid tiny offsets
+                DoSlamImpact();                 
                 break;
             }
+
             yield return null;
         }
 
@@ -427,6 +440,32 @@ public class BossController2D : RoomEnemy, IDamageable
         yield return new WaitForSeconds(0.25f);
 
         DisableAllHitboxes();
+    }
+
+    
+    void DoSlamImpact()
+    {
+        // optional debug:
+        // Debug.Log($"Slam at {lockedImpactPos}, boss {transform.position}");
+
+        if (slamHitbox)
+        {
+            // If slamHitbox is a separate object, this ensures it matches visuals.
+            // If it's a child centered already, you can omit this.
+            slamHitbox.transform.position = lockedImpactPos;
+        }
+
+        if (slamVfxPrefab)
+            Instantiate(slamVfxPrefab, lockedImpactPos, Quaternion.identity);
+
+        StartSlamDamage();
+        StartCoroutine(StopSlamAfterDelay(0.10f));
+    }
+
+    IEnumerator StopSlamAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StopSlamDamage();
     }
 
     public void StartSlamDamage() { if (slamHitbox) slamHitbox.enabled = true; }
@@ -543,5 +582,5 @@ public class BossController2D : RoomEnemy, IDamageable
     float ArenaFloorY() => TryGetArena(out var b) ? b.min.y + floorMargin : transform.position.y - 100f;
 
     // -------------------- GIZMOS (debug ground ray) --------------------
-  
+    // (you can add ground ray gizmos back here if needed)
 }

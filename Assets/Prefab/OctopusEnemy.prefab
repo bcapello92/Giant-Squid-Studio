@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2218156065274446564}
   - component: {fileID: 1365188497775610885}
   - component: {fileID: 7880869530581761265}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: OctopusEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ MonoBehaviour:
   invisibleTime: 5
   visibleTime: 5
   attackRange: 3
-  attackForce: 1
+  attackForce: 0
   attackCooldown: 5
   latchDuration: 10
   damagePerSecond: 1

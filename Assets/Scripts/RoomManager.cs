@@ -49,6 +49,14 @@ public class RoomManager : MonoBehaviour
     public void LoadRoom(GameObject roomPrefab)
     {
         // 1) Clear previous room
+        // 0) Destroy any hazards from the previous room
+        var oldHazards = FindObjectsOfType<RoomHazard>();
+        foreach (var h in oldHazards)
+        {
+            if (h != null)
+                Destroy(h.gameObject);
+        }
+
         if (currentRoomInstance) Destroy(currentRoomInstance);
         liveEnemies.Clear();
         currentExitDoor = null;

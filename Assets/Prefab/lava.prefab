@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5586948836792880054}
   - component: {fileID: 4558307716296306702}
   - component: {fileID: 424032945687532358}
+  - component: {fileID: 2768472516913990008}
   m_Layer: 0
   m_Name: lava
   m_TagString: Untagged
@@ -276,7 +277,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 1.46, y: 1.4, z: 0}
+  m_ChunkCullingBounds: {x: 1.5042944, y: 1.591953, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
@@ -367,3 +368,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   logHits: 0
+--- !u!114 &2768472516913990008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118801592603995558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7f4e51b3836c7347b77299f82b82886, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomHazard

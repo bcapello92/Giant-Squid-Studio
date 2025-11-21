@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8064285692204347605}
   - component: {fileID: 5840481753107282955}
   - component: {fileID: -7438358040214166716}
+  - component: {fileID: 3103227393130787933}
   m_Layer: 0
   m_Name: ExplosiveCrate
   m_TagString: Untagged
@@ -181,7 +182,7 @@ MonoBehaviour:
   knockback: 0
   targetLayers:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 448
   armOnStart: 0
   armDuration: 3
   flashRoot: {fileID: 0}
@@ -317,3 +318,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3103227393130787933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6448667952903092051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7f4e51b3836c7347b77299f82b82886, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomHazard

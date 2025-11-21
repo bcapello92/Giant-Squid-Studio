@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8760469084022212715}
   - component: {fileID: 8788846095910039138}
   - component: {fileID: 2214428600627713144}
+  - component: {fileID: 91828668242399765}
   m_Layer: 0
   m_Name: TurretHazard
   m_TagString: Untagged
@@ -110,6 +111,18 @@ MonoBehaviour:
   bulletsPerBurst: 3
   timeBetweenShots: 0.1
   timeBetweenBursts: 1.5
+--- !u!114 &91828668242399765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3281943245798240191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7f4e51b3836c7347b77299f82b82886, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomHazard
 --- !u!1 &6027309961942307473
 GameObject:
   m_ObjectHideFlags: 0

@@ -428,22 +428,22 @@ MonoBehaviour:
   isMovingParam: IsMoving
   moveXParam: MoveX
   moveYParam: MoveY
-  trackDuringHover: 1
+  trackDuringHover: 0
   hoverTrackTime: 0.8
   hoverMaxXSpeed: 10
-  hoverSnapEpsilon: 1
-  skyRiseHeight: 1
-  skyRiseSpeed: 1
+  hoverSnapEpsilon: 0.1
+  skyRiseHeight: 0.1
+  skyRiseSpeed: 0.1
   skyDiveSpeed: 10
-  alignSpeed: 10
+  alignSpeed: 1
   telegraphDelay: 0.5
   invulnerableDuringVanish: 1
   hideSpriteDuringVanish: 0
-  vanishTeleportYMargin: 0.5
+  vanishTeleportYMargin: 0
   useOnVanishDoneEvent: 0
   vanishEventTimeout: 1
   meleeDamage: 12
-  meleeRadius: 3.5
+  meleeRadius: 3
   meleeOffset: {x: 0.7, y: 0}
   meleeTargets:
     serializedVersion: 2

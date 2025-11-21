@@ -198,9 +198,12 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
 
             var pos = GetNextHazardSpawnPosition();
 
-            // Instantiate with prefab's default rotation
-            var go = Instantiate(pick.prefab, pos, pick.prefab.transform.rotation);
+            // choose parent = roomManager (if you treat it as room root) or roomCenter
+            Transform parent = roomManager != null ? roomManager.transform : roomCenter;
+
+            var go = Instantiate(pick.prefab, pos, Quaternion.identity, parent);
             hazardsSpawnedThisRoom++;
+
 
             // Only rotate turret hazards (objects with BurstTurret)
             if (randomizeTurretRotation && go != null && go.GetComponent<BurstTurret>() != null)

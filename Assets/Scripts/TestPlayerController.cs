@@ -21,6 +21,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     [Tooltip("Also ignore damage while dashing.")]
     public bool dashGrantsInvulnerability = true;
 
+    CharacterCombat combat;
     public bool IsInvulnerable { get; private set; }
 
     int playerLayer;
@@ -76,6 +77,9 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         if (!aimCamera) aimCamera = Camera.main;
         if (!anim) anim = GetComponentInChildren<Animator>();
 
+        // NEW: grab CharacterCombat if present on the same GameObject
+        combat = GetComponent<CharacterCombat>();
+
         currentHP = maxHP;
         HealthChanged?.Invoke(currentHP, maxHP);
 
@@ -87,8 +91,8 @@ public class TestPlayerController : MonoBehaviour, IDamageable
             if (ignoreLayerIds[i] < 0)
                 Debug.LogWarning($"[Player] Layer '{dashIgnoreLayers[i]}' not found. Check Project Settings > Tags & Layers.");
         }
-
     }
+
 
     void OnEnable()
     {
@@ -260,7 +264,14 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     // -------- Health / Damage --------
     public void TakeDamage(int amount)
     {
-        if (IsInvulnerable) return; // i-frames: ignore damage
+        // Dash i-frames still work
+        if (IsInvulnerable) return;
+
+        // NEW: if we’re blocking, ignore the damage
+        // With the current setup this will block ALL damage (bullets, melee, etc.)
+        // If you later want only bullets, we’ll add a damage type.
+        if (combat != null && combat.IsBlocking)
+            return;
 
         int prev = currentHP;
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
@@ -278,6 +289,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
         hurtAudio.Play();
     }
+
 
 
     public void Heal(int amount)
