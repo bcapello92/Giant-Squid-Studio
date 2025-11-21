@@ -6,6 +6,8 @@ using System.Collections;
 [DisallowMultipleComponent]
 public class TestPlayerController : MonoBehaviour, IDamageable
 {
+
+    
     [Header("Move")]
     public float moveSpeed = 5f;
 
@@ -77,8 +79,7 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         if (!aimCamera) aimCamera = Camera.main;
         if (!anim) anim = GetComponentInChildren<Animator>();
 
-        // NEW: grab CharacterCombat if present on the same GameObject
-        combat = GetComponent<CharacterCombat>();
+        combat = GetComponent<CharacterCombat>();   // <-- add this
 
         currentHP = maxHP;
         HealthChanged?.Invoke(currentHP, maxHP);
@@ -262,17 +263,32 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     }
 
     // -------- Health / Damage --------
+    // -------- Health / Damage --------
     public void TakeDamage(int amount)
+    {
+        // Generic damage: lava, explosive crates, melee, etc.
+        // Only dash i-frames can stop this.
+        if (IsInvulnerable) return;
+
+        ApplyDamage(amount);
+    }
+
+    // Bullet-specific damage that can be blocked
+    public void TakeBulletDamage(int amount)
     {
         // Dash i-frames still work
         if (IsInvulnerable) return;
 
-        // NEW: if we’re blocking, ignore the damage
-        // With the current setup this will block ALL damage (bullets, melee, etc.)
-        // If you later want only bullets, we’ll add a damage type.
+        // Block only affects bullets
         if (combat != null && combat.IsBlocking)
             return;
 
+        ApplyDamage(amount);
+    }
+
+    // Shared logic
+    void ApplyDamage(int amount)
+    {
         int prev = currentHP;
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
         if (currentHP != prev)
@@ -287,9 +303,8 @@ public class TestPlayerController : MonoBehaviour, IDamageable
             RunManager.I?.OnPlayerDied();
         }
 
-        hurtAudio.Play();
+        if (hurtAudio) hurtAudio.Play();
     }
-
 
 
     public void Heal(int amount)

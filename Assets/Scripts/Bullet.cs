@@ -47,12 +47,26 @@ public class Bullet2D : MonoBehaviour
                 return;
         }
 
-        // Try to find something damageable
+        // 1) Check for player first (so we can use TakeBulletDamage)
+        var player = other.GetComponentInParent<TestPlayerController>()
+                  ?? other.GetComponentInChildren<TestPlayerController>();
+
+        if (player != null)
+        {
+            // This will be blocked if the player is holding block,
+            // and still respect dash i-frames.
+            player.TakeBulletDamage(damage);
+            Destroy(gameObject);
+            return;
+        }
+
+        // 2) Fallback: anything else that implements IDamageable
         var damageable = other.GetComponentInParent<IDamageable>()
                       ?? other.GetComponentInChildren<IDamageable>();
 
         if (damageable != null)
         {
+            // Non-player targets just use generic damage
             damageable.TakeDamage(damage);
         }
 
@@ -63,7 +77,6 @@ public class Bullet2D : MonoBehaviour
     // Optional: destroy when it leaves camera view (backup)
     void OnBecameInvisible()
     {
-        // If it�s already scheduled for Destroy via lifeTime, this is safe anyway.
         Destroy(gameObject);
     }
 }
