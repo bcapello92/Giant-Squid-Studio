@@ -4,6 +4,8 @@ using UnityEngine.UIElements;
 
 public class PauseMenuController : MonoBehaviour
 {
+    public static bool IsPaused { get; private set; }  
+
     UIDocument doc;
     VisualElement root;          // "pause-root"
     VisualElement panel;         // "panel"
@@ -26,7 +28,6 @@ public class PauseMenuController : MonoBehaviour
         // Start hidden
         root.style.display = DisplayStyle.None;
 
-        // CLICK handlers (explicit null checks)
         if (resumeBtn != null) resumeBtn.clicked += OnResume;
         if (restartBtn != null) restartBtn.clicked += OnRestart;
         if (menuBtn != null) menuBtn.clicked += OnMainMenu;
@@ -45,30 +46,26 @@ public class PauseMenuController : MonoBehaviour
     void PauseGame()
     {
         isPaused = true;
+        IsPaused = true;           // <--- SET GLOBAL FLAG
         Time.timeScale = 0f;
 
-        // show UI and allow clicks
         root.style.display = DisplayStyle.Flex;
-        root.pickingMode = PickingMode.Position;   // accept pointer events
+        root.pickingMode = PickingMode.Position;
         if (panel != null) panel.pickingMode = PickingMode.Position;
 
-        // cursor available for clicking
         prevCursorVisible = UnityEngine.Cursor.visible;
         prevLock = UnityEngine.Cursor.lockState;
         UnityEngine.Cursor.visible = true;
         UnityEngine.Cursor.lockState = CursorLockMode.None;
-
-        // optional: focus a button for keyboard/gamepad nav
-        // resumeBtn?.Focus();
     }
 
     void ResumeGame()
     {
         isPaused = false;
+        IsPaused = false;          // <--- CLEAR GLOBAL FLAG
         Time.timeScale = 1f;
         root.style.display = DisplayStyle.None;
 
-        // restore cursor state
         UnityEngine.Cursor.visible = prevCursorVisible;
         UnityEngine.Cursor.lockState = prevLock;
     }
@@ -86,7 +83,7 @@ public class PauseMenuController : MonoBehaviour
     {
         Time.timeScale = 1f;
         RunManager.I?.StopRun();
-        SceneManager.LoadScene("Title Scene"); // set to your exact scene name
+        SceneManager.LoadScene("Title Scene");
     }
 
     void OnQuit()

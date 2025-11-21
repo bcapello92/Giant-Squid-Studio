@@ -103,6 +103,9 @@ public class TestPlayerController : MonoBehaviour, IDamageable
 
     void Update()
     {
+        if (PauseMenuController.IsPaused)
+            return;
+
         // ----- Clear stun when time passes -----
         if (IsStunned && Time.time >= stunUntil)
             IsStunned = false;
