@@ -106,7 +106,13 @@ public class BossController2D : RoomEnemy, IDamageable
     [Header("Animator State Names (match your controller)")]
     public string vanishStateName = "vanish";
     public string skyStateName = "attack from sky";
-    
+
+    [Header("Audio")]
+    public AudioSource slamAudio;
+    public AudioSource deathAudio;
+    public AudioSource tpAudio;
+    public AudioSource attackAudio;
+
 
     // -------------------- STATE --------------------
     bool busy;               // true while in attacks/cinematics
@@ -279,6 +285,7 @@ public class BossController2D : RoomEnemy, IDamageable
     {
         Vector2 pos = (Vector2)transform.position + new Vector2(meleeOffset.x * FacingSign(), meleeOffset.y);
         var hits = Physics2D.OverlapCircleAll(pos, meleeRadius, meleeTargets);
+        attackAudio.Play();
         foreach (var h in hits)
         {
             if (!h) continue;
@@ -319,6 +326,8 @@ public class BossController2D : RoomEnemy, IDamageable
         // Enter Vanish state
         SafeSetTrigger(anim, P_TRIG_VANISH);
         OnVanishStart(); // apply invis / iframes immediately even if event fails
+
+        tpAudio.Play();
 
         // Wait for OnVanishDone() event or timeout
         vanishDoneFlag = false;
@@ -415,7 +424,6 @@ public class BossController2D : RoomEnemy, IDamageable
 
         var oldConstraints = rb.constraints;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
-
         while (!IsDead && diveTimeout > 0f)
         {
             diveTimeout -= Time.deltaTime;
@@ -449,6 +457,7 @@ public class BossController2D : RoomEnemy, IDamageable
         if (bodyCollider) bodyCollider.enabled = true;
 
         SafeSetTrigger(anim, P_TRIG_SKY_DONE);
+        slamAudio.Play();
         yield return new WaitForSeconds(0.25f);
 
         DisableAllHitboxes();
@@ -470,6 +479,7 @@ public class BossController2D : RoomEnemy, IDamageable
         if (slamVfxPrefab)
             Instantiate(slamVfxPrefab, lockedImpactPos, Quaternion.identity);
 
+        slamAudio.Play();
         StartSlamDamage();
         StartCoroutine(StopSlamAfterDelay(0.10f));
     }
@@ -505,6 +515,9 @@ public class BossController2D : RoomEnemy, IDamageable
     {
         if (IsDead) return;
         IsDead = true;
+
+        deathAudio.Play();
+
         OnDied?.Invoke(this);
         DisableAllHitboxes();
         rb.linearVelocity = Vector2.zero;
