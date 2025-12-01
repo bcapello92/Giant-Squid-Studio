@@ -31,6 +31,10 @@ public class LavaHazard2D : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Ignore weapon hitboxes (spear, etc.)
+        if (other.GetComponent<AttackArea>() != null)
+            return;
+
         if (((1 << other.gameObject.layer) & targetLayers) == 0)
             return;
 
@@ -45,6 +49,7 @@ public class LavaHazard2D : MonoBehaviour
                 Debug.Log($"[Lava] Start damage on {other.name}");
         }
     }
+
 
     private void OnTriggerExit2D(Collider2D other)
     {

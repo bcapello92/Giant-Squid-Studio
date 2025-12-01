@@ -9,6 +9,8 @@ public class CharacterCombat : MonoBehaviour
     [SerializeField] Transform spearRoot;
     [SerializeField] SpearAim spearFollower;
 
+    public WeaponDriver WeaponInstance => weaponInstance;
+    public bool IsBlocking => weaponInstance && weaponInstance.IsBlocking;
     void Awake()
     {
         if (!weaponMount)
@@ -33,7 +35,7 @@ public class CharacterCombat : MonoBehaviour
             Debug.LogWarning("[Combat] No SpearAim on SpearRoot (aim follow won’t run).");
     }
 
-    public bool IsBlocking => weaponInstance && weaponInstance.IsBlocking;
+    
 
     void Update()
     {

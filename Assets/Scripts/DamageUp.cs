@@ -1,43 +1,58 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class DamageUp : MonoBehaviour
 {
     public AudioSource powerUpAudio;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("test1");
-        if(other.gameObject.tag == "Player")
+        Debug.Log("[DamageUp] Trigger with " + other.name);
+
+        // Ignore weapon hitboxes – only player body should pick this up
+        if (other.GetComponent<AttackArea>() != null)
+            return;
+
+        // Find the player regardless of which child collider hit
+        var player = other.GetComponentInParent<TestPlayerController>();
+        if (player == null)
+            return;
+
+        var combat = player.GetComponent<CharacterCombat>();
+        if (combat == null || combat.WeaponInstance == null)
         {
-            Debug.Log("test2");
-            GameObject weapon = other.gameObject;
-            while(weapon.transform.childCount != 0)
-            {
-                weapon = weapon.transform.GetChild(0).gameObject;
-            }
-            AttackArea damageMod = weapon.GetComponent<AttackArea>();
-            damageMod.damage++;
-            StartCoroutine(Pickup());
+            Debug.LogWarning("[DamageUp] Player has no CharacterCombat or WeaponInstance.");
+            return;
         }
+
+        // Get the AttackArea from the weapon
+        AttackArea damageMod = combat.WeaponInstance.attackArea;
+
+        // Fallback: search in children if not wired
+        if (damageMod == null)
+            damageMod = player.GetComponentInChildren<AttackArea>();
+
+        if (damageMod == null)
+        {
+            Debug.LogWarning("[DamageUp] No AttackArea found on player's weapon.");
+            return;
+        }
+
+        // Apply the buff
+        damageMod.damage++;
+        Debug.Log("[DamageUp] Increased weapon damage to " + damageMod.damage);
+
+        StartCoroutine(Pickup());
     }
 
     IEnumerator Pickup()
     {
-        this.gameObject.transform.localScale = new Vector3(0, 0, 0);
-        powerUpAudio.Play();
-        yield return new WaitForSeconds(1);
-        Destroy(this.gameObject);
+        transform.localScale = Vector3.zero;
+
+        if (powerUpAudio) powerUpAudio.Play();
+
+        yield return new WaitForSeconds(1f);
+
+        Destroy(gameObject);
     }
 }
