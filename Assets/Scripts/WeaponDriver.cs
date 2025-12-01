@@ -20,7 +20,26 @@ public class WeaponDriver : MonoBehaviour
         if (!animator) animator = GetComponentInChildren<Animator>(true);
         if (!animator) Debug.LogError("[WeaponDriver] No Animator found on Weapon.");
 
-        if (attackArea) attackArea.gameObject.SetActive(false);
+        if (attackArea)
+        {
+            attackArea.gameObject.SetActive(false);
+
+            // IMPORTANT: set owner so the hitbox doesn't damage the player
+            if (attackArea.owner == null)
+            {
+                // assume player lives somewhere above this weapon
+                var player = GetComponentInParent<TestPlayerController>();
+                if (player != null)
+                {
+                    attackArea.owner = player.gameObject;
+                }
+                else
+                {
+                    // Fallback: root object as owner
+                    attackArea.owner = transform.root.gameObject;
+                }
+            }
+        }
     }
 
     // ---------------- ATTACK ----------------

@@ -120,7 +120,7 @@ Rigidbody2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -216,7 +216,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 576
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -557,6 +557,10 @@ PrefabInstance:
       propertyPath: stabAudio
       value: 
       objectReference: {fileID: 1998005012763162912}
+    - target: {fileID: 1208066266336159950, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 2407920666920140502, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
       propertyPath: m_Name
       value: SpearVisual

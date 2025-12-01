@@ -63,7 +63,7 @@ public class AttackArea : MonoBehaviour
                 return false;
         }
 
-        // Ignore self/owner
+        // Ignore self/owner by transform hierarchy
         if (owner && other.transform.IsChildOf(owner.transform))
             return false;
 
@@ -74,6 +74,14 @@ public class AttackArea : MonoBehaviour
         // Find anything damageable on that hierarchy
         var dmg = other.GetComponentInParent<IDamageable>() ?? other.GetComponentInChildren<IDamageable>();
         if (dmg == null) return false;
+
+        // EXTRA: if this IDamageable belongs to the owner, skip it
+        if (owner)
+        {
+            var ownerDmg = owner.GetComponent<IDamageable>();
+            if (ownerDmg != null && ReferenceEquals(dmg, ownerDmg))
+                return false;
+        }
 
         // Apply damage
         dmg.TakeDamage(damage);
@@ -87,7 +95,7 @@ public class AttackArea : MonoBehaviour
         }
 
         if (oneHitPerSwing) hitThisSwing.Add(other);
-        // Debug.Log($"[AttackArea] Hit {other.name} for {damage}");
         return true;
     }
+
 }
