@@ -557,9 +557,13 @@ PrefabInstance:
       propertyPath: stabAudio
       value: 
       objectReference: {fileID: 1998005012763162912}
+    - target: {fileID: 674112579722621788, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
+      propertyPath: targetLayers.m_Bits
+      value: 1983
+      objectReference: {fileID: 0}
     - target: {fileID: 1208066266336159950, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
-      value: 64
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2407920666920140502, guid: bdae901b31fc7d64e8855fff8509c079, type: 3}
       propertyPath: m_Name

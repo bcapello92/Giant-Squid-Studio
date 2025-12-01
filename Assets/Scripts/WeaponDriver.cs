@@ -24,7 +24,7 @@ public class WeaponDriver : MonoBehaviour
         {
             attackArea.gameObject.SetActive(false);
 
-            // IMPORTANT: set owner so the hitbox doesn't damage the player
+           //set ownder to playerRoot
             if (attackArea.owner == null)
             {
                 // assume player lives somewhere above this weapon
@@ -32,11 +32,15 @@ public class WeaponDriver : MonoBehaviour
                 if (player != null)
                 {
                     attackArea.owner = player.gameObject;
+                    Debug.Log("[WeaponDriver] AttackArea owner set to " + attackArea.owner.name);
+
                 }
                 else
                 {
                     // Fallback: root object as owner
                     attackArea.owner = transform.root.gameObject;
+                    Debug.LogWarning("[WeaponDriver] No TestPlayerController found; using root " + attackArea.owner.name + " as owner.");
+
                 }
             }
         }
