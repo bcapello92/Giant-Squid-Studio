@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2053040452293740463
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7882334365359559899}
+  - component: {fileID: 4213203367931327099}
+  m_Layer: 0
+  m_Name: RunManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7882334365359559899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053040452293740463}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.2889, y: 13.98994, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4213203367931327099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053040452293740463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3a3b0c23b5cb994cacdc46ead0912e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunManager
+  finalLevel: 2
+  roomSequence: {fileID: 11400000, guid: ba9fc0bc7d81f74478a94410f701ea01, type: 2}
+  loopAndReshuffle: 0
+  roomsUntilBoss: 2
+  bossRoomPrefab: {fileID: 1267140214647661739, guid: 70bdb2a3bf2dfed45a352c4b5f5f40ea, type: 3}
+  difficultyBase: 4
+  difficultyPerRoom: 4
+  maxHP: 100
+  currentHP: 100
+  buffs:
+  - 
+  gameOverUIPrefab: {fileID: 2301578770528507454, guid: ee4d0cdf57e61a842a16625af3cd41ea, type: 3}
+  youWinUIPrefab: {fileID: 6455434437521660598, guid: 64c541a2448d3464e8a881146a228561, type: 3}
+  level1SceneName: Level 1
+  level2SceneName: Level 2
+  level1Rooms: {fileID: 11400000, guid: ba9fc0bc7d81f74478a94410f701ea01, type: 2}
+  level2Rooms: {fileID: 11400000, guid: 993523f53fa040043988e5e26eff2919, type: 2}
+  currentLevel: 1

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6513433915093605890}
   - component: {fileID: 1800363292962006263}
   - component: {fileID: 4023660518950298586}
-  - component: {fileID: 119726989234886481}
   - component: {fileID: 8630684553707823566}
   - component: {fileID: 1985781651554619419}
   - component: {fileID: 6029048494745225923}
@@ -118,22 +117,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!111 &119726989234886481
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3651986300484222735}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!50 &8630684553707823566
 Rigidbody2D:
   serializedVersion: 5
@@ -186,6 +169,8 @@ MonoBehaviour:
   attackTrigger: Attack
   spriteRenderer: {fileID: 1800363292962006263}
   hitTriggerParam: 
+  deathTriggerParam: Die
+  destroyDelayAfterDeath: 0.6
 --- !u!70 &6029048494745225923
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -202,7 +187,7 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

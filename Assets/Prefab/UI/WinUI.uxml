@@ -3,7 +3,7 @@
     <ui:VisualElement name="Root" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: none;">
         <ui:VisualElement name="BG" class="bg" style="background-image: none; top: -24px; bottom: 0; right: 3px; left: 0;" />
         <ui:VisualElement name="Content" class="content" style="background-image: url(&quot;project://database/Assets/Scenes/TitleScreenImages/TitleBackground.svg?fileID=7388822144124034973&amp;guid=f560454c9e4dad04abfb7a84f2d2e23a&amp;type=3#TitleBackground&quot;); top: 3px; bottom: -48px; right: -1px; left: -47px;">
-            <ui:Label name="Title" text="Level Cleared" class="title" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;);" />
+            <ui:Label name="Title" text="You Win!" class="title" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;);" />
             <ui:Button name="RestartBtn" text="Restart" class="menu-btn" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;); width: 633px;" />
             <ui:Button name="MainMenuBtn" text="Main Menu" class="menu-btn" style="-unity-font-definition: url(&quot;project://database/Assets/Scenes/TitleScreenImages/Requiem.ttf?fileID=12800000&amp;guid=55628fab95ade5349bce1ff53190279e&amp;type=3#Requiem&quot;); width: 474px; height: 41px;" />
             <ui:VisualElement name="Menu" class="menu" />

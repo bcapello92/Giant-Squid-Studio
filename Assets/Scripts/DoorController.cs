@@ -4,15 +4,18 @@
 public class DoorController : MonoBehaviour
 {
     [Header("UI Prompt")]
-    public GameObject promptRoot;               // child GO with "Press E to exit"
+    public GameObject promptRoot;
     public KeyCode interactKey = KeyCode.E;
 
     [Header("State")]
     [SerializeField] bool locked = true;
 
-    // <<< renamed to avoid collisions >>>
     [SerializeField] private RoomManager _roomManager;
     public RoomManager RoomManagerRef => _roomManager;
+
+    [Header("Level Transition")]
+    [Tooltip("If true, using this door will start the next level (scene) instead of just the next room.")]
+    public bool startsNextLevel = false;
 
     bool _playerInRange;
 
@@ -23,7 +26,6 @@ public class DoorController : MonoBehaviour
         if (promptRoot) promptRoot.SetActive(false);
     }
 
-    // Called by RoomManager after instantiation
     public void SetRoomManager(RoomManager rm) { _roomManager = rm; }
 
     public void Lock()
@@ -50,8 +52,17 @@ public class DoorController : MonoBehaviour
         if (promptRoot) promptRoot.SetActive(false);
         _playerInRange = false;
 
-        if (_roomManager) _roomManager.OnExitDoorUsed();
-        else Debug.LogWarning("[Door] No RoomManager set.");
+        if (startsNextLevel)
+        {
+            // Special door: go to next LEVEL (scene)
+            RunManager.I?.GoToNextLevel();
+        }
+        else
+        {
+            // Normal door: just go to the next ROOM in this level
+            if (_roomManager) _roomManager.OnExitDoorUsed();
+            else Debug.LogWarning("[Door] No RoomManager set.");
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)

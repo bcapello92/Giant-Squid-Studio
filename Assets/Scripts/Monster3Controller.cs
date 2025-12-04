@@ -9,7 +9,7 @@ public class EnemyShooter : RoomEnemy, IDamageable
     public int maxHP = 30;
     [SerializeField] private int currentHP;
     public event Action<int, int> OnHealthChanged;        // (current, max)
-    public event Action<EnemyShooter> OnDied;          // (this)
+    public event Action<EnemyShooter> OnDied;             // (this)
 
     [Header("Movement")]
     public float moveSpeed = 3f;
@@ -20,7 +20,7 @@ public class EnemyShooter : RoomEnemy, IDamageable
     public UnityEngine.Transform target;          // Player. If null, will search by tag "Player".
 
     [Header("Shooting")]
-    public GameObject bulletPrefab;   // Your Bullet2D prefab
+    public GameObject bulletPrefab;               // Your Bullet2D prefab
     public UnityEngine.Transform firePoint;       // Where bullets spawn
     public float attackCooldown = 1.5f;
 
@@ -28,17 +28,41 @@ public class EnemyShooter : RoomEnemy, IDamageable
     public Animator anim;
     public string speedParam = "Speed";
     public string attackTrigger = "Attack";
-    public SpriteRenderer spriteRenderer; // body sprite to flip on X
-    public string hitTriggerParam = "";   // optional: name of a hit trigger in Animator
+    public SpriteRenderer spriteRenderer;         // body sprite to flip on X
+    public string hitTriggerParam = "Hit";        // name of a hit trigger in Animator
+    public string deathTriggerParam = "Die";      // death trigger
+
+    [Header("Death")]
+    [Tooltip("Time after triggering death before the enemy object is destroyed.")]
+    public float destroyDelayAfterDeath = 0.6f;
 
     private Rigidbody2D rb;
     private float attackTimer = 0f;
     private bool isAttacking = false;
-
+    private bool isDead = false;
+    void Start()
+    {
+        
+        // try to find the current RoomManager and register ourselves.
+        if (roomManager == null)
+        {
+            var rm = FindObjectOfType<RoomManager>();
+            if (rm != null)
+            {
+                rm.RegisterEnemy(this);
+            }
+            else
+            {
+                Debug.LogWarning("[EnemyShooter] No RoomManager found to register with.", this);
+            }
+        }
+    }
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
         if (!anim) anim = GetComponentInChildren<Animator>();
         if (!spriteRenderer) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -63,6 +87,12 @@ public class EnemyShooter : RoomEnemy, IDamageable
 
     void Update()
     {
+        if (isDead)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         if (!target || currentHP <= 0) return;
 
         attackTimer -= Time.deltaTime;
@@ -90,10 +120,13 @@ public class EnemyShooter : RoomEnemy, IDamageable
                 rb.linearVelocity = vel;
 
                 // Flip sprite towards direction of movement on X
-                if (vel.x > 0.01f)
-                    spriteRenderer.flipX = false;   // facing right
-                else if (vel.x < -0.01f)
-                    spriteRenderer.flipX = true;    // facing left
+                if (spriteRenderer != null)
+                {
+                    if (vel.x > 0.01f)
+                        spriteRenderer.flipX = false;   // facing right
+                    else if (vel.x < -0.01f)
+                        spriteRenderer.flipX = true;    // facing left
+                }
             }
         }
 
@@ -105,6 +138,46 @@ public class EnemyShooter : RoomEnemy, IDamageable
         }
     }
 
+    // ------------------- Death ----------------------
+    void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+        DieInRoom();//register with roommanager
+        // Stop movement & attacks
+        rb.linearVelocity = Vector2.zero;
+        isAttacking = false;
+
+        // Notify listeners (health bar manager will remove the bar)
+        OnDied?.Invoke(this);
+
+        // Disable colliders so it no longer blocks or takes hits
+        var cols = GetComponents<Collider2D>();
+        for (int i = 0; i < cols.Length; i++)
+            cols[i].enabled = false;
+
+        // Play death animation if available
+        if (anim && !string.IsNullOrEmpty(deathTriggerParam))
+        {
+            anim.SetTrigger(deathTriggerParam);
+
+            // Auto-destroy after a short delay (approx length of death anim)
+            Destroy(gameObject, destroyDelayAfterDeath);
+        }
+        else
+        {
+            // No death animation set up -> just destroy immediately
+            Destroy(gameObject);
+        }
+    }
+
+    // Optional: still here if you want to use an Animation Event instead of the delay.
+    public void OnDeathAnimationComplete()
+    {
+        Destroy(gameObject);
+    }
+
+    // ------------------- Attacking ----------------------
     void TriggerAttack()
     {
         attackTimer = attackCooldown;
@@ -127,9 +200,6 @@ public class EnemyShooter : RoomEnemy, IDamageable
         // SpawnBullet(); // if you want it instantaneous instead
     }
 
-    /// <summary>
-    /// Called from an Animation Event in the Attack animation.
-    /// </summary>
     public void SpawnBullet()
     {
         if (!bulletPrefab || !firePoint) return;
@@ -167,9 +237,6 @@ public class EnemyShooter : RoomEnemy, IDamageable
         }
     }
 
-    /// <summary>
-    /// Call this from an Animation Event at the end of the Attack clip.
-    /// </summary>
     public void EndAttack()
     {
         isAttacking = false;
@@ -178,7 +245,7 @@ public class EnemyShooter : RoomEnemy, IDamageable
     // ------------------- IDamageable ----------------------
     public void TakeDamage(int amount)
     {
-        if (amount <= 0 || currentHP <= 0) return;
+        if (amount <= 0 || currentHP <= 0 || isDead) return;
 
         int prev = currentHP;
         currentHP = Mathf.Max(0, currentHP - amount);
@@ -187,7 +254,7 @@ public class EnemyShooter : RoomEnemy, IDamageable
         {
             OnHealthChanged?.Invoke(currentHP, maxHP);
 
-            // Optional hit animation
+            // Trigger hit reaction animation
             if (anim && !string.IsNullOrEmpty(hitTriggerParam))
             {
                 anim.SetTrigger(hitTriggerParam);
@@ -198,11 +265,5 @@ public class EnemyShooter : RoomEnemy, IDamageable
         {
             Die();
         }
-    }
-
-    void Die()
-    {
-        OnDied?.Invoke(this);
-        Destroy(gameObject);
     }
 }

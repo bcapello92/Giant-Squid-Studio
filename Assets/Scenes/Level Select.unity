@@ -275,6 +275,7 @@ MonoBehaviour:
   - {fileID: 1384805251}
   - {fileID: 1845241591}
   - {fileID: 2009656421}
+  runManagerPrefab: {fileID: 4213203367931327099, guid: 48163a8ddb31dc54780fabdc04311fc2, type: 3}
 --- !u!1 &346323884
 GameObject:
   m_ObjectHideFlags: 0
