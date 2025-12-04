@@ -49,7 +49,7 @@ public class RunManager : MonoBehaviour
     RoomManager rm;
     Coroutine _boot;
     int _runVersion = 0;
-
+    
     public System.Action<bool> RunActiveChanged;
     public bool runActive { get; private set; } = false;
     public bool IsRunActive => runActive;

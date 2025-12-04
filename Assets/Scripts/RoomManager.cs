@@ -37,6 +37,8 @@ public class RoomManager : MonoBehaviour
     readonly List<RoomEnemy> liveEnemies = new List<RoomEnemy>();
     DoorController currentExitDoor;                   // for pickup spawn
     DoorController[] allDoorsInRoom;
+    int activeSpawnerCount = 0;
+    bool roomCleared = false;
 
     void Awake()
     {
@@ -61,6 +63,8 @@ public class RoomManager : MonoBehaviour
         liveEnemies.Clear();
         currentExitDoor = null;
         allDoorsInRoom = null;
+        activeSpawnerCount = 0;
+        roomCleared = false;
 
         // 2) Spawn new room under root
         currentRoomInstance = Instantiate(roomPrefab, roomRoot);
@@ -95,6 +99,7 @@ public class RoomManager : MonoBehaviour
             if (!sp) continue;
             sp.SetDifficulty(difficulty);
             sp.SetRoomManager(this);
+            RegisterSpawner(sp);//register to keep track of waves
             sp.BeginSpawning(); // make sure BeginSpawning() has its own "started" guard internally
         }
 
@@ -114,6 +119,23 @@ public class RoomManager : MonoBehaviour
             if (follow && player) follow.SetTarget(player.transform);
         }
     }
+    public void RegisterSpawner(EnemyWaveSpawnerPoisson spawner)
+{
+    if (!spawner) return;
+    activeSpawnerCount++;
+    // Debug.Log($"[RoomManager] Spawner registered. Active = {activeSpawnerCount}");
+}
+
+public void OnSpawnerFinished(EnemyWaveSpawnerPoisson spawner)
+{
+    if (activeSpawnerCount > 0)
+        activeSpawnerCount--;
+
+    // Debug.Log($"[RoomManager] Spawner finished. Active = {activeSpawnerCount}");
+
+    if (liveEnemies.Count == 0 && activeSpawnerCount == 0 && !roomCleared)
+        OnRoomCleared();
+}
 
     // =========================================================
     //                   Enemy Registration & Clear
@@ -131,7 +153,7 @@ public class RoomManager : MonoBehaviour
         if (enemy && liveEnemies.Contains(enemy))
             liveEnemies.Remove(enemy);
 
-        if (liveEnemies.Count == 0)
+        if (liveEnemies.Count == 0 && activeSpawnerCount == 0 && !roomCleared)
             OnRoomCleared();
     }
 
@@ -140,6 +162,9 @@ public class RoomManager : MonoBehaviour
     // =========================================================
     void OnRoomCleared()
     {
+        if (roomCleared) return;
+        roomCleared = true;
+
         bool isFinalBossRoom =
             isBossRoom &&
             RunManager.I != null &&
@@ -147,12 +172,12 @@ public class RoomManager : MonoBehaviour
 
         if (isFinalBossRoom)
         {
-            // Final boss of the game → show win screen
+            // Final boss of the game → win screen
             RunManager.I.OnBossDefeated();
             return;
         }
 
-        // For ALL other rooms, including first boss room:
+        // Normal room clear (including first boss room):
         if (allDoorsInRoom != null)
             foreach (var d in allDoorsInRoom) if (d) d.Unlock();
 
@@ -167,6 +192,7 @@ public class RoomManager : MonoBehaviour
             Instantiate(powerupPrefab, pos, Quaternion.identity);
         }
     }
+
 
 
 

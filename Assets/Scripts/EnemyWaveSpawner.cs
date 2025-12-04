@@ -147,7 +147,15 @@ public class EnemyWaveSpawnerPoisson : MonoBehaviour
         SpawnWave(wave1, 1);
         yield return new WaitForSeconds(timeBetweenWaves);
         SpawnWave(wave2, 2);
+
+        // NEW: tell RoomManager this spawner is finished spawning enemies
+        if (roomManager != null)
+            roomManager.OnSpawnerFinished(this);
+
+        if (logSpawns)
+            Debug.Log($"[SpawnerPoisson] {name} all waves finished.");
     }
+
 
     public void BeginSpawning()
     {
