@@ -140,14 +140,19 @@ public class RoomManager : MonoBehaviour
     // =========================================================
     void OnRoomCleared()
     {
-        if (isBossRoom)
+        bool isFinalBossRoom =
+            isBossRoom &&
+            RunManager.I != null &&
+            RunManager.I.currentLevel >= RunManager.I.finalLevel;
+
+        if (isFinalBossRoom)
         {
-            // Let RunManager decide: next level or final win?
-            RunManager.I?.OnBossRoomCleared();
+            // Final boss of the game → show win screen
+            RunManager.I.OnBossDefeated();
             return;
         }
 
-        // Normal room clear:
+        // For ALL other rooms, including first boss room:
         if (allDoorsInRoom != null)
             foreach (var d in allDoorsInRoom) if (d) d.Unlock();
 
@@ -162,6 +167,7 @@ public class RoomManager : MonoBehaviour
             Instantiate(powerupPrefab, pos, Quaternion.identity);
         }
     }
+
 
 
 
