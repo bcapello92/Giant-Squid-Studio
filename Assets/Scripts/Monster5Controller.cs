@@ -31,13 +31,7 @@ public class Monster5Controller : RoomEnemy, IDamageable
     public Behaviour[] componentsToDisableOnDeath;
 
     [Header("Audio")]
-    public AudioSource slimeNoise;
-
-    // Animator hashes (adjust to your controller)
-    static readonly int MoveSpeedHash = Animator.StringToHash("Speed");
-    static readonly int AttackTrig = Animator.StringToHash("Attack");
-    static readonly int HitTrig = Animator.StringToHash("Hit");
-    static readonly int DeathTrig = Animator.StringToHash("Death");
+    public AudioSource crabNoise;
 
     [Header("Debug / Attack Wiring")]
     public bool callShockInCodeIfNoEvent = true;   // call ShockNow() directly when the trigger fires
@@ -46,11 +40,12 @@ public class Monster5Controller : RoomEnemy, IDamageable
     void Log(string msg) { if (debugLogs) Debug.Log($"[Blob] {msg}", this); }
 
     Rigidbody2D rb;
-    Animator anim;
+    SpriteRenderer sr;
     Collider2D[] cols;
     Transform player;
     RoomManager roomManager;
     bool isDead;
+    bool shouldFlip;
     float lastAttackTime = -999f;
     float moveTimer = 1;
     public event Action<int, int> OnHealthChanged; // (current, max)
@@ -58,7 +53,7 @@ public class Monster5Controller : RoomEnemy, IDamageable
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
         cols = GetComponentsInChildren<Collider2D>(true);
 
         currentHP = Mathf.Max(1, maxHP);
@@ -101,10 +96,12 @@ public class Monster5Controller : RoomEnemy, IDamageable
         {
             if (toPlayerNormal.y > 0)
             {
+                shouldFlip = false;
                 desiredVel = new Vector2(moveSpeed, moveSpeed);
             }
             else
             {
+                shouldFlip = true;
                 desiredVel = new Vector2(moveSpeed, -moveSpeed);
             }
         }
@@ -112,21 +109,22 @@ public class Monster5Controller : RoomEnemy, IDamageable
         {
             if (toPlayerNormal.y > 0)
             {
+                shouldFlip = true;
                 desiredVel = new Vector2(-moveSpeed, moveSpeed);
             }
             else
             {
+                shouldFlip = false;
                 desiredVel = new Vector2(-moveSpeed, -moveSpeed);
             }
         }
 
         if (moveTimer > 2.0f)
         {
+            sr.flipX = shouldFlip;
             rb.linearVelocity = desiredVel;
             moveTimer = 1;
         }
-
-        if (anim) anim.SetFloat(MoveSpeedHash, rb.linearVelocity.magnitude);
 
         bool inRange = dist <= (stopDistance + 0.1f);
         bool offCooldown = Time.time >= lastAttackTime + shockCooldown;
@@ -138,10 +136,6 @@ public class Monster5Controller : RoomEnemy, IDamageable
             moveTimer = 0;
 
             Log($"Attack trigger: dist={dist:F2}, stop={stopDistance}");
-            if (anim)
-            {
-                anim.SetTrigger(AttackTrig);   // Animator must have a Trigger named "Attack"
-            }
 
             // If your Attack clip doesn't have an Animation Event yet, do it now:
             if (callShockInCodeIfNoEvent)
@@ -176,7 +170,7 @@ public class Monster5Controller : RoomEnemy, IDamageable
             if (dmg != null)
             {
                 dmg.TakeDamage(pinchDamage);
-                slimeNoise.Play();
+                crabNoise.Play();
 
                 var prb = h.attachedRigidbody;
                 //if (prb) prb.AddForce((h.transform.position - transform.position).normalized * shockKnockback, ForceMode2D.Impulse);
@@ -195,10 +189,6 @@ public class Monster5Controller : RoomEnemy, IDamageable
         {
             Die();
         }
-        else
-        {
-            if (anim) anim.SetTrigger(HitTrig);
-        }
     }
 
 
@@ -207,7 +197,7 @@ public class Monster5Controller : RoomEnemy, IDamageable
         if (isDead) return;
         isDead = true;
 
-        slimeNoise.Play();
+        crabNoise.Play();
 
         // notify room ONCE
         DieInRoom();
@@ -228,7 +218,6 @@ public class Monster5Controller : RoomEnemy, IDamageable
         if (cols != null)
             foreach (var c in cols) if (c) c.enabled = false;
 
-        if (anim) anim.SetTrigger(DeathTrig);
         StartCoroutine(DespawnAfterDelay());
     }
 

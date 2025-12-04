@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1679283741918640262}
   - component: {fileID: 9139439802524293836}
-  - component: {fileID: 4337741895613754445}
   - component: {fileID: 6910246939352875376}
   - component: {fileID: 1785965975227482247}
   - component: {fileID: 5541645150240523091}
   - component: {fileID: -8724166376258197167}
   - component: {fileID: 4864429314517673703}
+  - component: {fileID: -7513465556643579255}
   m_Layer: 7
   m_Name: Monster 5
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.218, y: -0.311, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -96,28 +96,6 @@ SpriteMask:
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
   m_MaskSource: 0
---- !u!95 &4337741895613754445
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5347680577596769270}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f51f56b771f637e4b99a66be9dd66983, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &6910246939352875376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -165,12 +143,12 @@ SpriteRenderer:
   m_SortingLayerID: -529835431
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 8998667810197996635, guid: 6a5d29ec9feeedd46aa0ff43809ff101, type: 3}
+  m_Sprite: {fileID: 2104901783972924173, guid: 930927a6aa0abff4d86c72e2afb62ee2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.17, y: 0.12}
+  m_Size: {x: 1.62, y: 1.62}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -237,8 +215,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00076092995, y: -0.0064262836}
-  m_Radius: 0.1489482
+  m_Offset: {x: 0.0062039495, y: -0.0064261556}
+  m_Radius: 0.8
 --- !u!82 &-8724166376258197167
 AudioSource:
   m_ObjectHideFlags: 0
@@ -365,6 +343,28 @@ MonoBehaviour:
   deathDespawnDelay: 1.5
   disablePhysicsOnDeath: 1
   componentsToDisableOnDeath: []
-  slimeNoise: {fileID: -8724166376258197167}
+  crabNoise: {fileID: -8724166376258197167}
   callShockInCodeIfNoEvent: 1
   debugLogs: 0
+--- !u!95 &-7513465556643579255
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5347680577596769270}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 289a372883d6a674abe56633747b84ad, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
