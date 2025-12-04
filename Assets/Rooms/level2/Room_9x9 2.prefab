@@ -2094,6 +2094,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -2.37
       objectReference: {fileID: 0}
+    - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
+      propertyPath: enemyPool.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 5347680577596769270, guid: 3004659d026b1cf419eecd589f8e0d9f, type: 3}
+    - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
+      propertyPath: enemyPool.Array.data[2].prefab
+      value: 
+      objectReference: {fileID: 5347680577596769270, guid: a64214c18b9379641a02d176f0b6099b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
