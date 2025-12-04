@@ -504,9 +504,9 @@ GameObject:
   - component: {fileID: 4185051651181075430}
   - component: {fileID: 8887657593749903495}
   - component: {fileID: 4078705388648367214}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Lava
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

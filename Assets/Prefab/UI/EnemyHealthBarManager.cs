@@ -246,7 +246,51 @@ public class EnemyHealthBarManager : MonoBehaviour
             e.root.style.top = panelPos.y - barHeight * 1.5f;
         }
     }
+    public void RegisterShooter(EnemyShooter shooter)
+    {
+        if (shooter == null || healthBarTemplate == null || container == null)
+            return;
 
+        // Instantiate the template
+        VisualElement ve = healthBarTemplate.Instantiate();
+        ve.name = "EnemyHealthRoot";
+
+        ProgressBar bar = ve.Q<ProgressBar>("EnemyHealthBar");
+        if (bar == null)
+        {
+            Debug.LogError("[EnemyHealthBarManager] EnemyHealthBar not found in template.");
+            return;
+        }
+
+        bar.lowValue = 0;
+        bar.highValue = shooter.maxHP;
+        bar.value = shooter.maxHP;
+
+        container.Add(ve);
+
+        var entry = new Entry
+        {
+            targetTransform = shooter.transform,
+            root = ve,
+            bar = bar
+        };
+        entries.Add(entry);
+
+        // Hook into events to keep the bar updated
+        shooter.OnHealthChanged += (cur, max) =>
+        {
+            if (entry.bar != null)
+            {
+                entry.bar.highValue = max;
+                entry.bar.value = cur;
+            }
+        };
+
+        shooter.OnDied += _ =>
+        {
+            RemoveEntry(entry);
+        };
+    }
     public void RegisterOctopus(OctopusScript octopus)
     {
         if (octopus == null || healthBarTemplate == null || container == null)

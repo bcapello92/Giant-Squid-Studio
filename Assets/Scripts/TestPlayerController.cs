@@ -11,6 +11,10 @@ public class TestPlayerController : MonoBehaviour, IDamageable
     [Header("Move")]
     public float moveSpeed = 5f;
 
+    [Header("Movement Modifiers")]
+    [SerializeField, Range(0f, 1f)]
+    private float externalSpeedMultiplier = 1f;
+
     [Header("Dash")]
     public float dashSpeed = 10f;
     public float dashDuration = 0.15f;
@@ -181,7 +185,10 @@ public class TestPlayerController : MonoBehaviour, IDamageable
                 bodySR.flipX = false;          // for up/down, don�t flip
         }
     }
-
+    public void SetExternalSpeedMultiplier(float multiplier)
+    {
+        externalSpeedMultiplier = Mathf.Clamp(multiplier, 0f, 1f);
+    }
     void FixedUpdate()
     {
         if (IsStunned)
@@ -190,12 +197,12 @@ public class TestPlayerController : MonoBehaviour, IDamageable
             rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, stunDamp * Time.fixedDeltaTime);
             return;
         }
-
+        
         if (!isDashing)
         {
-            rb.linearVelocity = moveInput * moveSpeed;
+            rb.linearVelocity = moveInput * moveSpeed * externalSpeedMultiplier;
         }
-        // else: Dash coroutine controls velocity
+
     }
 
     IEnumerator Dash()
