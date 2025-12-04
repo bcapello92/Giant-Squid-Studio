@@ -9,7 +9,10 @@ public class RoomManager : MonoBehaviour
 
     [Header("Room root (where room instances go)")]
     public Transform roomRoot;
-    public GameObject powerupPrefab;
+
+    [Header("Power-ups")]
+    [Tooltip("Possible buff pickups to spawn when the room is cleared (e.g. DamageUp, SpeedUp).")]
+    public GameObject[] powerupPrefabs;
 
     // ----- Power-up spawn near exit door -----
     [Header("Power-up Spawn @ Exit Door")]
@@ -186,11 +189,18 @@ public void OnSpawnerFinished(EnemyWaveSpawnerPoisson spawner)
         if (player) player.Heal(clearHeal);
         RunManager.I?.Heal(clearHeal);
 
-        if (powerupPrefab && currentExitDoor)
-        {
-            Vector3 pos = GetPowerupSpawnPosition(currentExitDoor.transform);
-            Instantiate(powerupPrefab, pos, Quaternion.identity);
-        }
+        if (powerupPrefabs != null && powerupPrefabs.Length > 0 && currentExitDoor)
+{
+    // Pick a random prefab from the list
+    int idx = Random.Range(0, powerupPrefabs.Length);
+    GameObject chosen = powerupPrefabs[idx];
+
+    if (chosen != null)
+    {
+        Vector3 pos = GetPowerupSpawnPosition(currentExitDoor.transform);
+        Instantiate(chosen, pos, Quaternion.identity);
+    }
+}
     }
 
 

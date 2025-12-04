@@ -41,7 +41,7 @@ public class DamageUp : MonoBehaviour
         // Apply the buff
         damageMod.damage++;
         Debug.Log("[DamageUp] Increased weapon damage to " + damageMod.damage);
-
+        RunManager.I?.AddBuff("DamageUp");
         StartCoroutine(Pickup());
     }
 

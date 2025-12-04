@@ -211,6 +211,49 @@ public class RunManager : MonoBehaviour
         Time.timeScale = 0f; // pause behind UI (your UI should use unscaled time)
         Debug.Log("[Run] EndRun: Game Over.");
     }
+    public void ApplyPersistentBuffs(TestPlayerController player)
+    {
+        if (player == null) return;
+
+        // --- Get attack area (for damage buffs) ---
+        CharacterCombat combat = player.GetComponent<CharacterCombat>();
+        AttackArea damageMod = null;
+
+        if (combat != null && combat.WeaponInstance != null)
+            damageMod = combat.WeaponInstance.attackArea;
+
+        if (damageMod == null)
+            damageMod = player.GetComponentInChildren<AttackArea>();
+
+        if (damageMod == null)
+            Debug.LogWarning("[RunManager] No AttackArea found on player's weapon when applying buffs.");
+
+        // Cache base values (for debug if you like)
+        float baseMove = player.moveSpeed;
+        float baseDash = player.dashSpeed;
+
+        // Reapply each buff stack
+        foreach (string id in buffs)
+        {
+            switch (id)
+            {
+                case "DamageUp":
+                    if (damageMod != null)
+                        damageMod.damage++;
+                    break;
+
+                case "SpeedUp":
+                    // Make sure these match your SpeedUp pickup increments
+                    player.moveSpeed += 1.5f;
+                    player.dashSpeed += 2f;
+                    break;
+            }
+        }
+
+        Debug.Log($"[RunManager] Applied {buffs.Count} buffs. " +
+                  $"MoveSpeed {baseMove} -> {player.moveSpeed}, Dash {baseDash} -> {player.dashSpeed}" +
+                  (damageMod != null ? $", Damage = {damageMod.damage}" : ""));
+    }
 
     public void OnBossDefeated()
     {
@@ -247,6 +290,12 @@ public class RunManager : MonoBehaviour
         if (!foundRM) { Debug.LogError("[Run] No RoomManager in scene after load."); yield break; }
 
         rm = foundRM;
+        // Reapply any buffs from previous rooms/levels
+        if (player != null)
+        {
+            ApplyPersistentBuffs(player);
+        }
+
         LoadCurrentRoom();
 
         var cam = Camera.main;
