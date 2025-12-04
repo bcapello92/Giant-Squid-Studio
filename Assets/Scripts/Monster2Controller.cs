@@ -8,15 +8,23 @@ using System;
 public class EnemyController : RoomEnemy, IDamageable
 {
     [Header("Target")]
-    public Transform target;                 // Drag the player here, or will find by tag
+    public Transform target;
     public string targetTag = "Player";
 
     [Header("Movement")]
-    public bool sideScroller = false;        // true = X-only (platformer), false = top-down XY
+    public bool sideScroller = false;
     public float moveSpeed = 3f;
-    public float detectionRange = 8f;        // start chasing inside this radius
-    public float stopDistance = 1.0f;        // stop just short of target
-    public float acceleration = 25f;         // smoothing
+    public float detectionRange = 8f;
+    public float stopDistance = 1.0f;
+    public float acceleration = 25f;
+
+    [Header("Retreat After Attack")]
+    [Tooltip("If true, enemy will move away from the player for a short time after each attack.")]
+    public bool retreatAfterAttack = true;
+    [Tooltip("How long after an attack the enemy retreats (seconds).")]
+    public float retreatDuration = 0.8f;
+    [Tooltip("Speed multiplier while retreating.")]
+    public float retreatSpeedMultiplier = 1.1f;
 
     [Header("Health")]
     public int maxHP = 40;
@@ -24,18 +32,18 @@ public class EnemyController : RoomEnemy, IDamageable
     bool isDead;
 
     [Header("Attacks")]
-    public float attackRange = 1.2f;         // MUST be > stopDistance
+    public float attackRange = 1.2f;
     public float attackCooldown = 0.7f;
-    public Vector2 attackIndices = new Vector2(0, 2); // inclusive [min,max] (0=Attack1,1=Attack2,2=ATTACK)
+    public Vector2 attackIndices = new Vector2(0, 2);
+
     [Header("Death")]
     public float deathDespawnDelay = 1.5f;
     public bool disablePhysicsOnDeath = true;
     public Behaviour[] componentsToDisableOnDeath;
     Collider2D[] cols;
 
-
     [Header("Hit Logic (OverlapCircle)")]
-    public LayerMask targetLayers;           // include Player layer
+    public LayerMask targetLayers;
     public int damage = 10;
     public float knockbackForce = 4f;
     public float attackRadius = 0.6f;
@@ -43,6 +51,7 @@ public class EnemyController : RoomEnemy, IDamageable
     public Vector2 attackOffset = new Vector2(0.6f, 0.0f);
     [Tooltip("Only used if sideScroller=true, to lift/lower hit circle.")]
     public float sideScrollerYOffset = 0f;
+
     public event Action<int, int> OnHealthChanged;
     public event Action<EnemyController> OnDied;
 
@@ -51,14 +60,14 @@ public class EnemyController : RoomEnemy, IDamageable
     public AudioSource hurtAudio;
 
     [Header("Debug")]
-    public bool debugAttack = false;                 // show detailed logs
-    public KeyCode manualAttackKey = KeyCode.K;      // press to force an overlap test
+    public bool debugAttack = false;
+    public KeyCode manualAttackKey = KeyCode.K;
 
     // Animator hashes
     static readonly int SpeedHash = Animator.StringToHash("Speed");
-    static readonly int VSpeedHash = Animator.StringToHash("VerticalSpeed"); // side-scroller only
-    static readonly int MoveXHash = Animator.StringToHash("MoveX");         // top-down optional
-    static readonly int MoveYHash = Animator.StringToHash("MoveY");         // top-down optional
+    static readonly int VSpeedHash = Animator.StringToHash("VerticalSpeed");
+    static readonly int MoveXHash = Animator.StringToHash("MoveX");
+    static readonly int MoveYHash = Animator.StringToHash("MoveY");
     static readonly int AttackIdxHash = Animator.StringToHash("AttackIndex");
     static readonly int AttackTrig = Animator.StringToHash("Attack");
     static readonly int HitTrig = Animator.StringToHash("Hit");
@@ -67,11 +76,9 @@ public class EnemyController : RoomEnemy, IDamageable
     Rigidbody2D rb;
     Animator anim;
 
-    // Flipping support (child renderers or fallback to scale)
-    [SerializeField] SpriteRenderer[] spriteRenderers; // optional: assign explicitly
+    [SerializeField] SpriteRenderer[] spriteRenderers;
     bool useScaleFlipFallback;
 
-    // Attack timing state
     float lastAttackTime = -999f;
     bool attackWindowOpen = false;
     readonly HashSet<Collider2D> hitThisSwing = new HashSet<Collider2D>();
@@ -83,7 +90,6 @@ public class EnemyController : RoomEnemy, IDamageable
             EnemyHealthBarManager.Instance.RegisterEnemy(this);
         }
 
-        // make sure UI starts in sync
         OnHealthChanged?.Invoke(currentHP, maxHP);
     }
 
@@ -97,19 +103,19 @@ public class EnemyController : RoomEnemy, IDamageable
             var go = GameObject.FindGameObjectWithTag(targetTag);
             if (go) target = go.transform;
         }
+
         currentHP = Mathf.Max(1, maxHP);
         OnHealthChanged?.Invoke(currentHP, maxHP);
+
         cols = GetComponentsInChildren<Collider2D>(true);
-        // Physics defaults
+
         rb.gravityScale = sideScroller ? 1f : 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        // Find child renderers if not assigned
         if (spriteRenderers == null || spriteRenderers.Length == 0)
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
         useScaleFlipFallback = (spriteRenderers == null || spriteRenderers.Length == 0);
 
-        // If mask empty, try to include "Player"
         if (targetLayers.value == 0)
         {
             int playerLayer = LayerMask.NameToLayer("Player");
@@ -122,7 +128,6 @@ public class EnemyController : RoomEnemy, IDamageable
 
     void Update()
     {
-        // Manual debug overlap (bypasses animation event)
         if (debugAttack && Input.GetKeyDown(manualAttackKey))
         {
             Debug.Log("[Enemy] Manual attack key pressed");
@@ -132,28 +137,49 @@ public class EnemyController : RoomEnemy, IDamageable
 
     void FixedUpdate()
     {
-        if (!target) return;
+        if (!target || isDead) return;
 
         Vector2 toTarget = (Vector2)(target.position - transform.position);
         float dist = toTarget.magnitude;
 
+        // --- Are we in retreat phase? ---
+        bool isRetreating = retreatAfterAttack && (Time.time < lastAttackTime + retreatDuration);
+
         // --- Movement ---
         Vector2 desiredVel = Vector2.zero;
-        if (dist <= detectionRange && dist > stopDistance)
+
+        if (isRetreating)
         {
+            // Move away from the player
             if (sideScroller)
             {
-                float dirX = Mathf.Sign(toTarget.x);
-                desiredVel = new Vector2(dirX * moveSpeed, rb.linearVelocity.y); // keep gravity Y
+                float dirX = -Mathf.Sign(toTarget.x); // opposite direction
+                desiredVel = new Vector2(dirX * moveSpeed * retreatSpeedMultiplier, rb.linearVelocity.y);
             }
             else
             {
-                desiredVel = toTarget.normalized * moveSpeed;              // top-down XY
+                desiredVel = -toTarget.normalized * moveSpeed * retreatSpeedMultiplier;
             }
         }
         else
         {
-            desiredVel = sideScroller ? new Vector2(0f, rb.linearVelocity.y) : Vector2.zero;
+            // Normal chase behavior
+            if (dist <= detectionRange && dist > stopDistance)
+            {
+                if (sideScroller)
+                {
+                    float dirX = Mathf.Sign(toTarget.x);
+                    desiredVel = new Vector2(dirX * moveSpeed, rb.linearVelocity.y);
+                }
+                else
+                {
+                    desiredVel = toTarget.normalized * moveSpeed;
+                }
+            }
+            else
+            {
+                desiredVel = sideScroller ? new Vector2(0f, rb.linearVelocity.y) : Vector2.zero;
+            }
         }
 
         Vector2 vel = rb.linearVelocity;
@@ -193,8 +219,8 @@ public class EnemyController : RoomEnemy, IDamageable
             }
         }
 
-        // --- Attack trigger ---
-        if (dist <= attackRange && Time.time >= lastAttackTime + attackCooldown)
+        // --- Attack trigger (ONLY if not retreating) ---
+        if (!isRetreating && dist <= attackRange && Time.time >= lastAttackTime + attackCooldown)
         {
             int min = Mathf.RoundToInt(attackIndices.x);
             int max = Mathf.RoundToInt(attackIndices.y);
@@ -202,25 +228,24 @@ public class EnemyController : RoomEnemy, IDamageable
 
             if (debugAttack) Debug.Log($"[Enemy] Attack fire: dist={dist:F2}, idx={pick}");
 
-            anim.ResetTrigger(AttackTrig);           // defensive clear
-            anim.SetInteger(AttackIdxHash, pick);    // ensure AttackIndex is INT in Animator
+            anim.ResetTrigger(AttackTrig);
+            anim.SetInteger(AttackIdxHash, pick);
             anim.SetTrigger(AttackTrig);
 
-            lastAttackTime = Time.time;
+            lastAttackTime = Time.time; // also marks start of retreat window
         }
 
         // Continuous hurtbox (if using Start/End window events)
         if (attackWindowOpen)
             DoHitOverlap(singleFrame: false);
     }
+
     // ===== Health / Damage =====
     public void TakeDamage(int amount)
     {
         if (isDead) return;
 
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));
-
-        // notify UI
         OnHealthChanged?.Invoke(currentHP, maxHP);
 
         if (currentHP == 0)
@@ -238,15 +263,11 @@ public class EnemyController : RoomEnemy, IDamageable
         if (isDead) return;
         isDead = true;
 
-        hurtAudio.Play();
+        if (hurtAudio) hurtAudio.Play();
 
-        // notify room
         DieInRoom();
-
-        // notify UI
         OnDied?.Invoke(this);
 
-        // stop movement / physics
         if (rb)
         {
             rb.linearVelocity = Vector2.zero;
@@ -271,11 +292,12 @@ public class EnemyController : RoomEnemy, IDamageable
         yield return new WaitForSeconds(deathDespawnDelay);
         Destroy(gameObject);
     }
+
     // ====== DAMAGE HOOKS (Animation Events) ======
     public void DealDamageEvent()
     {
         if (debugAttack) Debug.Log("[Enemy] DealDamageEvent()");
-        attackAudio.Play();
+        if (attackAudio) attackAudio.Play();
         DoHitOverlap(singleFrame: true);
     }
 
@@ -317,7 +339,6 @@ public class EnemyController : RoomEnemy, IDamageable
             if (h == null) continue;
             if (!singleFrame && hitThisSwing.Contains(h)) continue;
 
-            // Look for damage receiver anywhere in the hit hierarchy
             var dmg = h.GetComponentInParent<IDamageable>() ?? h.GetComponentInChildren<IDamageable>();
             if (dmg != null)
             {
@@ -355,13 +376,11 @@ public class EnemyController : RoomEnemy, IDamageable
 
     void OnDrawGizmosSelected()
     {
-        // Ranges
         Gizmos.color = new Color(1f, 0.95f, 0f, 0.35f);
         Gizmos.DrawWireSphere(transform.position, detectionRange);
         Gizmos.color = new Color(1f, 0f, 0f, 0.35f);
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
-        // Hit circle
         Gizmos.color = Color.red;
         float sign = Application.isPlaying ? GetFacingSign() :
                      Mathf.Sign(transform.localScale.x == 0 ? 1 : transform.localScale.x);
@@ -369,7 +388,6 @@ public class EnemyController : RoomEnemy, IDamageable
         Gizmos.DrawWireSphere(pos, attackRadius);
     }
 
-    // Optional external hooks
     public void PlayHit() => anim.SetTrigger(HitTrig);
     public void PlayDeath() => anim.SetTrigger(DeathTrig);
 }

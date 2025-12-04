@@ -238,6 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c87acb9646a304a8ce10aa4c021dbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedUp
-  moveSpeedIncrease: 1.5
+  moveSpeedIncrease: 1
   dashSpeedIncrease: 0
   powerUpAudio: {fileID: 1776720894538164193}

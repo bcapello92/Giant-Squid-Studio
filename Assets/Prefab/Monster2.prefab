@@ -140,7 +140,7 @@ Rigidbody2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -164,6 +164,9 @@ MonoBehaviour:
   detectionRange: 8
   stopDistance: 1.25
   acceleration: 25
+  retreatAfterAttack: 1
+  retreatDuration: 2
+  retreatSpeedMultiplier: 1.5
   maxHP: 40
   currentHP: 0
   attackRange: 2
