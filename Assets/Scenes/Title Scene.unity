@@ -553,6 +553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TitleScreenUI
   uiDocument: {fileID: 1173064282}
   backgroundTexture: {fileID: 0}
+  runManagerPrefab: {fileID: 4213203367931327099, guid: 48163a8ddb31dc54780fabdc04311fc2, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

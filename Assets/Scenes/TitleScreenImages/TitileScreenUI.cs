@@ -1,12 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GameTitleUI : MonoBehaviour
 {
     [SerializeField] UIDocument uiDocument;
     [SerializeField] Texture2D backgroundTexture;
+
+    [Header("Run Manager")]
+    [Tooltip("Prefab with RunManager on it (DontDestroyOnLoad).")]
+    public RunManager runManagerPrefab;
 
     VisualElement root, bg;
     Label title;
@@ -20,7 +24,7 @@ public class GameTitleUI : MonoBehaviour
         root = uiDocument.rootVisualElement;
 
         bg = root.Q<VisualElement>("BG");
-        title = root.Q<Label>("Title"); // adjust if your label is named "GameTitle"
+        title = root.Q<Label>("Title");
         startBtn = root.Q<Button>("StartBtn");
         levelBtn = root.Q<Button>("LevelBtn");
         optionsBtn = root.Q<Button>("OptionsBtn");
@@ -54,6 +58,22 @@ public class GameTitleUI : MonoBehaviour
         RemoveHandlers(optionsBtn);
     }
 
+    // ---------------- RunManager helper ----------------
+
+    void EnsureRunManager()
+    {
+        if (RunManager.I == null)
+        {
+            if (runManagerPrefab == null)
+            {
+                Debug.LogError("[GameTitleUI] No RunManager prefab assigned.");
+                return;
+            }
+
+            Instantiate(runManagerPrefab);
+        }
+    }
+
     // ---------------- Helper Functions ----------------
 
     void SetupBrackets(Button b)
@@ -64,7 +84,7 @@ public class GameTitleUI : MonoBehaviour
         b.RegisterCallback<FocusInEvent>(_ => ApplyBrackets(b, true));
         b.RegisterCallback<FocusOutEvent>(_ => ApplyBrackets(b, false));
 
-        // add hover
+        // hover
         b.RegisterCallback<MouseEnterEvent>(_ =>
         {
             b.Focus(); // focus for keyboard/visual consistency
@@ -72,7 +92,8 @@ public class GameTitleUI : MonoBehaviour
         });
         b.RegisterCallback<MouseLeaveEvent>(_ =>
         {
-            if (!b.focusController.focusedElement.Equals(b))
+            // be safe if focusController is null
+            if (b.focusController == null || b.focusController.focusedElement != b)
                 ApplyBrackets(b, false);
         });
     }
@@ -80,7 +101,7 @@ public class GameTitleUI : MonoBehaviour
     void RemoveHandlers(Button b)
     {
         if (b == null) return;
-        // no explicit unregister needed unless you’re using lambdas with stored refs
+        // UI Toolkit doesn't need explicit unregister here since callbacks are anonymous
     }
 
     void ApplyBrackets(Button b, bool active)
@@ -94,7 +115,25 @@ public class GameTitleUI : MonoBehaviour
 
     // ---------------- Button Clicks ----------------
 
-    void OnStartClicked() => SceneManager.LoadScene("Level 1");
-    void OnLevelSelectClicked() => SceneManager.LoadScene("Level Select");
-    void OnOptionsClicked() => Debug.Log("Options clicked");
+    void OnStartClicked()
+    {
+        // Start a run at Level 1 via RunManager
+        EnsureRunManager();
+        if (RunManager.I != null)
+        {
+            RunManager.I.StartRunAtLevel(1);
+        }
+    }
+
+    void OnLevelSelectClicked()
+    {
+        // Level select is just another scene; LevelMenu will also EnsureRunManager
+        SceneManager.LoadScene("Level Select");
+    }
+
+    void OnOptionsClicked()
+    {
+        Debug.Log("Options clicked");
+        // open options menu / scene as needed
+    }
 }

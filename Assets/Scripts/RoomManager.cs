@@ -142,8 +142,8 @@ public class RoomManager : MonoBehaviour
     {
         if (isBossRoom)
         {
-            // Boss defeated → win the game
-            RunManager.I?.OnBossDefeated();
+            // Let RunManager decide: next level or final win?
+            RunManager.I?.OnBossRoomCleared();
             return;
         }
 
@@ -162,6 +162,7 @@ public class RoomManager : MonoBehaviour
             Instantiate(powerupPrefab, pos, Quaternion.identity);
         }
     }
+
 
 
     // Called by DoorController when player uses the exit

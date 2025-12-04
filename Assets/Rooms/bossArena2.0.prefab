@@ -2904,6 +2904,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DoorOut
       objectReference: {fileID: 0}
+    - target: {fileID: 4802810607068913314, guid: 822dacc2ac78350438bf12e44242e733, type: 3}
+      propertyPath: startsNextLevel
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
