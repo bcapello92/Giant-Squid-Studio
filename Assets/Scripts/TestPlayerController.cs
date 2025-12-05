@@ -204,6 +204,12 @@ public class TestPlayerController : MonoBehaviour, IDamageable
         }
 
     }
+    public void SetHealth(int newCurrent, int newMax)
+    {
+        maxHP = newMax;
+        currentHP = Mathf.Clamp(newCurrent, 0, maxHP);
+        HealthChanged?.Invoke(currentHP, maxHP);
+    }
 
     IEnumerator Dash()
     {

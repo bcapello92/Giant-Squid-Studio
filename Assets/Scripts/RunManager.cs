@@ -7,8 +7,10 @@ public class RunManager : MonoBehaviour
 {
     public static RunManager I { get; private set; }
 
+    // ========= CONFIG =========
+
     [Header("Levels / Progression")]
-    public int finalLevel = 2;   // last level in the game (2 for now)
+    public int finalLevel = 2;   // last level in the game
 
     [Header("Rooms (Default / Legacy)")]
     public RoomSequence roomSequence;       // fallback for level 1 if level1Rooms is empty
@@ -27,7 +29,7 @@ public class RunManager : MonoBehaviour
     [Min(1)] public int difficultyBase = 1;
     [Min(0)] public int difficultyPerRoom = 1;
 
-    [Header("Player State")]
+    [Header("Player State (Persistent for the run)")]
     public int maxHP = 100;
     public int currentHP = 100;
     public List<string> buffs = new List<string>();
@@ -47,28 +49,37 @@ public class RunManager : MonoBehaviour
     [Header("Level State")]
     public int currentLevel = 1;
 
-    // runtime
+    // ========= RUNTIME STATE =========
+
     List<GameObject> runRooms = new();
     int currentIndex = 0;
     int loopCount = 0;
     int roomsClearedThisRun = 0;
     bool inBossRoom = false;
 
-    // NOTE: this property name is confusing (it was in your original).
-    // It actually returns loop count + 1, not the actual "level index".
+    // NOTE: This property name is from your original script and actually
+    // represents loopCount + 1, not the level index.
     public int CurrentLevel => loopCount + 1;
 
     RoomManager rm;
     Coroutine _boot;
     int _runVersion = 0;
 
+    TestPlayerController _player;
+
     public System.Action<bool> RunActiveChanged;
     public bool runActive { get; private set; } = false;
     public bool IsRunActive => runActive;
 
+    // ========= SINGLETON SETUP =========
+
     void Awake()
     {
-        if (I != null && I != this) { Destroy(gameObject); return; }
+        if (I != null && I != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         I = this;
         DontDestroyOnLoad(gameObject);
 
@@ -78,12 +89,10 @@ public class RunManager : MonoBehaviour
 
     void Start()
     {
-        // start runs via StartRunAtLevel or StartNewRun
+        // Start runs via StartRunAtLevel / StartNewRun / StartSecondRun
     }
 
-    // =========================================================
-    //  Helpers: per-level configuration
-    // =========================================================
+    // ========= PER-LEVEL HELPERS =========
 
     RoomSequence GetRoomSequenceForLevel(int level)
     {
@@ -133,10 +142,12 @@ public class RunManager : MonoBehaviour
         return bossRoomPrefab;
     }
 
-    // =========================================================
-    //  RUN LIFECYCLE
-    // =========================================================
+    // ========= RUN LIFECYCLE =========
 
+    /// <summary>
+    /// Start a fresh run at a given level (1 or 2).
+    /// Resets HP and buffs for a new run.
+    /// </summary>
     public void StartRunAtLevel(int level)
     {
         _runVersion++;
@@ -150,6 +161,8 @@ public class RunManager : MonoBehaviour
         RunActiveChanged?.Invoke(true);
 
         currentLevel = level;
+
+        // New run → reset HP and buffs
         currentHP = maxHP;
         buffs?.Clear();
 
@@ -190,7 +203,7 @@ public class RunManager : MonoBehaviour
         StartRunAtLevel(1);
     }
 
-    // Legacy entry point – now just a convenience wrapper for Level 2
+    // Legacy entry point – simple convenience wrapper for Level 2
     public void StartSecondRun()
     {
         StartRunAtLevel(2);
@@ -303,9 +316,20 @@ public class RunManager : MonoBehaviour
         Debug.Log("[Run] You Win! Boss defeated.");
     }
 
-    // =========================================================
-    //  BUFFS
-    // =========================================================
+    // ========= BUFFS & PLAYER SYNC =========
+
+    // Called from DamageUp / SpeedUp pickups etc.
+    public void AddBuff(string id)
+    {
+        if (!buffs.Contains(id)) buffs.Add(id);
+    }
+
+    // Sync from player → RunManager whenever HP changes
+    void OnPlayerHealthChanged(int current, int max)
+    {
+        currentHP = current;
+        maxHP = max;
+    }
 
     public void ApplyPersistentBuffs(TestPlayerController player)
     {
@@ -351,9 +375,7 @@ public class RunManager : MonoBehaviour
                   (damageMod != null ? $", Damage = {damageMod.damage}" : ""));
     }
 
-    // =========================================================
-    //  BOOTSTRAP / ROOM FLOW
-    // =========================================================
+    // ========= BOOTSTRAP / ROOM FLOW =========
 
     IEnumerator BootstrapRun(int version)
     {
@@ -386,10 +408,20 @@ public class RunManager : MonoBehaviour
 
         rm = foundRM;
 
-        // Reapply any buffs from previous rooms/levels
         if (player != null)
         {
-            ApplyPersistentBuffs(player);
+            // Unsubscribe old player
+            if (_player != null)
+                _player.HealthChanged -= OnPlayerHealthChanged;
+
+            _player = player;
+            _player.HealthChanged += OnPlayerHealthChanged;
+
+            // Push saved health from RunManager into this scene's player
+            _player.SetHealth(currentHP, maxHP);
+
+            // Reapply buffs for this scene’s player
+            ApplyPersistentBuffs(_player);
         }
 
         LoadCurrentRoom();
@@ -515,9 +547,7 @@ public class RunManager : MonoBehaviour
         return diff;
     }
 
-    // =========================================================
-    //  PLAYER STATE
-    // =========================================================
+    // ========= PLAYER STATE HELPERS (optional external use) =========
 
     public void ApplyDamage(int amount)
     {
@@ -528,10 +558,5 @@ public class RunManager : MonoBehaviour
     public void Heal(int amount)
     {
         currentHP = Mathf.Min(maxHP, currentHP + Mathf.Abs(amount));
-    }
-
-    public void AddBuff(string id)
-    {
-        if (!buffs.Contains(id)) buffs.Add(id);
     }
 }

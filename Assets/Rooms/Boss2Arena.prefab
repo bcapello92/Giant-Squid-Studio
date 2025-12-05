@@ -479,8 +479,9 @@ GameObject:
   - component: {fileID: 4714282883281824898}
   - component: {fileID: 7242877516046826369}
   - component: {fileID: 6131365245067495848}
+  - component: {fileID: 2658121534886070107}
   m_Layer: 0
-  m_Name: Lava
+  m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -848,6 +849,20 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 4494348726268308366}
+--- !u!114 &2658121534886070107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4494348726268308366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dbe9026a736e104b89bec6bb9b7e836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FeetHazardSlow
+  player: {fileID: 0}
+  hazardSpeedMultiplier: 0.25
 --- !u!1 &6513096075189723417
 GameObject:
   m_ObjectHideFlags: 0
