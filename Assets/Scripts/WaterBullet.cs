@@ -55,7 +55,7 @@ public class WaterBullet : MonoBehaviour
         {
             // This will be blocked if the player is holding block,
             // and still respect dash i-frames.
-            player.GetComponent<TestPlayerController>().ApplyStun(1);
+            player.GetComponent<TestPlayerController>().ApplyStun(0.5f);
             player.GetComponent<Rigidbody2D>().AddForce(rb.linearVelocity.normalized * 50, ForceMode2D.Impulse);
             Destroy(gameObject);
             return;
@@ -68,7 +68,7 @@ public class WaterBullet : MonoBehaviour
         if (damageable != null)
         {
             // Non-player targets just use generic damage
-            other.GetComponent<Rigidbody2D>().AddForce((other.transform.position - transform.position).normalized, ForceMode2D.Impulse);
+            other.GetComponent<Rigidbody2D>().AddForce(rb.linearVelocity.normalized, ForceMode2D.Impulse);
         }
 
         // Destroy bullet on ANY valid hit

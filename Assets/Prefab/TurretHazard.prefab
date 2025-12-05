@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayerID: -529835431
   m_SortingLayer: 4
   m_SortingOrder: 5
-  m_Sprite: {fileID: -8916305655728764833, guid: 23ae00a833f3291428bfe9e226977856, type: 3}
+  m_Sprite: {fileID: -352198177103576309, guid: dc31af46b96cb9d46b5a2bec1ce4b41d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -108,7 +108,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7662989591880503268, guid: 57788ed9d1038e24694b7d973e89be15, type: 3}
   muzzleFlashPrefab: {fileID: 2746501451109235850, guid: 5577794053a2b1c4383c4912210d1a9d, type: 3}
   firePoint: {fileID: 4006642404088787990}
-  bulletsPerBurst: 3
+  bulletsPerBurst: 1
   timeBetweenShots: 0.1
   timeBetweenBursts: 1.5
 --- !u!114 &91828668242399765

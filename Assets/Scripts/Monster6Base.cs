@@ -62,8 +62,11 @@ public class Monster6Base : RoomEnemy, IDamageable
 
     void FixedUpdate()
     {
-        lr.SetPosition(0, transform.position);
-        lr.SetPosition(1, SpawnedMonster.transform.position);
+        if (!isDead)
+        {
+            lr.SetPosition(0, transform.position);
+            lr.SetPosition(1, SpawnedMonster.transform.position);
+        }
     }
 
 
@@ -113,7 +116,7 @@ public class Monster6Base : RoomEnemy, IDamageable
         if (cols != null)
             foreach (var c in cols) if (c) c.enabled = false;
 
-        gameObject.transform.localScale = new Vector3(0.7f, 0.7f, 1);
+        gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 1);
         if (anim) anim.SetTrigger(DeathTrig);
         StartCoroutine(DespawnAfterDelay());
     }

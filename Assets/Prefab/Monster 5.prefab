@@ -335,12 +335,12 @@ MonoBehaviour:
   detectionRange: 8
   stopDistance: 1.5
   shockRadius: 2
-  pinchDamage: 10
+  pinchDamage: 5
   shockCooldown: 1
   shockKnockback: 4
   moveSpeed: 2.2
   acceleration: 12
-  deathDespawnDelay: 1.5
+  deathDespawnDelay: 0.5
   disablePhysicsOnDeath: 1
   componentsToDisableOnDeath: []
   crabNoise: {fileID: -8724166376258197167}
