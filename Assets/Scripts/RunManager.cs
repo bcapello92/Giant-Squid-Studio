@@ -15,7 +15,11 @@ public class RunManager : MonoBehaviour
 
     [Header("Boss Flow")]
     [Min(1)] public int roomsUntilBoss = 4;       // boss after N normal rooms
-    public GameObject bossRoomPrefab;             // room that contains the boss (or a BossSpawn marker)
+    public GameObject bossRoomPrefab;
+    [Header("Second Boss Run (Level 2)")]
+    public RoomSequence secondRunRoomSequence;      // rooms for level 2 run
+    [Min(1)] public int secondRunRoomsUntilBoss = 2;
+    public GameObject secondBossRoomPrefab;
 
     [Header("Difficulty Curve")]
     [Min(1)] public int difficultyBase = 1;
@@ -192,6 +196,44 @@ public class RunManager : MonoBehaviour
         runActive = false;
         RunActiveChanged?.Invoke(false);
         if (_boot != null) { StopCoroutine(_boot); _boot = null; }
+    }
+    public void StartSecondRun()
+    {
+        _runVersion++;
+        if (_boot != null)
+        {
+            StopCoroutine(_boot);
+            _boot = null;
+        }
+
+        runActive = true;
+        RunActiveChanged?.Invoke(true);
+
+        roomsClearedThisRun = 0;
+        inBossRoom = false;
+
+        // Use the second-run configuration
+        if (secondRunRoomSequence == null ||
+            secondRunRoomSequence.rooms == null ||
+            secondRunRoomSequence.rooms.Length == 0)
+        {
+            Debug.LogError("[Run] No rooms in secondRunRoomSequence.");
+            return;
+        }
+
+        roomSequence = secondRunRoomSequence;
+        roomsUntilBoss = secondRunRoomsUntilBoss;
+        bossRoomPrefab = secondBossRoomPrefab;
+
+        if (runRooms == null) runRooms = new List<GameObject>();
+        runRooms.Clear();
+        runRooms.AddRange(roomSequence.rooms);
+        Shuffle(runRooms);
+
+        currentIndex = 0;
+        loopCount = 0;
+
+        _boot = StartCoroutine(BootstrapRun(_runVersion));
     }
 
     public void OnPlayerDied()
