@@ -357,6 +357,9 @@ MonoBehaviour:
   loopAndReshuffle: 1
   roomsUntilBoss: 2
   bossRoomPrefab: {fileID: 1267140214647661739, guid: 70bdb2a3bf2dfed45a352c4b5f5f40ea, type: 3}
+  secondRunRoomSequence: {fileID: 11400000, guid: 993523f53fa040043988e5e26eff2919, type: 2}
+  secondRunRoomsUntilBoss: 2
+  secondBossRoomPrefab: {fileID: 6705747931879158168, guid: ce52958d966e2a2499517b52b4ad7543, type: 3}
   difficultyBase: 4
   difficultyPerRoom: 4
   maxHP: 100

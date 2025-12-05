@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyHealthBarManager : MonoBehaviour
 {
@@ -335,6 +336,57 @@ public class EnemyHealthBarManager : MonoBehaviour
         {
             RemoveEntry(entry);
         };
+    }
+    public void RegisterBoss2(Boss2Controller2D boss2)
+    { 
+     if (boss2 == null) return;
+        if (healthBarTemplate == null || container == null)
+            return;
+
+        // Instantiate UI
+        VisualElement ve = healthBarTemplate.Instantiate();
+    ve.name = "EnemyHealthRoot";
+
+        ProgressBar bar = ve.Q<ProgressBar>("EnemyHealthBar");
+        if (bar == null)
+        {
+            Debug.LogError("[EnemyHealthBarManager] EnemyHealthBar not found in template.");
+            return;
+        }
+
+bar.lowValue = 0;
+bar.highValue = boss2.maxHP;
+bar.value = boss2.maxHP;
+
+container.Add(ve);
+
+// Create entry
+var entry = new Entry
+{
+    targetTransform = boss2.transform,
+    root = ve,
+    bar = bar
+};
+entries.Add(entry);
+
+// Hook health update event
+boss2.OnHealthChanged += (cur, max) =>
+{
+    if (entry.bar != null)
+    {
+        entry.bar.highValue = max;
+        entry.bar.value = cur;
+    }
+};
+
+// Hook death event: remove bar
+boss2.OnDied += _ =>
+{
+    RemoveEntry(entry);
+};
+
+// Sync initial health
+entry.bar.value = boss2.maxHP;
     }
     public void RegisterBoss(BossController2D boss)
     {
