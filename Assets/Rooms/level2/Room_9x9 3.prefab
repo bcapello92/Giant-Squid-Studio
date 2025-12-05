@@ -446,7 +446,7 @@ Transform:
   m_GameObject: {fileID: 6893132700134477808}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.04, y: 0.09, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2006,11 +2006,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3753119628116798319, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 2.13
       objectReference: {fileID: 0}
     - target: {fileID: 3753119628116798319, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.85751
+      value: 8.67
       objectReference: {fileID: 0}
     - target: {fileID: 3753119628116798319, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2057,6 +2057,14 @@ PrefabInstance:
       value: -1.64
       objectReference: {fileID: 0}
     - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
+      propertyPath: hazardMinDistance
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
+      propertyPath: maxHazardsPerRoom
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
       propertyPath: enemyPool.Array.data[0].prefab
       value: 
       objectReference: {fileID: 5347680577596769270, guid: 3004659d026b1cf419eecd589f8e0d9f, type: 3}
@@ -2072,6 +2080,10 @@ PrefabInstance:
       propertyPath: hazardPool.Array.data[1].prefab
       value: 
       objectReference: {fileID: 1379074531695304566, guid: 35d1b97888a7bad498eceeb44514cc50, type: 3}
+    - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
+      propertyPath: hazardPool.Array.data[1].weight
+      value: 0.407
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

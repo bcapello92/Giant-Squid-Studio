@@ -102,7 +102,7 @@ public class Monster6Controller : RoomEnemy
         Vector2 step = Vector2.ClampMagnitude(desiredVel - vel, acceleration * Time.fixedDeltaTime);
         rb.linearVelocity = vel + step;
 
-        if (anim) anim.SetFloat(MoveSpeedHash, rb.linearVelocity.magnitude);
+       
 
         // --- Attack gating ---
         bool inRange = dist <= (stopDistance + 0.1f);

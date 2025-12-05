@@ -1,25 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class RunManager : MonoBehaviour
 {
     public static RunManager I { get; private set; }
+
     [Header("Levels / Progression")]
     public int finalLevel = 2;   // last level in the game (2 for now)
 
-    [Header("Rooms")]
-    public RoomSequence roomSequence;
+    [Header("Rooms (Default / Legacy)")]
+    public RoomSequence roomSequence;       // fallback for level 1 if level1Rooms is empty
     public bool loopAndReshuffle = true;
 
-    [Header("Boss Flow")]
-    [Min(1)] public int roomsUntilBoss = 4;       // boss after N normal rooms
-    public GameObject bossRoomPrefab;
-    [Header("Second Boss Run (Level 2)")]
-    public RoomSequence secondRunRoomSequence;      // rooms for level 2 run
+    [Header("Boss Flow (Level 1)")]
+    [Min(1)] public int roomsUntilBoss = 4;       // boss after N normal rooms on level 1
+    public GameObject bossRoomPrefab;             // level 1 boss room
+
+    [Header("Boss Flow (Level 2)")]
+    public RoomSequence secondRunRoomSequence;    // optional alternative room set for level 2
     [Min(1)] public int secondRunRoomsUntilBoss = 2;
-    public GameObject secondBossRoomPrefab;
+    public GameObject secondBossRoomPrefab;       // level 2 boss room
 
     [Header("Difficulty Curve")]
     [Min(1)] public int difficultyBase = 1;
@@ -33,6 +35,7 @@ public class RunManager : MonoBehaviour
     [Header("UI (optional)")]
     public GameObject gameOverUIPrefab;     // Game Over (lose)
     public GameObject youWinUIPrefab;       // You Win (boss defeated)
+
     [Header("Scenes")]
     public string level1SceneName = "Level1";   // set in Inspector
     public string level2SceneName = "Level2";   // set in Inspector
@@ -43,17 +46,22 @@ public class RunManager : MonoBehaviour
 
     [Header("Level State")]
     public int currentLevel = 1;
+
     // runtime
     List<GameObject> runRooms = new();
     int currentIndex = 0;
     int loopCount = 0;
     int roomsClearedThisRun = 0;
     bool inBossRoom = false;
+
+    // NOTE: this property name is confusing (it was in your original).
+    // It actually returns loop count + 1, not the actual "level index".
     public int CurrentLevel => loopCount + 1;
+
     RoomManager rm;
     Coroutine _boot;
     int _runVersion = 0;
-    
+
     public System.Action<bool> RunActiveChanged;
     public bool runActive { get; private set; } = false;
     public bool IsRunActive => runActive;
@@ -63,16 +71,80 @@ public class RunManager : MonoBehaviour
         if (I != null && I != this) { Destroy(gameObject); return; }
         I = this;
         DontDestroyOnLoad(gameObject);
+
+        Debug.Log($"[Run] Awake. bossRoomPrefab = {bossRoomPrefab?.name ?? "null"}, " +
+                  $"secondBossRoomPrefab = {secondBossRoomPrefab?.name ?? "null"}");
     }
 
     void Start()
     {
-        
+        // start runs via StartRunAtLevel or StartNewRun
     }
+
+    // =========================================================
+    //  Helpers: per-level configuration
+    // =========================================================
+
+    RoomSequence GetRoomSequenceForLevel(int level)
+    {
+        switch (level)
+        {
+            case 1:
+                // Use level1Rooms if set, otherwise fallback to legacy roomSequence
+                if (level1Rooms != null && level1Rooms.rooms != null && level1Rooms.rooms.Length > 0)
+                    return level1Rooms;
+                return roomSequence;
+
+            case 2:
+                // Prefer level2Rooms; fallback to secondRunRoomSequence if provided
+                if (level2Rooms != null && level2Rooms.rooms != null && level2Rooms.rooms.Length > 0)
+                    return level2Rooms;
+                return secondRunRoomSequence;
+
+            default:
+                return null;
+        }
+    }
+
+    string GetSceneNameForLevel(int level)
+    {
+        switch (level)
+        {
+            case 1: return level1SceneName;
+            case 2: return level2SceneName;
+            default: return null;
+        }
+    }
+
+    int GetRoomsUntilBossForCurrentLevel()
+    {
+        if (currentLevel == 2)
+            return Mathf.Max(1, secondRunRoomsUntilBoss);
+
+        // default / level 1
+        return Mathf.Max(1, roomsUntilBoss);
+    }
+
+    GameObject GetBossPrefabForCurrentLevel()
+    {
+        if (currentLevel == 2)
+            return secondBossRoomPrefab;
+
+        return bossRoomPrefab;
+    }
+
+    // =========================================================
+    //  RUN LIFECYCLE
+    // =========================================================
+
     public void StartRunAtLevel(int level)
     {
         _runVersion++;
-        if (_boot != null) { StopCoroutine(_boot); _boot = null; }
+        if (_boot != null)
+        {
+            StopCoroutine(_boot);
+            _boot = null;
+        }
 
         runActive = true;
         RunActiveChanged?.Invoke(true);
@@ -89,21 +161,8 @@ public class RunManager : MonoBehaviour
         if (runRooms == null) runRooms = new List<GameObject>();
         runRooms.Clear();
 
-        // Pick the right room sequence for that level
-        RoomSequence seq = null;
-        switch (level)
-        {
-            case 1:
-                seq = level1Rooms != null ? level1Rooms : roomSequence;
-                break;
-            case 2:
-                seq = level2Rooms;
-                break;
-            default:
-                Debug.LogError($"[Run] Unsupported level index {level}.");
-                return;
-        }
-
+        // Get rooms & scene for this level
+        RoomSequence seq = GetRoomSequenceForLevel(level);
         if (seq == null || seq.rooms == null || seq.rooms.Length == 0)
         {
             Debug.LogError($"[Run] No rooms configured for level {level}.");
@@ -113,8 +172,12 @@ public class RunManager : MonoBehaviour
         runRooms.AddRange(seq.rooms);
         Shuffle(runRooms);
 
-        // Decide which scene to load
-        string sceneName = level == 1 ? level1SceneName : level2SceneName;
+        string sceneName = GetSceneNameForLevel(level);
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogError($"[Run] Scene name for level {level} is not configured.");
+            return;
+        }
 
         SceneManager.LoadScene(sceneName);
 
@@ -126,6 +189,13 @@ public class RunManager : MonoBehaviour
     {
         StartRunAtLevel(1);
     }
+
+    // Legacy entry point – now just a convenience wrapper for Level 2
+    public void StartSecondRun()
+    {
+        StartRunAtLevel(2);
+    }
+
     public void OnBossRoomCleared()
     {
         if (!runActive) return;
@@ -149,7 +219,7 @@ public class RunManager : MonoBehaviour
 
         currentLevel++;
 
-        // Reset per-level progress (we're starting fresh in Level 2)
+        // Reset per-level progress (we're starting fresh in the new level)
         roomsClearedThisRun = 0;
         inBossRoom = false;
         loopCount = 0;
@@ -158,19 +228,7 @@ public class RunManager : MonoBehaviour
         if (runRooms == null) runRooms = new List<GameObject>();
         runRooms.Clear();
 
-        RoomSequence seq = null;
-
-        if (currentLevel == 2)
-        {
-            seq = level2Rooms;
-        }
-        else
-        {
-            // Future: add more levels here
-            Debug.LogWarning($"[Run] GoToNextLevel called for unsupported level {currentLevel}. Using level2Rooms as fallback.");
-            seq = level2Rooms;
-        }
-
+        RoomSequence seq = GetRoomSequenceForLevel(currentLevel);
         if (seq == null || seq.rooms == null || seq.rooms.Length == 0)
         {
             Debug.LogError($"[Run] No rooms configured for level {currentLevel}.");
@@ -181,10 +239,19 @@ public class RunManager : MonoBehaviour
         Shuffle(runRooms);
 
         _runVersion++;
-        if (_boot != null) { StopCoroutine(_boot); _boot = null; }
+        if (_boot != null)
+        {
+            StopCoroutine(_boot);
+            _boot = null;
+        }
 
-        // Load the new scene for this level
-        string sceneName = currentLevel == 2 ? level2SceneName : level1SceneName;
+        string sceneName = GetSceneNameForLevel(currentLevel);
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogError($"[Run] Scene name for level {currentLevel} is not configured.");
+            return;
+        }
+
         SceneManager.LoadScene(sceneName);
 
         // After the scene loads, BootstrapRun will find the new RoomManager & Player
@@ -195,45 +262,14 @@ public class RunManager : MonoBehaviour
     {
         runActive = false;
         RunActiveChanged?.Invoke(false);
-        if (_boot != null) { StopCoroutine(_boot); _boot = null; }
-    }
-    public void StartSecondRun()
-    {
-        _runVersion++;
+
         if (_boot != null)
         {
             StopCoroutine(_boot);
             _boot = null;
         }
 
-        runActive = true;
-        RunActiveChanged?.Invoke(true);
-
-        roomsClearedThisRun = 0;
-        inBossRoom = false;
-
-        // Use the second-run configuration
-        if (secondRunRoomSequence == null ||
-            secondRunRoomSequence.rooms == null ||
-            secondRunRoomSequence.rooms.Length == 0)
-        {
-            Debug.LogError("[Run] No rooms in secondRunRoomSequence.");
-            return;
-        }
-
-        roomSequence = secondRunRoomSequence;
-        roomsUntilBoss = secondRunRoomsUntilBoss;
-        bossRoomPrefab = secondBossRoomPrefab;
-
-        if (runRooms == null) runRooms = new List<GameObject>();
-        runRooms.Clear();
-        runRooms.AddRange(roomSequence.rooms);
-        Shuffle(runRooms);
-
-        currentIndex = 0;
-        loopCount = 0;
-
-        _boot = StartCoroutine(BootstrapRun(_runVersion));
+        Time.timeScale = 1f;
     }
 
     public void OnPlayerDied()
@@ -253,6 +289,24 @@ public class RunManager : MonoBehaviour
         Time.timeScale = 0f; // pause behind UI (your UI should use unscaled time)
         Debug.Log("[Run] EndRun: Game Over.");
     }
+
+    public void OnBossDefeated()
+    {
+        if (!runActive) return; // ignore if already ended
+        runActive = false;
+        RunActiveChanged?.Invoke(false);
+
+        if (youWinUIPrefab)
+            Instantiate(youWinUIPrefab);
+
+        Time.timeScale = 0f;
+        Debug.Log("[Run] You Win! Boss defeated.");
+    }
+
+    // =========================================================
+    //  BUFFS
+    // =========================================================
+
     public void ApplyPersistentBuffs(TestPlayerController player)
     {
         if (player == null) return;
@@ -297,22 +351,14 @@ public class RunManager : MonoBehaviour
                   (damageMod != null ? $", Damage = {damageMod.damage}" : ""));
     }
 
-    public void OnBossDefeated()
-    {
-        if (!runActive) return; // ignore if already ended
-        runActive = false;
-        RunActiveChanged?.Invoke(false);
-
-        if (youWinUIPrefab)
-            Instantiate(youWinUIPrefab);
-
-        Time.timeScale = 0f;
-        Debug.Log("[Run] You Win! Boss defeated.");
-    }
+    // =========================================================
+    //  BOOTSTRAP / ROOM FLOW
+    // =========================================================
 
     IEnumerator BootstrapRun(int version)
     {
-        yield return null; // let scene objects initialize
+        // Let scene objects initialize
+        yield return null;
 
         float t = 0f, timeout = 2f;
         RoomManager foundRM = null;
@@ -321,17 +367,25 @@ public class RunManager : MonoBehaviour
         while (t < timeout)
         {
             if (version != _runVersion) yield break; // stale
+
             foundRM = FindObjectOfType<RoomManager>();
             player = FindObjectOfType<TestPlayerController>();
+
             if (foundRM && player) break;
+
             t += Time.unscaledDeltaTime;
             yield return null;
         }
 
         if (version != _runVersion) yield break;
-        if (!foundRM) { Debug.LogError("[Run] No RoomManager in scene after load."); yield break; }
+        if (!foundRM)
+        {
+            Debug.LogError("[Run] No RoomManager in scene after load.");
+            yield break;
+        }
 
         rm = foundRM;
+
         // Reapply any buffs from previous rooms/levels
         if (player != null)
         {
@@ -364,26 +418,44 @@ public class RunManager : MonoBehaviour
         if (!runActive) return;
 
         if (rm == null) rm = FindObjectOfType<RoomManager>();
-        if (rm == null) { Debug.LogError("[Run] No RoomManager in scene."); return; }
+        if (rm == null)
+        {
+            Debug.LogError("[Run] No RoomManager in scene.");
+            return;
+        }
 
-        // Decide which room to load:
         GameObject prefabToLoad;
 
         if (inBossRoom)
         {
-            if (!bossRoomPrefab)
+            // Always pick boss based on the currentLevel
+            GameObject bossPrefab = GetBossPrefabForCurrentLevel();
+            if (!bossPrefab)
             {
-                Debug.LogError("[Run] inBossRoom = true but bossRoomPrefab is not assigned.");
+                Debug.LogError($"[Run] inBossRoom = true but no boss prefab assigned for level {currentLevel}.");
                 return;
             }
-            prefabToLoad = bossRoomPrefab;
+            prefabToLoad = bossPrefab;
+            Debug.Log($"[Run] Loading BOSS room for level {currentLevel}: {bossPrefab.name}");
         }
         else
         {
-            if (runRooms == null || runRooms.Count == 0) { Debug.LogError("[Run] No rooms in sequence."); return; }
+            if (runRooms == null || runRooms.Count == 0)
+            {
+                Debug.LogError("[Run] No rooms in sequence.");
+                return;
+            }
+
             currentIndex = Mathf.Clamp(currentIndex, 0, runRooms.Count - 1);
             prefabToLoad = runRooms[currentIndex];
-            if (!prefabToLoad) { Debug.LogError($"[Run] Room at index {currentIndex} is null."); return; }
+
+            if (!prefabToLoad)
+            {
+                Debug.LogError($"[Run] Room at index {currentIndex} is null.");
+                return;
+            }
+
+            Debug.Log($"[Run] Loading room index {currentIndex} of {runRooms.Count}, level {currentLevel}: {prefabToLoad.name}");
         }
 
         rm.LoadRoom(prefabToLoad);
@@ -397,8 +469,11 @@ public class RunManager : MonoBehaviour
         if (!inBossRoom)
             roomsClearedThisRun++;
 
+        int roomsNeeded = GetRoomsUntilBossForCurrentLevel();
+        Debug.Log($"[Run] GoToNextRoom: level {currentLevel}, roomsClearedThisRun = {roomsClearedThisRun}, roomsUntilBoss = {roomsNeeded}");
+
         // Should we switch to boss now?
-        if (!inBossRoom && roomsClearedThisRun >= roomsUntilBoss)
+        if (!inBossRoom && roomsClearedThisRun >= roomsNeeded)
         {
             inBossRoom = true;
             LoadCurrentRoom();
@@ -440,8 +515,10 @@ public class RunManager : MonoBehaviour
         return diff;
     }
 
+    // =========================================================
+    //  PLAYER STATE
+    // =========================================================
 
-    // ==== Player state ====
     public void ApplyDamage(int amount)
     {
         currentHP = Mathf.Max(0, currentHP - Mathf.Abs(amount));

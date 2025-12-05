@@ -247,6 +247,96 @@ public class EnemyHealthBarManager : MonoBehaviour
             e.root.style.top = panelPos.y - barHeight * 1.5f;
         }
     }
+    public void RegisterMonster5(Monster5Controller mon5)
+    {
+        if (mon5 == null || healthBarTemplate == null || container == null)
+            return;
+
+        // Instantiate the template
+        VisualElement ve = healthBarTemplate.Instantiate();
+        ve.name = "EnemyHealthRoot";
+
+        ProgressBar bar = ve.Q<ProgressBar>("EnemyHealthBar");
+        if (bar == null)
+        {
+            Debug.LogError("[EnemyHealthBarManager] EnemyHealthBar not found in template.");
+            return;
+        }
+
+        bar.lowValue = 0;
+        bar.highValue = mon5.maxHP;
+        bar.value = mon5.maxHP;
+
+        container.Add(ve);
+
+        var entry = new Entry
+        {
+            targetTransform = mon5.transform,
+            root = ve,
+            bar = bar
+        };
+        entries.Add(entry);
+
+        // Hook into events to keep the bar updated
+        mon5.OnHealthChanged += (cur, max) =>
+        {
+            if (entry.bar != null)
+            {
+                entry.bar.highValue = max;
+                entry.bar.value = cur;
+            }
+        };
+
+        mon5.OnDied += _ =>
+        {
+            RemoveEntry(entry);
+        };
+    }
+    public void RegisterMonster6(Monster6Base mon6)
+    {
+        if (mon6 == null || healthBarTemplate == null || container == null)
+            return;
+
+        // Instantiate the template
+        VisualElement ve = healthBarTemplate.Instantiate();
+        ve.name = "EnemyHealthRoot";
+
+        ProgressBar bar = ve.Q<ProgressBar>("EnemyHealthBar");
+        if (bar == null)
+        {
+            Debug.LogError("[EnemyHealthBarManager] EnemyHealthBar not found in template.");
+            return;
+        }
+
+        bar.lowValue = 0;
+        bar.highValue = mon6.maxHP;
+        bar.value = mon6.maxHP;
+
+        container.Add(ve);
+
+        var entry = new Entry
+        {
+            targetTransform = mon6.transform,
+            root = ve,
+            bar = bar
+        };
+        entries.Add(entry);
+
+        // Hook into events to keep the bar updated
+        mon6.OnHealthChanged += (cur, max) =>
+        {
+            if (entry.bar != null)
+            {
+                entry.bar.highValue = max;
+                entry.bar.value = cur;
+            }
+        };
+
+        mon6.OnDied += _ =>
+        {
+            RemoveEntry(entry);
+        };
+    }
     public void RegisterShooter(EnemyShooter shooter)
     {
         if (shooter == null || healthBarTemplate == null || container == null)

@@ -2057,6 +2057,10 @@ PrefabInstance:
       value: -2.3
       objectReference: {fileID: 0}
     - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
+      propertyPath: maxHazardsPerRoom
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
       propertyPath: enemyPool.Array.data[0].prefab
       value: 
       objectReference: {fileID: 5347680577596769270, guid: a4d7855e1e85372438a13081137253fd, type: 3}

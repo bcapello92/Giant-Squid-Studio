@@ -235,7 +235,7 @@ public class Monster5Controller : RoomEnemy, IDamageable
         // Register with healthbar manager if available
         if (EnemyHealthBarManager.Instance != null)
         {
-            //EnemyHealthBarManager.Instance.RegisterBlob(this);
+            EnemyHealthBarManager.Instance.RegisterMonster5(this);
         }
 
         // also push initial health just in case

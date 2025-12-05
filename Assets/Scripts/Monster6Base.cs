@@ -57,9 +57,24 @@ public class Monster6Base : RoomEnemy, IDamageable
         lr.positionCount = 2;
         lr.material = new Material(Shader.Find("Sprites/Default"));
         lr.widthMultiplier = 0.2f;
-        SpawnedMonster = Instantiate(MonsterSix, gameObject.transform.position, Quaternion.identity);
     }
+    void Start()
+    {
+        // Register with healthbar manager if available
+        if (EnemyHealthBarManager.Instance != null)
+        {
+            EnemyHealthBarManager.Instance.RegisterMonster6(this);
+        }
 
+        // also push initial health just in case
+        OnHealthChanged?.Invoke(currentHP, maxHP);
+
+        // Spawn the buddy here, when position is more reliable
+        if (SpawnedMonster == null && MonsterSix != null)
+        {
+            SpawnedMonster = Instantiate(MonsterSix, transform.position, Quaternion.identity);
+        }
+    }
     void FixedUpdate()
     {
         if (!isDead)
@@ -123,17 +138,7 @@ public class Monster6Base : RoomEnemy, IDamageable
 
     public void OnDeathAnimationComplete() { Destroy(gameObject); }
 
-    void Start()
-    {
-        // Register with healthbar manager if available
-        if (EnemyHealthBarManager.Instance != null)
-        {
-            //EnemyHealthBarManager.Instance.RegisterBlob(this);
-        }
-
-        // also push initial health just in case
-        OnHealthChanged?.Invoke(currentHP, maxHP);
-    }
+    
 
     IEnumerator DespawnAfterDelay()
     {
