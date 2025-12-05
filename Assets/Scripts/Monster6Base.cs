@@ -36,6 +36,7 @@ public class Monster6Base : RoomEnemy, IDamageable
     Animator anim;
     Collider2D[] cols;
     RoomManager roomManager;
+    LineRenderer lr;
     private GameObject SpawnedMonster;
     bool isDead;
     public event Action<int, int> OnHealthChanged; // (current, max)
@@ -45,6 +46,7 @@ public class Monster6Base : RoomEnemy, IDamageable
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         cols = GetComponentsInChildren<Collider2D>(true);
+        lr = GetComponent<LineRenderer>();
 
         currentHP = Mathf.Max(1, maxHP);
         OnHealthChanged?.Invoke(currentHP, maxHP);
@@ -52,12 +54,16 @@ public class Monster6Base : RoomEnemy, IDamageable
 
     void OnEnable()
     {
+        lr.positionCount = 2;
+        lr.material = new Material(Shader.Find("Sprites/Default"));
+        lr.widthMultiplier = 0.2f;
         SpawnedMonster = Instantiate(MonsterSix, gameObject.transform.position, Quaternion.identity);
     }
 
     void FixedUpdate()
     {
-
+        lr.SetPosition(0, transform.position);
+        lr.SetPosition(1, SpawnedMonster.transform.position);
     }
 
 
@@ -84,6 +90,7 @@ public class Monster6Base : RoomEnemy, IDamageable
         if (isDead) return;
         isDead = true;
         SpawnedMonster.GetComponent<Monster6Controller>().Die();
+        lr.widthMultiplier = 0f;
 
         deathNoise.Play();
 
