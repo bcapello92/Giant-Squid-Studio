@@ -862,7 +862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FeetHazardSlow
   player: {fileID: 0}
-  hazardSpeedMultiplier: 0.25
+  hazardSpeedMultiplier: 0.498
 --- !u!1 &6513096075189723417
 GameObject:
   m_ObjectHideFlags: 0

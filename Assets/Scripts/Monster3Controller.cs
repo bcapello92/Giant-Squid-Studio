@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
@@ -97,37 +97,62 @@ public class EnemyShooter : RoomEnemy, IDamageable
 
         attackTimer -= Time.deltaTime;
 
-        Vector2 toTarget = target.position - transform.position;
+        Vector2 toTarget = (Vector2)(target.position - transform.position);
         float distance = toTarget.magnitude;
+
+        // Small band around desired range to avoid jitter
+        float desiredRange = attackRange;   // e.g. 6f
+        float rangeTolerance = 0.5f;        // acceptable +/- range
+
+        Vector2 desiredVelocity = Vector2.zero;
 
         if (isAttacking)
         {
             // Must stop while shooting
-            rb.linearVelocity = Vector2.zero;
+            desiredVelocity = Vector2.zero;
         }
         else
         {
+            // If in range and off cooldown → attack
             if (attackTimer <= 0f && distance <= attackRange)
             {
-                // In range and off cooldown -> stop & shoot
                 TriggerAttack();
+                // TriggerAttack sets isAttacking = true and zeroes velocity
+                desiredVelocity = Vector2.zero;
             }
             else
             {
-                // Between shots: move away from the player on the X axis
-                float dirX = Mathf.Sign(transform.position.x - target.position.x);
-                Vector2 vel = new Vector2(dirX * moveSpeed, 0f);
-                rb.linearVelocity = vel;
-
-                // Flip sprite towards direction of movement on X
-                if (spriteRenderer != null)
+                // Maintain distance band:
+                // too far -> move closer
+                // too close -> back away
+                if (distance > desiredRange + rangeTolerance)
                 {
-                    if (vel.x > 0.01f)
-                        spriteRenderer.flipX = false;   // facing right
-                    else if (vel.x < -0.01f)
-                        spriteRenderer.flipX = true;    // facing left
+                    // Move toward player
+                    desiredVelocity = toTarget.normalized * moveSpeed;
+                }
+                else if (distance < desiredRange - rangeTolerance)
+                {
+                    // Move away from player
+                    desiredVelocity = -toTarget.normalized * moveSpeed;
+                }
+                else
+                {
+                    // In the sweet spot, hover
+                    desiredVelocity = Vector2.zero;
                 }
             }
+        }
+
+        rb.linearVelocity = desiredVelocity;
+
+        // Flip sprite to face the player (or velocity) on X
+        if (spriteRenderer != null)
+        {
+            // Face the player horizontally
+            if (toTarget.x > 0.01f)
+                spriteRenderer.flipX = false;   // facing right
+            else if (toTarget.x < -0.01f)
+                spriteRenderer.flipX = true;    // facing left
         }
 
         // Animator Speed parameter
@@ -137,6 +162,7 @@ public class EnemyShooter : RoomEnemy, IDamageable
             anim.SetFloat(speedParam, speed);
         }
     }
+
 
     // ------------------- Death ----------------------
     void Die()
