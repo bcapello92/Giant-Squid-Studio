@@ -6,7 +6,7 @@ using System;
 public class Monster6Base : RoomEnemy, IDamageable
 {
     [Header("Health")]
-    public int maxHP = 50;
+    public int maxHP = 60;
     [SerializeField] int currentHP;
 
     [Header("Spawn")]
