@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424d48fae18569a4f8e0614fd69438a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster6Base
-  maxHP: 50
+  maxHP: 60
   currentHP: 0
   MonsterSix: {fileID: 5347680577596769270, guid: a64214c18b9379641a02d176f0b6099b, type: 3}
   deathDespawnDelay: 1.5

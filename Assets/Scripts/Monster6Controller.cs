@@ -17,7 +17,7 @@ public class Monster6Controller : RoomEnemy
 
     [Header("Shock Attack")]
     public float shockRadius = 1.4f;
-    public int shockDamage = 10;
+    public int shockDamage = 5;
     public float shockCooldown = 1.0f;
     public float shockKnockback = 4f;
 
