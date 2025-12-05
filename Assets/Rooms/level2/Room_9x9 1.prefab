@@ -2069,6 +2069,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3281943245798240191, guid: 256934271585a00448351a9ffd82f1ce, type: 3}
     - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
+      propertyPath: hazardPool.Array.data[0].weight
+      value: 0.949
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665331580261002985, guid: 07392f85ea1f24549b893ffda33d4dbd, type: 3}
       propertyPath: hazardPool.Array.data[1].prefab
       value: 
       objectReference: {fileID: 1379074531695304566, guid: 35d1b97888a7bad498eceeb44514cc50, type: 3}

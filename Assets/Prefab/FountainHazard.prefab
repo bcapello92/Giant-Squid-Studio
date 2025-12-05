@@ -140,4 +140,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FountainController
   bulletPrefab: {fileID: 7662989591880503268, guid: 3fbb936ee487a3e45955eaaaad18d75e, type: 3}
-  timeBetweenShots: 1
+  timeBetweenShots: 2
